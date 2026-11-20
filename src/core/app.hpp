@@ -46,6 +46,7 @@ class App : public ftxui::ComponentBase {
   std::string helpFilter() const { return help_filter_; }
   bool helpFiltering() const { return help_filtering_; }
   std::size_t helpOffset() const { return help_offset_; }
+  bool selecting() const { return selecting_; }
   bool resizeMode() const { return resize_mode_; }
   std::size_t themeIndex() const { return theme_index_; }
   std::string renameBuffer() const { return rename_buffer_; }
@@ -60,6 +61,8 @@ class App : public ftxui::ComponentBase {
   void setMode(Mode mode);
   void enterNormal(bool home = false, bool end = false);
   void enterVisual();
+  void startSelection();
+  void exitVisual();
   void toggleHelp();
   void closeOverlay();
   void toggleTabs();
@@ -121,6 +124,7 @@ class App : public ftxui::ComponentBase {
   Overlay overlay_ = Overlay::None;
   bool zoom_ = false;
   bool resize_mode_ = false;
+  bool selecting_ = false;
   std::atomic<bool> clock_active_{false};
   int clock_pane_id_ = -1;
   std::string pending_;

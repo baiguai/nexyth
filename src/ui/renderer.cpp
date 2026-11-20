@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 
 #include "../core/app.hpp"
 #include "../utils.hpp"
@@ -285,10 +286,13 @@ void Renderer::drawPane(ftxui::Canvas& canvas, const PaneRect& entry,
   const auto anchor = buffer.anchor();
   const auto head = buffer.head();
   const bool hasSelection = anchor && head;
-  const Pos selectionStart =
-      hasSelection ? (anchor->y <= head->y ? *anchor : *head) : Pos{};
-  const Pos selectionEnd =
-      hasSelection ? (anchor->y <= head->y ? *head : *anchor) : Pos{};
+  Pos selectionStart = hasSelection ? *anchor : Pos{};
+  Pos selectionEnd = hasSelection ? *head : Pos{};
+  if (hasSelection && (selectionEnd.y < selectionStart.y ||
+                       (selectionEnd.y == selectionStart.y &&
+                        selectionEnd.x < selectionStart.x))) {
+    std::swap(selectionStart, selectionEnd);
+  }
   const auto focusedPane = app_.workspace().focusedPane();
   const bool focused = focusedPane && pane && focusedPane->id() == pane->id();
   const ftxui::Color selectionColor = parseColor(
@@ -401,7 +405,9 @@ void Renderer::drawStatus(ftxui::Canvas& canvas, int width, int y,
     pixel.background_color = modeBg;
     pixel.bold = true;
   };
-  const std::string mode = " " + std::string(modeName(app_.mode())) + " ";
+  const std::string mode = " " +
+                           std::string(modeName(app_.mode())) +
+                           (app_.selecting() ? " SELECT " : " ");
   writeText(canvas, 0, y, mode, modeStyle);
 
   std::ostringstream text;

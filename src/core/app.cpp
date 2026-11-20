@@ -406,6 +406,7 @@ bool App::handleMouse(ftxui::Event event) {
     }
     if (mouse.button == ftxui::Mouse::Left) {
       if (mode_ != Mode::Visual) setMode(Mode::Visual);
+      selecting_ = true;
       {
         std::lock_guard<std::mutex> lock(entry.pane->mutex());
         Buffer& buffer = entry.pane->buffer();
@@ -430,6 +431,13 @@ bool App::handleMouse(ftxui::Event event) {
 
 void App::setMode(Mode mode) {
   if (mode_ == mode) return;
+  if (mode != Mode::Visual && selecting_) {
+    selecting_ = false;
+    if (auto pane = workspace_.focusedPane()) {
+      std::lock_guard<std::mutex> lock(pane->mutex());
+      pane->buffer().clearSelection();
+    }
+  }
   mode_ = mode;
   clearPending();
   if (mode == Mode::Insert) {
@@ -451,13 +459,35 @@ void App::enterNormal(bool home, bool end) {
 }
 
 void App::enterVisual() {
-  auto pane = workspace_.focusedPane();
-  if (pane) {
+  selecting_ = false;
+  if (auto pane = workspace_.focusedPane()) {
     std::lock_guard<std::mutex> lock(pane->mutex());
-    const Pos navigation = pane->buffer().navigation();
-    pane->buffer().setAnchor(navigation);
+    pane->buffer().clearSelection();
   }
   setMode(Mode::Visual);
+}
+
+void App::startSelection() {
+  if (mode_ != Mode::Visual || selecting_) return;
+  if (auto pane = workspace_.focusedPane()) {
+    std::lock_guard<std::mutex> lock(pane->mutex());
+    pane->buffer().setAnchor(pane->buffer().navigation());
+  }
+  selecting_ = true;
+  refresh();
+}
+
+void App::exitVisual() {
+  if (selecting_) {
+    selecting_ = false;
+    if (auto pane = workspace_.focusedPane()) {
+      std::lock_guard<std::mutex> lock(pane->mutex());
+      pane->buffer().clearSelection();
+    }
+    refresh();
+    return;
+  }
+  setMode(Mode::Normal);
 }
 
 void App::toggleHelp() {
@@ -880,6 +910,7 @@ void App::yank(bool wholeLine) {
   while (!text.empty() && text.back() == '\n') text.pop_back();
   clipboard_ = text;
   emitClipboard(clipboard_);
+  selecting_ = false;
   setMode(Mode::Normal);
   statusMessage("yanked " + std::to_string(clipboard_.size()) + " bytes");
 }
