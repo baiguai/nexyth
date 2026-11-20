@@ -1,0 +1,11 @@
+/build/
+/build-windows/
+/CMakeLists.txt
+
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.dll
+*.log

@@ -21,7 +21,7 @@ if [ ! -d "build" ]; then
 fi
 
 echo "Building Windows EXE..."
-./build-windows.sh || echo "Warning: Windows build failed, continuing with Linux build..."
+./build-windows.sh "$1" || echo "Warning: Windows build failed, continuing with Linux build..."
 
 # Navigate to build directory
 cd build
@@ -64,15 +64,9 @@ make
 # Check if build was successful
 if [ -f "bin/$APP_NAME" ]; then
 
-
-
-
     # Add any custom cp's or other actions here
-    # mkdir -p "./bin/data/themes"
-    # cp -r ../themes/* "./bin/data/themes/" 2>/dev/null || true
-
-
-
+    mkdir -p "bin/data"
+    cp -f ../config/*.conf "bin/data/" 2>/dev/null || true
 
     echo "-- Build successful --"
     echo "Executable: $(pwd)/bin/$APP_NAME"

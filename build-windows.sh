@@ -17,6 +17,16 @@ echo "Performing $BUILD_TYPE build."
 
 TOOLCHAIN="$(dirname "$0")/cmake/mingw-x86_64.cmake"
 
+if [ ! -f "$TOOLCHAIN" ]; then
+    echo "Skipping Windows build: toolchain not found at $TOOLCHAIN"
+    exit 0
+fi
+
+if ! command -v "${MINGW_CC:-x86_64-w64-mingw32-gcc}" >/dev/null 2>&1; then
+    echo "Skipping Windows build: ${MINGW_CC:-x86_64-w64-mingw32-gcc} not found"
+    exit 0
+fi
+
 mkdir -p build-windows
 
 # Generate CMakeLists.txt from template
