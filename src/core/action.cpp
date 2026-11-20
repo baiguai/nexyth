@@ -68,6 +68,8 @@ ActionRegistry::ActionRegistry() {
   add(*this, "close-pane", [](App& app, const auto&) { app.closePane(); });
 
   add(*this, "new-tab", [](App& app, const auto&) { app.newTab(); });
+  add(*this, "rename-tab",
+      [](App& app, const auto&) { app.startRenameTab(); });
   add(*this, "close-tab", [](App& app, const auto&) { app.closeTab(); });
   add(*this, "tab-next", [](App& app, const auto&) { app.nextTab(); });
   add(*this, "tab-prev", [](App& app, const auto&) { app.previousTab(); });

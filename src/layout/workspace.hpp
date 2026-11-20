@@ -12,6 +12,7 @@ namespace nexyth {
 struct Tab {
   NodePtr root;
   int focusId = -1;
+  std::string name;
 };
 
 class Workspace {
@@ -25,6 +26,7 @@ class Workspace {
   int activeIndex() const { return active_; }
   int tabCount() const { return static_cast<int>(tabs_.size()); }
   std::string tabLabel(int index) const;
+  void setTabName(std::string name);
 
   std::shared_ptr<Pane> focusedPane() const;
   void setFocus(int paneId);

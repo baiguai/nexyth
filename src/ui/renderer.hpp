@@ -60,6 +60,8 @@ class Renderer {
                        ftxui::Color foreground, ftxui::Color background);
   void drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,
                          ftxui::Color foreground, ftxui::Color background);
+  void drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,
+                         ftxui::Color foreground, ftxui::Color background);
   void drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,
                            ftxui::Color foreground, ftxui::Color background);
 

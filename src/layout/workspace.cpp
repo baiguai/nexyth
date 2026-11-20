@@ -28,11 +28,21 @@ void Workspace::createInitial(int columns, int rows) {
 
 std::string Workspace::tabLabel(int index) const {
   if (index < 0 || index >= static_cast<int>(tabs_.size())) return "?";
+  if (!tabs_[static_cast<std::size_t>(index)].name.empty()) {
+    return std::to_string(index + 1) + ": " +
+           tabs_[static_cast<std::size_t>(index)].name;
+  }
   auto pane = focusedPane();
   if (index == active_ && pane) {
     return std::to_string(index + 1) + ": " + pane->title();
   }
   return std::to_string(index + 1) + ": /bin/bash";
+}
+
+void Workspace::setTabName(std::string name) {
+  if (active_ >= 0 && active_ < static_cast<int>(tabs_.size())) {
+    tabs_[static_cast<std::size_t>(active_)].name = std::move(name);
+  }
 }
 
 std::shared_ptr<Pane> Workspace::focusedPane() const {
