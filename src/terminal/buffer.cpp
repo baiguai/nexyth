@@ -1,0 +1,373 @@
+#include "buffer.hpp"
+
+#include <algorithm>
+#include <utility>
+
+#include "../utils.hpp"
+#include "vte.hpp"
+
+namespace nexyth {
+namespace {
+
+int clampInt(int value, int low, int high) {
+  if (high < low) return low;
+  return std::max(low, std::min(high, value));
+}
+
+}  // namespace
+
+Buffer::Buffer(int columns, int rows, int scrollback)
+    : columns_(std::max(1, columns)),
+      rows_(std::max(1, rows)),
+      scrollback_limit_(std::max(0, scrollback)) {
+  lines_.assign(rows_, std::vector<Cell>(columns_));
+  navigation_ = {0, rows_ - 1};
+  parser_ = new Vte(*this);
+}
+
+Buffer::~Buffer() { delete parser_; }
+
+void Buffer::feed(std::string_view data) { parser_->feed(data); }
+
+void Buffer::enterAlternateScreen() {
+  if (saved_screen_) return;
+  ScreenState state;
+  state.lines = lines_;
+  state.cursor_x = cursor_x_;
+  state.cursor_y = cursor_y_;
+  state.saved_x = saved_x_;
+  state.saved_y = saved_y_;
+  state.style = current_style_;
+  state.saved_style = saved_style_;
+  state.scroll_offset = scroll_offset_;
+  state.wrap_pending = wrap_pending_;
+  state.navigation = navigation_;
+  saved_screen_ = std::move(state);
+
+  lines_.assign(rows_, std::vector<Cell>(columns_, Cell{}));
+  cursor_x_ = 0;
+  cursor_y_ = 0;
+  saved_x_ = 0;
+  saved_y_ = 0;
+  current_style_ = Style{};
+  saved_style_ = Style{};
+  scroll_offset_ = 0;
+  wrap_pending_ = false;
+  navigation_ = {0, rows_ - 1};
+  clearSelection();
+}
+
+void Buffer::leaveAlternateScreen() {
+  if (!saved_screen_) return;
+  ScreenState state = std::move(*saved_screen_);
+  saved_screen_.reset();
+
+  lines_ = std::move(state.lines);
+  cursor_x_ = state.cursor_x;
+  cursor_y_ = state.cursor_y;
+  saved_x_ = state.saved_x;
+  saved_y_ = state.saved_y;
+  current_style_ = state.style;
+  saved_style_ = state.saved_style;
+  scroll_offset_ = state.scroll_offset;
+  wrap_pending_ = state.wrap_pending;
+  navigation_ = state.navigation;
+  clearSelection();
+}
+
+Cell Buffer::blankCell() const {
+  Cell cell;
+  cell.style = current_style_;
+  return cell;
+}
+
+void Buffer::ensureLine(int index) {
+  while (static_cast<int>(lines_.size()) <= index) {
+    lines_.emplace_back(columns_, blankCell());
+  }
+  const auto limit = static_cast<int>(rows_) + scrollback_limit_;
+  if (static_cast<int>(lines_.size()) > limit && cursor_y_ > 0) {
+    const int excess = static_cast<int>(lines_.size()) - limit;
+    lines_.erase(lines_.begin(), lines_.begin() + excess);
+    cursor_y_ = std::max(0, cursor_y_ - excess);
+    saved_y_ = std::max(0, saved_y_ - excess);
+  }
+}
+
+void Buffer::putGrapheme(const std::string& grapheme) {
+  if (grapheme.empty()) return;
+  if (wrap_pending_) {
+    wrap_pending_ = false;
+    carriageReturn();
+    lineFeed();
+  }
+  std::size_t position = 0;
+  std::uint32_t codepoint = 0;
+  if (!utf8Decode(grapheme, position, codepoint)) return;
+  const int width = codepointWidth(codepoint);
+  if (width == 0) {
+    if (cursor_x_ > 0 && cursor_y_ < static_cast<int>(lines_.size())) {
+      lines_[cursor_y_][cursor_x_ - 1].text += grapheme;
+    }
+    return;
+  }
+  if (cursor_x_ + width > columns_) {
+    carriageReturn();
+    lineFeed();
+  }
+  ensureLine(cursor_y_);
+  auto& line = lines_[cursor_y_];
+  if (cursor_x_ >= columns_) return;
+  Cell cell = blankCell();
+  cell.text = grapheme;
+  cell.width = width;
+  line[cursor_x_] = cell;
+  if (width > 1 && cursor_x_ + 1 < columns_) {
+    Cell continuation = blankCell();
+    continuation.text = "";
+    continuation.width = 0;
+    line[cursor_x_ + 1] = continuation;
+  }
+  cursor_x_ += width;
+  if (cursor_x_ >= columns_) {
+    cursor_x_ = columns_ - 1;
+    wrap_pending_ = true;
+  }
+}
+
+void Buffer::putText(const std::string& text) {
+  std::size_t position = 0;
+  std::string pending;
+  while (position < text.size()) {
+    const std::size_t start = position;
+    std::uint32_t codepoint = 0;
+    const bool valid = utf8Decode(text, position, codepoint);
+    if (!valid) {
+      position = start + 1;
+      pending.clear();
+      continue;
+    }
+    pending += text.substr(start, position - start);
+    const int width = codepointWidth(codepoint);
+    if (width >= 0) {
+      putGrapheme(pending);
+      pending.clear();
+    }
+  }
+  if (!pending.empty()) putGrapheme(pending);
+}
+
+void Buffer::carriageReturn() {
+  cursor_x_ = 0;
+  wrap_pending_ = false;
+}
+
+void Buffer::lineFeed() {
+  wrap_pending_ = false;
+  ++cursor_y_;
+  ensureLine(cursor_y_);
+  scroll_offset_ = 0;
+  clearSelection();
+}
+
+void Buffer::backspace() {
+  cursor_x_ = std::max(0, cursor_x_ - 1);
+  wrap_pending_ = false;
+}
+
+void Buffer::tab() {
+  wrap_pending_ = false;
+  int next = ((cursor_x_ / 8) + 1) * 8;
+  if (next >= columns_) next = columns_ - 1;
+  cursor_x_ = next;
+}
+
+void Buffer::eraseLine(int mode) {
+  ensureLine(cursor_y_);
+  auto& line = lines_[cursor_y_];
+  const int from = mode == 1 ? 0 : cursor_x_;
+  const int to = mode == 2 ? columns_ : (mode == 1 ? cursor_x_ + 1 : columns_);
+  for (int x = from; x < to && x < columns_; ++x) {
+    line[x] = blankCell();
+  }
+}
+
+void Buffer::eraseDisplay(int mode) {
+  if (mode == 2 || mode == 3) {
+    lines_.assign(rows_, std::vector<Cell>(columns_, blankCell()));
+    cursor_x_ = 0;
+    cursor_y_ = 0;
+    clearSelection();
+    return;
+  }
+  if (mode == 1) {
+    for (int y = 0; y <= cursor_y_ && y < static_cast<int>(lines_.size());
+         ++y) {
+      const int end = y == cursor_y_ ? cursor_x_ + 1 : columns_;
+      for (int x = 0; x < end && x < columns_; ++x) {
+        lines_[y][x] = blankCell();
+      }
+    }
+  } else {
+    eraseLine(0);
+    for (int y = cursor_y_ + 1; y < static_cast<int>(lines_.size()); ++y) {
+      lines_[y].assign(columns_, blankCell());
+    }
+  }
+}
+
+void Buffer::insertBlanks(int count) {
+  ensureLine(cursor_y_);
+  auto& line = lines_[cursor_y_];
+  count = clampInt(count, 0, columns_ - cursor_x_);
+  for (int i = 0; i < count; ++i) {
+    line.insert(line.begin() + cursor_x_, blankCell());
+    line.pop_back();
+  }
+}
+
+void Buffer::deleteCharacters(int count) {
+  ensureLine(cursor_y_);
+  auto& line = lines_[cursor_y_];
+  count = clampInt(count, 0, columns_ - cursor_x_);
+  for (int i = 0; i < count; ++i) {
+    line.erase(line.begin() + cursor_x_);
+    line.push_back(blankCell());
+  }
+}
+
+void Buffer::eraseCharacters(int count) {
+  ensureLine(cursor_y_);
+  const int end = std::min(columns_, cursor_x_ + count);
+  for (int x = cursor_x_; x < end; ++x) {
+    lines_[cursor_y_][x] = blankCell();
+  }
+}
+
+void Buffer::saveCursor() {
+  saved_x_ = cursor_x_;
+  saved_y_ = cursor_y_;
+  saved_style_ = current_style_;
+}
+
+void Buffer::restoreCursor() {
+  cursor_x_ = clampInt(saved_x_, 0, columns_ - 1);
+  cursor_y_ = saved_y_;
+  ensureLine(cursor_y_);
+  current_style_ = saved_style_;
+}
+
+void Buffer::reset() {
+  lines_.assign(rows_, std::vector<Cell>(columns_, blankCell()));
+  cursor_x_ = 0;
+  cursor_y_ = 0;
+  saved_x_ = 0;
+  saved_y_ = 0;
+  current_style_ = Style{};
+  saved_style_ = Style{};
+  scroll_offset_ = 0;
+  clearSelection();
+}
+
+int Buffer::maxScrollOffset() const {
+  return std::max(0, cursor_y_ - rows_ + 1);
+}
+
+int Buffer::visibleStart() const {
+  return maxScrollOffset() - scroll_offset_;
+}
+
+void Buffer::resize(int columns, int rows) {
+  columns_ = std::max(1, columns);
+  rows_ = std::max(1, rows);
+  for (auto& line : lines_) {
+    if (static_cast<int>(line.size()) < columns_) {
+      line.resize(columns_, blankCell());
+    } else if (static_cast<int>(line.size()) > columns_) {
+      line.resize(columns_);
+    }
+  }
+  while (static_cast<int>(lines_.size()) < rows_) {
+    lines_.emplace_back(columns_, blankCell());
+  }
+  cursor_x_ = clampInt(cursor_x_, 0, columns_ - 1);
+  cursor_y_ = clampInt(cursor_y_, 0, static_cast<int>(lines_.size()) - 1);
+  scroll_offset_ = clampInt(scroll_offset_, 0, maxScrollOffset());
+  navigation_.x = clampInt(navigation_.x, 0, columns_ - 1);
+  const int start = visibleStart();
+  navigation_.y = clampInt(navigation_.y, start,
+                           start + rows_ - 1);
+  if (anchor_) *anchor_ = {clampInt(anchor_->x, 0, columns_ - 1),
+                           clampInt(anchor_->y, 0,
+                                    static_cast<int>(lines_.size()) - 1)};
+  if (head_) *head_ = {clampInt(head_->x, 0, columns_ - 1),
+                       clampInt(head_->y, 0,
+                                static_cast<int>(lines_.size()) - 1)};
+}
+
+void Buffer::setNavigation(Pos position) {
+  const int start = visibleStart();
+  const int end = std::min(static_cast<int>(lines_.size()) - 1, start + rows_ - 1);
+  if (position.y < start) {
+    scroll_offset_ = clampInt(scroll_offset_ + start - position.y, 0,
+                              maxScrollOffset());
+  } else if (position.y > end) {
+    scroll_offset_ = clampInt(scroll_offset_ - position.y + end, 0,
+                              maxScrollOffset());
+  }
+  navigation_ = {clampInt(position.x, 0, columns_ - 1),
+                 clampInt(position.y, start, end)};
+  if (anchor_ && head_) {
+    *head_ = navigation_;
+  }
+}
+
+void Buffer::moveNavigation(int dx, int dy) {
+  setNavigation({navigation_.x + dx, navigation_.y + dy});
+}
+
+void Buffer::setAnchor(Pos position) {
+  anchor_ = position;
+  head_ = position;
+  navigation_ = position;
+}
+
+void Buffer::setHead(Pos position) {
+  head_ = position;
+  navigation_ = position;
+}
+
+void Buffer::clearSelection() {
+  anchor_.reset();
+  head_.reset();
+}
+
+std::string Buffer::selectedText() const {
+  if (!anchor_ || !head_) return "";
+  const Pos first = anchor_->y <= head_->y ? *anchor_ : *head_;
+  const Pos last = anchor_->y <= head_->y ? *head_ : *anchor_;
+  std::string result;
+  for (int y = first.y; y <= last.y && y < static_cast<int>(lines_.size());
+       ++y) {
+    const int from = y == first.y ? first.x : 0;
+    const int to = y == last.y ? last.x + 1 : columns_;
+    for (int x = from; x < to && x < static_cast<int>(lines_[y].size()); ++x) {
+      result += lines_[y][x].text;
+    }
+    if (y != last.y) result += '\n';
+  }
+  return result;
+}
+
+void Buffer::scrollBy(int delta) {
+  scroll_offset_ = clampInt(scroll_offset_ + delta, 0, maxScrollOffset());
+  const int start = visibleStart();
+  navigation_.y = clampInt(navigation_.y, start,
+                           start + rows_ - 1);
+}
+
+void Buffer::scrollToTop() { scroll_offset_ = maxScrollOffset(); }
+
+void Buffer::scrollToBottom() { scroll_offset_ = 0; }
+
+}  // namespace nexyth
