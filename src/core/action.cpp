@@ -94,6 +94,9 @@ ActionRegistry::ActionRegistry() {
       [](App& app, const auto&) { app.resizeEqual(); });
   add(*this, "zoom-toggle",
       [](App& app, const auto&) { app.toggleZoom(); });
+  add(*this, "clock", [](App& app, const auto&) { app.toggleClock(); });
+  add(*this, "clock-toggle",
+      [](App& app, const auto&) { app.toggleClock(); });
 
   add(*this, "scroll-up", [](App& app, const auto& args) {
     app.scroll(-toInt(args, 0, 5));

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <ctime>
 #include <iomanip>
 #include <sstream>
 
@@ -93,6 +94,30 @@ Rect centeredBox(int width, int height, int preferredWidth,
       std::min(preferredHeight, std::max(8, height - 4));
   return {(width - boxWidth) / 2, (height - boxHeight) / 2, boxWidth,
           boxHeight};
+}
+
+const char* const kClockDigits[10][5] = {
+    {"███", "█ █", "█ █", "█ █", "███"},
+    {" █ ", "███", " █ ", " █ ", "███"},
+    {"███", "  █", "███", "█  ", "███"},
+    {"███", "  █", "███", "  █", "███"},
+    {"█ █", "█ █", "███", "  █", "  █"},
+    {"███", "█  ", "███", "  █", "███"},
+    {"███", "█  ", "███", "█ █", "███"},
+    {"███", "  █", "  █", "  █", "  █"},
+    {"███", "█ █", "███", "█ █", "███"},
+    {"███", "█ █", "███", "  █", "███"}};
+
+const char* const kClockColon[5] = {"   ", " █ ", "   ", " █ ", "   "};
+
+void drawClockGlyph(Canvas& canvas, int x, int y, const char* const glyph[5],
+                    const Canvas::Stylizer& stylizer) {
+  for (int row = 0; row < 5; ++row) {
+    for (int column = 0; column < 3; ++column) {
+      if (glyph[row][column] == ' ') continue;
+      writeCell(canvas, x + column, y + row, "█", stylizer);
+    }
+  }
 }
 
 }  // namespace
@@ -226,6 +251,9 @@ void Renderer::draw(ftxui::Canvas& canvas, int width, int height) {
     }
   }
 
+  if (app_.clockActive()) {
+    drawClock(canvas, foreground, background);
+  }
   if (settings.tabbar) drawTabs(canvas, width, 0, foreground, background);
   if (settings.statusline) {
     drawStatus(canvas, width, height - 1, foreground, background);
@@ -422,6 +450,59 @@ void Renderer::drawHelp(ftxui::Canvas& canvas, int width, int height,
       writeText(canvas, x, y,
                 text.substr(0, static_cast<std::size_t>(columnWidth - 1)), fill);
     }
+  }
+}
+
+void Renderer::drawClock(ftxui::Canvas& canvas, ftxui::Color foreground,
+                         ftxui::Color background) {
+  const auto rect = rectFor(app_.clockPaneId());
+  if (!rect || rect->width < 10 || rect->height < 5) return;
+  const auto style = [foreground, background](ftxui::Pixel& pixel) {
+    pixel.foreground_color = foreground;
+    pixel.background_color = background;
+    pixel.bold = true;
+  };
+  fillRect(canvas, *rect, " ", style);
+
+  const std::time_t now = std::time(nullptr);
+  const std::tm* local = std::localtime(&now);
+  if (local == nullptr) return;
+  char timeBuffer[16] = {0};
+  char dateBuffer[48] = {0};
+  std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M", local);
+  std::strftime(dateBuffer, sizeof(dateBuffer), "%a %Y-%m-%d", local);
+
+  if (rect->width >= 24 && rect->height >= 9) {
+    const int clockWidth = 19;
+    const int x = rect->x + std::max(0, (rect->width - clockWidth) / 2);
+    const int y = rect->y + std::max(0, (rect->height - 8) / 2);
+    int cursorX = x;
+    for (int index : {0, 1}) {
+      drawClockGlyph(canvas, cursorX, y,
+                     kClockDigits[timeBuffer[index] - '0'], style);
+      cursorX += 4;
+    }
+    drawClockGlyph(canvas, cursorX, y, kClockColon, style);
+    cursorX += 4;
+    for (int index : {3, 4}) {
+      drawClockGlyph(canvas, cursorX, y,
+                     kClockDigits[timeBuffer[index] - '0'], style);
+      cursorX += 4;
+    }
+    const std::string date = dateBuffer;
+    const int dateX =
+        rect->x + std::max(0, (rect->width - static_cast<int>(date.size())) / 2);
+    writeText(canvas, dateX, y + 6, date, style);
+    // writeText(canvas, rect->x + 1, rect->y + rect->height - 1, "q close",
+    //          style);
+  } else {
+    const std::string text = timeBuffer;
+    const int x =
+        rect->x + std::max(0, (rect->width - static_cast<int>(text.size())) / 2);
+    const int y = rect->y + rect->height / 2;
+    writeText(canvas, x, y, text, style);
+    writeText(canvas, rect->x + 1, rect->y + rect->height - 1, "q close",
+              style);
   }
 }
 

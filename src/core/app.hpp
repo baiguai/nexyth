@@ -38,6 +38,8 @@ class App : public ftxui::ComponentBase {
   Mode mode() const { return mode_; }
   Overlay overlay() const { return overlay_; }
   bool zoom() const { return zoom_; }
+  bool clockActive() const { return clock_active_; }
+  int clockPaneId() const { return clock_pane_id_; }
   bool helpVisible() const { return overlay_ == Overlay::Help; }
   std::string pendingKeys() const { return pending_; }
   std::string statusMessage() const;
@@ -70,6 +72,8 @@ class App : public ftxui::ComponentBase {
   void backspaceHelpFilter();
   void toggleZoom();
   void toggleResizeMode();
+  void toggleClock();
+  void closeClock();
 
   void focusDirection(int dx, int dy);
   void focusNext();
@@ -111,6 +115,8 @@ class App : public ftxui::ComponentBase {
   Overlay overlay_ = Overlay::None;
   bool zoom_ = false;
   bool resize_mode_ = false;
+  std::atomic<bool> clock_active_{false};
+  int clock_pane_id_ = -1;
   std::string pending_;
   std::string message_;
   std::string help_filter_;

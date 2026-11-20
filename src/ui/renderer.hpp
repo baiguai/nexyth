@@ -54,6 +54,8 @@ class Renderer {
                   ftxui::Color foreground, ftxui::Color background);
   void drawHelp(ftxui::Canvas& canvas, int width, int height,
                 ftxui::Color foreground, ftxui::Color background);
+  void drawClock(ftxui::Canvas& canvas,
+                 ftxui::Color foreground, ftxui::Color background);
   void drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,
                        ftxui::Color foreground, ftxui::Color background);
   void drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,

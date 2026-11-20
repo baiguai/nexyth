@@ -121,6 +121,16 @@ bool App::handleKey(const ftxui::Event& event) {
 
   if (token.empty()) return false;
 
+  if (clock_active_ &&
+      (token == "q" || mode_ == Mode::Insert)) {
+    if (auto pane = workspace_.focusedPane()) {
+      if (pane->id() == clock_pane_id_) {
+        closeClock();
+        return true;
+      }
+    }
+  }
+
   if (overlay_ == Overlay::Help) {
     if (token == "<Up>") {
       helpScroll(-1);
@@ -468,6 +478,24 @@ void App::toggleResizeMode() {
   refresh();
 }
 
+void App::toggleClock() {
+  if (clock_active_) {
+    closeClock();
+    return;
+  }
+  if (auto pane = workspace_.focusedPane()) {
+    clock_pane_id_ = pane->id();
+    clock_active_.store(true, std::memory_order_relaxed);
+    refresh();
+  }
+}
+
+void App::closeClock() {
+  clock_active_.store(false, std::memory_order_relaxed);
+  clock_pane_id_ = -1;
+  refresh();
+}
+
 void App::focusDirection(int dx, int dy) {
   auto pane = workspace_.focusedPane();
   if (!pane) return;
@@ -787,8 +815,15 @@ std::string App::statusMessage() const {
 
 void App::refreshLoop() {
   constexpr auto kFrameInterval = std::chrono::milliseconds(16);
+  auto last_clock_tick = std::chrono::steady_clock::now();
   while (refresh_running_.load(std::memory_order_relaxed)) {
     std::this_thread::sleep_for(kFrameInterval);
+    const auto now = std::chrono::steady_clock::now();
+    if (clock_active_.load(std::memory_order_relaxed) &&
+        now - last_clock_tick >= std::chrono::seconds(1)) {
+      refresh_pending_.store(true, std::memory_order_relaxed);
+      last_clock_tick = now;
+    }
     if (refresh_pending_.exchange(false, std::memory_order_relaxed) &&
         screen_ != nullptr) {
       screen_->PostEvent(ftxui::Event::Special(kRefreshToken));
