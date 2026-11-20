@@ -22,7 +22,7 @@
 
 namespace nexyth {
 
-enum class Overlay { None, Help, Tabs, Themes };
+enum class Overlay { None, Help, Tabs, Themes, Rename };
 
 class App : public ftxui::ComponentBase {
  public:
@@ -48,6 +48,7 @@ class App : public ftxui::ComponentBase {
   std::size_t helpOffset() const { return help_offset_; }
   bool resizeMode() const { return resize_mode_; }
   std::size_t themeIndex() const { return theme_index_; }
+  std::string renameBuffer() const { return rename_buffer_; }
   std::vector<std::pair<std::string, std::string>> filteredBindings() const;
 
   void refresh();
@@ -67,6 +68,11 @@ class App : public ftxui::ComponentBase {
   void themePrevious();
   void themeApply();
   void themeCancel();
+  void startRenameTab();
+  void appendRenameChar(char character);
+  void backspaceRenameChar();
+  void renameTabApply();
+  void renameTabCancel();
   void helpScroll(int delta);
   void appendHelpFilter(char character);
   void backspaceHelpFilter();
@@ -121,6 +127,7 @@ class App : public ftxui::ComponentBase {
   std::string message_;
   std::string help_filter_;
   bool help_filtering_ = false;
+  std::string rename_buffer_;
   std::string clipboard_;
   std::size_t help_offset_ = 0;
   std::size_t theme_index_ = 0;

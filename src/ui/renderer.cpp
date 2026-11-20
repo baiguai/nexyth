@@ -97,24 +97,24 @@ Rect centeredBox(int width, int height, int preferredWidth,
 }
 
 const char* const kClockDigits[10][5] = {
-    {"███", "█ █", "█ █", "█ █", "███"},
-    {" █ ", "███", " █ ", " █ ", "███"},
-    {"███", "  █", "███", "█  ", "███"},
-    {"███", "  █", "███", "  █", "███"},
-    {"█ █", "█ █", "███", "  █", "  █"},
-    {"███", "█  ", "███", "  █", "███"},
-    {"███", "█  ", "███", "█ █", "███"},
-    {"███", "  █", "  █", "  █", "  █"},
-    {"███", "█ █", "███", "█ █", "███"},
-    {"███", "█ █", "███", "  █", "███"}};
+    {"###", "# #", "# #", "# #", "###"},
+    {"## ", " # ", " # ", " # ", "###"},
+    {"###", "  #", "###", "#  ", "###"},
+    {"###", "  #", "###", "  #", "###"},
+    {"# #", "# #", "###", "  #", "  #"},
+    {"###", "#  ", "###", "  #", "###"},
+    {"###", "#  ", "###", "# #", "###"},
+    {"###", "  #", "  #", "  #", "  #"},
+    {"###", "# #", "###", "# #", "###"},
+    {"###", "# #", "###", "  #", "###"}};
 
-const char* const kClockColon[5] = {"   ", " █ ", "   ", " █ ", "   "};
+const char* const kClockColon[5] = {"   ", " # ", "   ", " # ", "   "};
 
 void drawClockGlyph(Canvas& canvas, int x, int y, const char* const glyph[5],
                     const Canvas::Stylizer& stylizer) {
   for (int row = 0; row < 5; ++row) {
     for (int column = 0; column < 3; ++column) {
-      if (glyph[row][column] == ' ') continue;
+      if (glyph[row][column] != '#') continue;
       writeCell(canvas, x + column, y + row, "█", stylizer);
     }
   }
@@ -243,7 +243,10 @@ void Renderer::draw(ftxui::Canvas& canvas, int width, int height) {
     };
     drawBox(canvas, entry.border, edgeStyle);
     if (focused && entry.border.width > 12) {
-      std::string title = " " + entry.pane->title() + " ";
+      const auto& tabName = app_.workspace().active().name;
+      std::string title = " " +
+                          (tabName.empty() ? entry.pane->title() : tabName) +
+                          " ";
       if (static_cast<int>(title.size()) > entry.border.width - 3) {
         title = title.substr(0, static_cast<std::size_t>(entry.border.width - 3));
       }
@@ -267,6 +270,8 @@ void Renderer::draw(ftxui::Canvas& canvas, int width, int height) {
     drawTabsOverlay(canvas, width, height, foreground, background);
   } else if (app_.overlay() == Overlay::Themes) {
     drawThemesOverlay(canvas, width, height, foreground, background);
+  } else if (app_.overlay() == Overlay::Rename) {
+    drawRenameOverlay(canvas, width, height, foreground, background);
   }
 }
 
@@ -402,7 +407,10 @@ void Renderer::drawStatus(ftxui::Canvas& canvas, int width, int y,
   std::ostringstream text;
   text << " tab " << (app_.workspace().activeIndex() + 1) << "/"
        << app_.workspace().tabs().size();
-  if (auto pane = app_.workspace().focusedPane()) text << "  " << pane->title();
+  if (auto pane = app_.workspace().focusedPane()) {
+    const auto& tabName = app_.workspace().active().name;
+    text << "  " << (tabName.empty() ? pane->title() : tabName);
+  }
   if (!app_.pendingKeys().empty()) text << "  pending: " << app_.pendingKeys();
   if (app_.resizeMode()) text << "  RESIZE";
   const std::string message = app_.statusMessage();
@@ -560,6 +568,35 @@ void Renderer::drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,
               prefix + themes[i].first,
               i == index ? selectedStyle : normalStyle);
   }
+}
+
+void Renderer::drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,
+                                 ftxui::Color foreground,
+                                 ftxui::Color background) {
+  const auto fill = [foreground, background](ftxui::Pixel& pixel) {
+    pixel.foreground_color = foreground;
+    pixel.background_color = background;
+  };
+  const auto heading = [foreground, background](ftxui::Pixel& pixel) {
+    pixel.foreground_color = background;
+    pixel.background_color = foreground;
+    pixel.bold = true;
+  };
+  const Rect box = centeredBox(width, height, 64, 8);
+  fillRect(canvas, box, " ", fill);
+  drawBox(canvas, box, fill);
+  writeText(canvas, box.x + 1, box.y, " nexyth rename tab (Enter save, Esc cancel)",
+            heading);
+
+  const std::string value = "> " + app_.renameBuffer();
+  writeText(canvas, box.x + 1, box.y + 2,
+            value.substr(0, static_cast<std::size_t>(box.width - 2)), fill);
+  const std::string current =
+      " current: " + app_.workspace().tabLabel(app_.workspace().activeIndex());
+  writeText(canvas, box.x + 1, box.y + 3,
+            current.substr(0, static_cast<std::size_t>(box.width - 2)), fill);
+  writeText(canvas, box.x + 1, box.y + box.height - 2,
+            " type a new name; Backspace edits", fill);
 }
 
 void Renderer::drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,

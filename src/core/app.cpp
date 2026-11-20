@@ -131,6 +131,26 @@ bool App::handleKey(const ftxui::Event& event) {
     }
   }
 
+  if (overlay_ == Overlay::Rename) {
+    if (token == "<Esc>") {
+      renameTabCancel();
+      return true;
+    }
+    if (token == "<CR>") {
+      renameTabApply();
+      return true;
+    }
+    if (token == "<BS>" || raw == "\x7F") {
+      backspaceRenameChar();
+      return true;
+    }
+    if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20) {
+      appendRenameChar(raw[0]);
+      return true;
+    }
+    return true;
+  }
+
   if (overlay_ == Overlay::Help) {
     if (token == "<Up>") {
       helpScroll(-1);
@@ -425,6 +445,37 @@ void App::themeApply() {
 
 void App::themeCancel() {
   overlay_ = Overlay::None;
+  refresh();
+}
+
+void App::startRenameTab() {
+  overlay_ = Overlay::Rename;
+  rename_buffer_ = workspace_.active().name;
+  clearPending();
+  refresh();
+}
+
+void App::appendRenameChar(char character) {
+  rename_buffer_ += character;
+  refresh();
+}
+
+void App::backspaceRenameChar() {
+  if (!rename_buffer_.empty()) rename_buffer_.pop_back();
+  refresh();
+}
+
+void App::renameTabApply() {
+  if (rename_buffer_.empty()) rename_buffer_ = "shell";
+  workspace_.setTabName(rename_buffer_);
+  overlay_ = Overlay::None;
+  rename_buffer_.clear();
+  refresh();
+}
+
+void App::renameTabCancel() {
+  overlay_ = Overlay::None;
+  rename_buffer_.clear();
   refresh();
 }
 

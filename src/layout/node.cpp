@@ -52,4 +52,15 @@ bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement) {
   return replacePane(node->second, paneId, replacement);
 }
 
+bool replaceNode(NodePtr& node, const NodePtr& target,
+                 const NodePtr& replacement) {
+  if (!node) return false;
+  if (node == target) {
+    node = replacement;
+    return true;
+  }
+  if (replaceNode(node->first, target, replacement)) return true;
+  return replaceNode(node->second, target, replacement);
+}
+
 }  // namespace nexyth

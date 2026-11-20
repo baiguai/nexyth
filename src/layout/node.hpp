@@ -28,5 +28,7 @@ NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind,
 NodePtr findPane(const NodePtr& node, int paneId);
 NodePtr findParent(const NodePtr& node, int paneId);
 bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);
+bool replaceNode(NodePtr& node, const NodePtr& target,
+                 const NodePtr& replacement);
 
 }  // namespace nexyth
