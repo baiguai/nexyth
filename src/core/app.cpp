@@ -131,11 +131,11 @@ bool App::handleKey(const ftxui::Event& event) {
       return true;
     }
     if (token == "<C-u>") {
-      helpScroll(-6);
+      helpScroll(-1);
       return true;
     }
     if (token == "<C-d>") {
-      helpScroll(6);
+      helpScroll(1);
       return true;
     }
     if (token == "<BS>" || raw == "\x7F") {
@@ -433,11 +433,13 @@ void App::applyTheme(const Theme& theme) {
 
 void App::helpScroll(int delta) {
   const auto bindings = filteredBindings();
-  const int visibleRows = 12;
-  const int maxOffset =
-      std::max(0, static_cast<int>(bindings.size()) / 2 - visibleRows);
+  const int boxHeight =
+      std::min(30, std::max(8, ftxui::Terminal::Size().dimy - 4));
+  const int perPage = std::max(1, (boxHeight - 3) * 2);
+  const int pages =
+      std::max(0, (static_cast<int>(bindings.size()) + perPage - 1) / perPage - 1);
   const int next = static_cast<int>(help_offset_) + delta;
-  help_offset_ = static_cast<std::size_t>(std::clamp(next, 0, maxOffset));
+  help_offset_ = static_cast<std::size_t>(std::clamp(next, 0, pages));
   refresh();
 }
 

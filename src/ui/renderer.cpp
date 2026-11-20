@@ -408,19 +408,20 @@ void Renderer::drawHelp(ftxui::Canvas& canvas, int width, int height,
   const auto bindings = app_.filteredBindings();
   const int rows = std::max(0, box.height - 3);
   const int columnWidth = box.width / 2;
-  const std::size_t offset = app_.helpOffset() * 2;
-  for (int i = 0; i < rows; ++i) {
-    const std::size_t index = offset + static_cast<std::size_t>(i);
-    if (index >= bindings.size()) break;
-    const std::string text =
-        bindings[index].first + "  " + bindings[index].second;
-    const int column = i % 2;
-    const int row = i / 2;
-    if (row >= box.height - 2) break;
-    const int x = box.x + 1 + column * columnWidth;
-    const int y = box.y + 2 + row;
-    writeText(canvas, x, y, text.substr(0, static_cast<std::size_t>(columnWidth - 1)),
-              fill);
+  const std::size_t offset = app_.helpOffset() * static_cast<std::size_t>(rows) * 2;
+  for (int row = 0; row < rows; ++row) {
+    for (int column = 0; column < 2; ++column) {
+      const std::size_t index =
+          offset + static_cast<std::size_t>(row) * 2 +
+          static_cast<std::size_t>(column);
+      if (index >= bindings.size()) break;
+      const std::string text =
+          bindings[index].first + "  " + bindings[index].second;
+      const int x = box.x + 1 + column * columnWidth;
+      const int y = box.y + 2 + row;
+      writeText(canvas, x, y,
+                text.substr(0, static_cast<std::size_t>(columnWidth - 1)), fill);
+    }
   }
 }
 
