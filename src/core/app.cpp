@@ -1,11 +1,18 @@
 #include "app.hpp"
 
 #include <algorithm>
+#include <cerrno>
 #include <cctype>
 #include <cmath>
+#include <csignal>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
+
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/dom/canvas.hpp"
@@ -54,6 +61,75 @@ void forEachSplit(const NodePtr& node,
   callback(node);
   forEachSplit(node->first, callback);
   forEachSplit(node->second, callback);
+}
+
+bool runClipboardCommand(const std::vector<std::string>& argv,
+                         const std::string& text) {
+  int pipes[2];
+  if (pipe(pipes) != 0) return false;
+  const pid_t pid = fork();
+  if (pid < 0) {
+    close(pipes[0]);
+    close(pipes[1]);
+    return false;
+  }
+  if (pid == 0) {
+    close(pipes[1]);
+    dup2(pipes[0], STDIN_FILENO);
+    close(pipes[0]);
+    const int devnull = open("/dev/null", O_WRONLY);
+    if (devnull >= 0) {
+      dup2(devnull, STDOUT_FILENO);
+      dup2(devnull, STDERR_FILENO);
+      close(devnull);
+    }
+    std::vector<char*> args;
+    for (const auto& argument : argv) {
+      args.push_back(const_cast<char*>(argument.c_str()));
+    }
+    args.push_back(nullptr);
+    execvp(args[0], args.data());
+    _exit(127);
+  }
+
+  close(pipes[0]);
+  struct sigaction ignorePipe {};
+  struct sigaction previousPipe {};
+  ignorePipe.sa_handler = SIG_IGN;
+  sigemptyset(&ignorePipe.sa_mask);
+  sigaction(SIGPIPE, &ignorePipe, &previousPipe);
+  std::size_t offset = 0;
+  while (offset < text.size()) {
+    const ssize_t written =
+        write(pipes[1], text.data() + offset, text.size() - offset);
+    if (written > 0) {
+      offset += static_cast<std::size_t>(written);
+      continue;
+    }
+    if (written < 0 && errno == EINTR) continue;
+    break;
+  }
+  close(pipes[1]);
+  sigaction(SIGPIPE, &previousPipe, nullptr);
+
+  int status = 0;
+  while (waitpid(pid, &status, 0) < 0 && errno == EINTR) {
+  }
+  return WIFEXITED(status) && WEXITSTATUS(status) == 0;
+}
+
+bool writeSystemClipboard(const std::string& text) {
+  static const std::vector<std::vector<std::string>> commands = {
+      {"wl-copy"},
+      {"xclip", "-selection", "clipboard"},
+      {"xsel", "--clipboard", "--input"},
+      {"pbcopy"},
+      {"clip.exe"},
+  };
+  for (const auto& command : commands) {
+    if (runClipboardCommand(command, text)) return true;
+  }
+  return false;
 }
 
 }  // namespace
@@ -822,7 +898,12 @@ void App::sendKeys(const std::string& data) {
 }
 
 void App::emitClipboard(const std::string& text) {
-  std::cout << "\x1B]52;c;" << base64Encode(text) << "\a" << std::flush;
+  const bool inTmux = std::getenv("TMUX") != nullptr;
+  if (inTmux) std::cout << "\x1BPtmux;\x1B";
+  std::cout << "\x1B]52;c;" << base64Encode(text) << "\a";
+  if (inTmux) std::cout << "\x1B\\";
+  std::cout << std::flush;
+  writeSystemClipboard(text);
 }
 
 void App::quit() {
