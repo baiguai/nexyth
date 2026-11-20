@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/baiguai/documents/development/cpp/nexyth/nexyth/build/_deps/ftxui-src/src -I/home/baiguai/documents/development/cpp/nexyth/nexyth/build/_deps/ftxui-src/include
 
-CXX_FLAGS = -g -std=gnu++20
+CXX_FLAGS = -O3 -DNDEBUG -std=gnu++20
 
