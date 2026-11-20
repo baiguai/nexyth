@@ -97,24 +97,24 @@ Rect centeredBox(int width, int height, int preferredWidth,
 }
 
 const char* const kClockDigits[10][5] = {
-    {"███", "█ █", "█ █", "█ █", "███"},
-    {" █ ", "███", " █ ", " █ ", "███"},
-    {"███", "  █", "███", "█  ", "███"},
-    {"███", "  █", "███", "  █", "███"},
-    {"█ █", "█ █", "███", "  █", "  █"},
-    {"███", "█  ", "███", "  █", "███"},
-    {"███", "█  ", "███", "█ █", "███"},
-    {"███", "  █", "  █", "  █", "  █"},
-    {"███", "█ █", "███", "█ █", "███"},
-    {"███", "█ █", "███", "  █", "███"}};
+    {"###", "# #", "# #", "# #", "###"},
+    {"## ", " # ", " # ", " # ", "###"},
+    {"###", "  #", "###", "#  ", "###"},
+    {"###", "  #", "###", "  #", "###"},
+    {"# #", "# #", "###", "  #", "  #"},
+    {"###", "#  ", "###", "  #", "###"},
+    {"###", "#  ", "###", "# #", "###"},
+    {"###", "  #", "  #", "  #", "  #"},
+    {"###", "# #", "###", "# #", "###"},
+    {"###", "# #", "###", "  #", "###"}};
 
-const char* const kClockColon[5] = {"   ", " █ ", "   ", " █ ", "   "};
+const char* const kClockColon[5] = {"   ", " # ", "   ", " # ", "   "};
 
 void drawClockGlyph(Canvas& canvas, int x, int y, const char* const glyph[5],
                     const Canvas::Stylizer& stylizer) {
   for (int row = 0; row < 5; ++row) {
     for (int column = 0; column < 3; ++column) {
-      if (glyph[row][column] == ' ') continue;
+      if (glyph[row][column] != '#') continue;
       writeCell(canvas, x + column, y + row, "█", stylizer);
     }
   }
