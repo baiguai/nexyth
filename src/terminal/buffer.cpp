@@ -344,8 +344,11 @@ void Buffer::clearSelection() {
 
 std::string Buffer::selectedText() const {
   if (!anchor_ || !head_) return "";
-  const Pos first = anchor_->y <= head_->y ? *anchor_ : *head_;
-  const Pos last = anchor_->y <= head_->y ? *head_ : *anchor_;
+  Pos first = *anchor_;
+  Pos last = *head_;
+  if (last.y < first.y || (last.y == first.y && last.x < first.x)) {
+    std::swap(first, last);
+  }
   std::string result;
   for (int y = first.y; y <= last.y && y < static_cast<int>(lines_.size());
        ++y) {

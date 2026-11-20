@@ -40,6 +40,9 @@ ActionRegistry::ActionRegistry() {
   add(*this, "normal-end",
       [](App& app, const auto&) { app.enterNormal(false, true); });
   add(*this, "visual", [](App& app, const auto&) { app.enterVisual(); });
+  add(*this, "select-start",
+      [](App& app, const auto&) { app.startSelection(); });
+  add(*this, "visual-exit", [](App& app, const auto&) { app.exitVisual(); });
   add(*this, "help", [](App& app, const auto&) { app.toggleHelp(); });
   add(*this, "tab-list", [](App& app, const auto&) { app.toggleTabs(); });
   add(*this, "theme-list", [](App& app, const auto&) { app.toggleThemes(); });
