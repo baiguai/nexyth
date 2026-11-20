@@ -170,7 +170,7 @@ void Workspace::closePane() {
   if (!parent) return;
   const bool isFirst = parent->first && findPane(parent->first, tab.focusId);
   const auto replacement = isFirst ? parent->second : parent->first;
-  replacePane(tab.root, tab.focusId, replacement);
+  replaceNode(tab.root, parent, replacement);
   std::vector<int> remaining;
   collectPanes(tab.root, remaining);
   tab.focusId = remaining.empty() ? -1 : remaining.front();
