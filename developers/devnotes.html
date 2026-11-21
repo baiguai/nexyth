@@ -1032,7 +1032,7 @@
               {
                 "id": "02253939",
                 "title": "Check for a Prefix",
-                "content": "Check for a Prefix\n\nSignature: bool Config::hasPrefix(Mode mode, const std::string& key) const\nMethod: hasPrefix\nReturns: bool Config\nQualifiers: const\nParameters:\n    mode Mode\n    key  const std::string&\nCalled By: (none found)",
+                "content": "Check for a Prefix\n\nSignature: bool Config::hasPrefix(Mode mode, const std::string& key) const\nMethod: hasPrefix\nReturns: bool Config\nQualifiers: const\nParameters:\n    mode Mode\n    key  const std::string&\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
                 "children": [],
                 "expanded": false
               },
@@ -1068,21 +1068,21 @@
               {
                 "id": "4a06c696",
                 "title": "List the Bindings",
-                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By: (none found)",
+                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [setMode](_Set the Mode_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "16578984",
                 "title": "Load Configuration",
-                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By: (none found)",
+                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [Ftxui App](_Ftxui App_)\n    [setMode](_Set the Mode_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "a74d9c90",
                 "title": "Look for the Key Binding",
-                "content": "Look for the Key Binding\n\nSignature: const Binding* Config::findBinding(Mode mode, const std::string& key) const\nMethod: findBinding\nReturns: const Binding* Config\nQualifiers: const\nParameters:\n    mode Mode\n    key  const std::string&\nCalled By: (none found)",
+                "content": "Look for the Key Binding\n\nSignature: const Binding* Config::findBinding(Mode mode, const std::string& key) const\nMethod: findBinding\nReturns: const Binding* Config\nQualifiers: const\nParameters:\n    mode Mode\n    key  const std::string&\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
                 "children": [],
                 "expanded": false
               },
@@ -1110,14 +1110,14 @@
               {
                 "id": "f934a0d3",
                 "title": "Resolve Command",
-                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By: (none found)",
+                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "af032daa",
                 "title": "Save the Color Settings",
-                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By: (none found)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
+                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [setMode](_Set the Mode_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
                 "children": [],
                 "expanded": false
               },
@@ -1189,7 +1189,7 @@
               {
                 "id": "b6f7738c",
                 "title": "Translate the Key Code",
-                "content": "Translate the Key Code\n\nSignature: std::string normalizeToken(const std::string& raw)\nMethod: normalizeToken\nReturns: std::string\nParameters:\n    raw const std::string&\nCalled By:\n    [applySetting](_Apply Setting_)\n    [load](_Load Configuration_)",
+                "content": "Translate the Key Code\n\nSignature: std::string normalizeToken(const std::string& raw)\nMethod: normalizeToken\nReturns: std::string\nParameters:\n    raw const std::string&\nCalled By:\n    [applySetting](_Apply Setting_)\n    [handleKey](_Handle the Key Combination_)\n    [load](_Load Configuration_)",
                 "children": [],
                 "expanded": false
               },
@@ -1248,14 +1248,14 @@
               {
                 "id": "38aa0acf",
                 "title": "Execute",
-                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By: (none found)",
+                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [setMode](_Set the Mode_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "1999155d",
                 "title": "Join",
-                "content": "Join\n\nSignature: std::string join(const std::vector<std::string>& args)\nMethod: join\nReturns: std::string\nParameters:\n    args const std::vector<std::string>&\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "content": "Join\n\nSignature: std::string join(const std::vector<std::string>& args)\nMethod: join\nReturns: std::string\nParameters:\n    args const std::vector<std::string>&\nCalled By:\n    [Ftxui App Destructor](_Ftxui App Destructor_)\n    [The Action Registry](_The Action Registry_)",
                 "children": [],
                 "expanded": false
               },
@@ -1299,6 +1299,105 @@
                 "id": "792bd13f",
                 "title": "App Class",
                 "content": "App Class\n\nclass App;",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "d04b41e7",
+            "title": "app.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "1289a1e4",
+                "title": "Case Insensitive Contains",
+                "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "c1f7ffb3",
+                "title": "For Each Split",
+                "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [forEachSplit](_For Each Split_)\n    [setMode](_Set the Mode_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "4daee8ba",
+                "title": "Ftxui App",
+                "content": "Ftxui App\n\nApp::App(ftxui::ScreenInteractive* screen, std::string configPath)\n    : screen_(screen),\n      config_(Config::load(configPath)),\n      workspace_(config_.settings.shell, config_.settings.scrollback,\n                 [this](int) { refresh(); }),\n      renderer_(*this)\n{\n    workspace_.createInitial(80, 24);\n    for (const auto& error : config_.errors) statusMessage(error);\n    refresh_thread_ = std::thread([this] { refreshLoop(); });\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f709f42d",
+                "title": "Ftxui App Destructor",
+                "content": "Ftxui App Destructor\n\nApp::~App()\n{\n    refresh_running_.store(false, std::memory_order_relaxed);\n    if (refresh_thread_.joinable()) refresh_thread_.join();\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "4e13e38b",
+                "title": "Ftxui On Event",
+                "content": "Ftxui On Event\n\nSignature: bool App::OnEvent(ftxui::Event event)\nMethod: OnEvent\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By: (none found)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "acc55f14",
+                "title": "Ftxui Render",
+                "content": "Ftxui Render\n\nftxui::Element App::Render()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "cd2f8ae1",
+                "title": "Handle the Key Combination",
+                "content": "Handle the Key Combination\n\nSignature: bool App::handleKey(const ftxui::Event& event)\nMethod: handleKey\nReturns: bool App\nParameters:\n    event const ftxui::Event&\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f30fae4e",
+                "title": "Handle the Mouse",
+                "content": "Handle the Mouse\n\nSignature: bool App::handleMouse(ftxui::Event event)\nMethod: handleMouse\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "bcd444fd",
+                "title": "Refresh Token",
+                "content": "Refresh Token\n\nconstexpr const char* kRefreshToken = \"__nexyth_refresh__\";",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "e0e09a4c",
+                "title": "Run Clipboard Command",
+                "content": "Run Clipboard Command\n\nSignature: bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)\nMethod: runClipboardCommand\nReturns: bool\nParameters:\n    argv const std::vector<std::string>&\n    text const std::string&\nCalled By:\n    [app.cpp:203](_app.cpp_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "9bdd6c4d",
+                "title": "Set the Mode",
+                "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [setMode](_Set the Mode_)\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "e3d8fab6",
+                "title": "Unescape Keys",
+                "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "55b63276",
+                "title": "Write System Clipboard",
+                "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
                 "children": [],
                 "expanded": false
               }
