@@ -41,6 +41,15 @@ NodePtr findParent(const NodePtr& node, int paneId) {
   return findParent(node->second, paneId);
 }
 
+NodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind) {
+  if (!node || node->type != Node::Type::Split) return nullptr;
+  const NodePtr child =
+      findPane(node->first, paneId) ? node->first : node->second;
+  if (!child || !findPane(child, paneId)) return nullptr;
+  if (auto found = findResizeSplit(child, paneId, kind)) return found;
+  return node->kind == kind ? node : nullptr;
+}
+
 bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement) {
   if (!node) return false;
   if (node->type == Node::Type::Leaf) {

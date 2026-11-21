@@ -27,6 +27,7 @@ NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind,
                       double ratio = 0.5);
 NodePtr findPane(const NodePtr& node, int paneId);
 NodePtr findParent(const NodePtr& node, int paneId);
+NodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind);
 bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);
 bool replaceNode(NodePtr& node, const NodePtr& target,
                  const NodePtr& replacement);

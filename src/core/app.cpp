@@ -1051,19 +1051,17 @@ void App::previousTab() {
 
 void App::resizeFocused(int dx, int dy, int amount) {
   auto pane = workspace_.focusedPane();
-  if (!pane || zoom_) return;
-  const NodePtr parent = findParent(workspace_.active().root, pane->id());
-  if (!parent) return;
-  const bool matchesAxis =
-      (dx != 0 && parent->kind == SplitKind::SideBySide) ||
-      (dy != 0 && parent->kind == SplitKind::Stacked);
-  if (!matchesAxis) return;
+  if (!pane || zoom_ || (dx == 0 && dy == 0)) return;
+  const SplitKind kind = dx != 0 ? SplitKind::SideBySide : SplitKind::Stacked;
+  const NodePtr split =
+      findResizeSplit(workspace_.active().root, pane->id(), kind);
+  if (!split) return;
   const int step =
       amount != 0 ? amount : config_.settings.resize_step;
   const double delta = std::clamp(step, -100, 100) / 100.0;
   const int direction = dx != 0 ? dx : dy;
-  parent->ratio =
-      std::clamp(parent->ratio + direction * delta, 0.05, 0.95);
+  split->ratio =
+      std::clamp(split->ratio + direction * delta, 0.05, 0.95);
   refresh();
 }
 
