@@ -1876,6 +1876,159 @@
               }
             ],
             "expanded": false
+          },
+          {
+            "id": "a2990426",
+            "title": "app.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "80db4b50",
+                "title": "App Class",
+                "content": "App Class",
+                "children": [
+                  {
+                    "id": "81d2d004",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nvoid refreshLoop();\nbool handleKey(const ftxui::Event& event);\nbool handleMouse(ftxui::Event event);\nvoid clearPending();\nvoid emitClipboard(const std::string& text);\nvoid applyTheme(const Theme& theme);\n\nftxui::ScreenInteractive* screen_ = nullptr;\nConfig config_;\nWorkspace workspace_;\nRenderer renderer_;\nMode mode_ = Mode::Normal;\nOverlay overlay_ = Overlay::None;\nbool zoom_ = false;\nbool resize_mode_ = false;\nbool selecting_ = false;\nstd::atomic<bool> clock_active_{false};\nint clock_pane_id_ = -1;\nstd::string pending_;\nstd::string message_;\nstd::string help_filter_;\nbool help_filtering_ = false;\nstd::string rename_buffer_;\nstd::string clipboard_;\nstd::size_t help_offset_ = 0;\nstd::size_t theme_index_ = 0;\nstd::chrono::steady_clock::time_point pending_time_;\nstd::chrono::steady_clock::time_point message_time_;\nstd::chrono::steady_clock::time_point last_escape_time_;\nstd::atomic<bool> refresh_pending_{false};\nstd::atomic<bool> refresh_running_{true};\nstd::thread refresh_thread_;\nmutable std::mutex message_mutex_;",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "937a7fc9",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nApp(ftxui::ScreenInteractive* screen, std::string configPath);\n~App() override;\n\nftxui::Element Render() override;\nbool OnEvent(ftxui::Event event) override;\n\nConfig& config() { return config_; }\nWorkspace& workspace() { return workspace_; }\nRenderer& renderer() { return renderer_; }\nMode mode() const { return mode_; }\nOverlay overlay() const { return overlay_; }\nbool zoom() const { return zoom_; }\nbool clockActive() const { return clock_active_; }\nint clockPaneId() const { return clock_pane_id_; }\nbool helpVisible() const { return overlay_ == Overlay::Help; }\nstd::string pendingKeys() const { return pending_; }\nstd::string statusMessage() const;\nstd::string helpFilter() const { return help_filter_; }\nbool helpFiltering() const { return help_filtering_; }\nstd::size_t helpOffset() const { return help_offset_; }\nbool selecting() const { return selecting_; }\nbool resizeMode() const { return resize_mode_; }\nstd::size_t themeIndex() const { return theme_index_; }\nstd::string renameBuffer() const { return rename_buffer_; }\nstd::vector<std::pair<std::string, std::string>> filteredBindings() const;\n\nvoid refresh();\nvoid statusMessage(std::string message);\nvoid quit();\nvoid runCommand(const std::string& name,\nconst std::vector<std::string>& args);\n\nvoid setMode(Mode mode);\nvoid enterNormal(bool home = false, bool end = false);\nvoid enterVisual();\nvoid startSelection();\nvoid exitVisual();\nvoid toggleHelp();\nvoid closeOverlay();\nvoid toggleTabs();\nvoid toggleThemes();\nvoid themeNext();\nvoid themePrevious();\nvoid themeApply();\nvoid themeCancel();\nvoid startRenameTab();\nvoid appendRenameChar(char character);\nvoid backspaceRenameChar();\nvoid renameTabApply();\nvoid renameTabCancel();\nvoid helpScroll(int delta);\nvoid appendHelpFilter(char character);\nvoid backspaceHelpFilter();\nvoid toggleZoom();\nvoid toggleResizeMode();\nvoid toggleClock();\nvoid closeClock();\n\nvoid focusDirection(int dx, int dy);\nvoid focusNext();\nvoid focusPrevious();\nvoid splitFocused(bool vertical);\nvoid splitWindow(bool vertical);\nvoid closePane();\nvoid newTab();\nvoid closeTab();\nvoid selectTab(int oneBased);\nvoid nextTab();\nvoid previousTab();\n\nvoid resizeFocused(int dx, int dy, int amount = 0);\nvoid resizeEqual();\nvoid scroll(int delta);\nvoid scrollToEdge(bool top);\nvoid moveNavigation(int dx, int dy);\nvoid moveNavigationWord(int direction);\nvoid moveNavigationEdge(bool top, bool line);\nvoid selectHere();\nvoid yank(bool wholeLine);\nvoid paste();\nvoid sendKeys(const std::string& data);",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "07f907e5",
+                "title": "Overlay Enum Class",
+                "content": "Overlay Enum Class\n\nenum class Overlay { None, Help, Tabs, Themes, Rename };",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "b7995095",
+            "title": "mode.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "05b1776f",
+                "title": "Mode Enum Class",
+                "content": "Mode Enum Class\n\nenum class Mode { Normal, Insert, Visual };",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "fa75dda9",
+                "title": "Mode Name",
+                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "37bacfd0",
+                "title": "Parse Mode",
+                "content": "Parse Mode\n\nSignature: inline bool parseMode(const std::string& text, Mode& mode)\nMethod: parseMode\nReturns: inline bool\nParameters:\n    text const std::string&\n    mode Mode&\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\ninline bool parseMode(const std::string& text, Mode& mode)\n{\n    const std::string value = text == \"insert\" ? \"normal\" : text;\n    if (value == \"plex\" || value == \"normal-mode\")\n    {\n        mode = Mode::Normal;\n    }\n    else if (value == \"normal\" || value == \"insert\")\n    {\n        mode = Mode::Insert;\n    }\n    else if (value == \"visual\")\n    {\n        mode = Mode::Visual;\n    }\n    else\n    {\n        return false;\n    }\n\n    return true;\n}",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "ffd705f2",
+        "title": "layout",
+        "content": "",
+        "children": [
+          {
+            "id": "e50743bc",
+            "title": "node.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "0db03d65",
+                "title": "Find Pane",
+                "content": "Find Pane\n\nSignature: NodePtr findPane(const NodePtr& node, int paneId)\nMethod: findPane\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\nCalled By:\n    [findPane](_Find Pane_)\n    [findResizeSplit](_Find Resize Split_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "7492e672",
+                "title": "Find Parent",
+                "content": "Find Parent\n\nSignature: NodePtr findParent(const NodePtr& node, int paneId)\nMethod: findParent\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\nCalled By:\n    [findParent](_Find Parent_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "8056df09",
+                "title": "Find Resize Split",
+                "content": "Find Resize Split\n\nSignature: NodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind)\nMethod: findResizeSplit\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\n    kind   SplitKind\nCalled By:\n    [findResizeSplit](_Find Resize Split_)\n    [resizeFocused](_Resize Focused Pane_)\n\n--------------------------------------------------------------------------------\n\nNodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind)\n{\n    if (!node || node->type != Node::Type::Split) return nullptr;\n\n    const NodePtr child = findPane(node->first, paneId) ? node->first : node->second;\n\n    if (!child || !findPane(child, paneId)) return nullptr;\n\n    if (auto found = findResizeSplit(child, paneId, kind)) return found;\n\n    return node->kind == kind ? node : nullptr;\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "54b6b787",
+                "title": "Make Pane Node",
+                "content": "Make Pane Node\n\nSignature: NodePtr makePaneNode(std::shared_ptr<Pane> pane)\nMethod: makePaneNode\nReturns: NodePtr\nParameters:\n    pane std::shared_ptr<Pane>\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Leaf;\n    node->pane = std::move(pane);\n\n    return node;\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "8338a200",
+                "title": "Make Split Node",
+                "content": "Make Split Node\n\nSignature: NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\nMethod: makeSplitNode\nReturns: NodePtr\nParameters:\n    first  NodePtr\n    second NodePtr\n    kind   SplitKind\n    ratio  double\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Split;\n    node->kind = kind;\n    node->ratio = ratio;\n    node->first = std::move(first);\n    node->second = std::move(second);\n\n    return node;\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b3b7a7e8",
+                "title": "Replace Node",
+                "content": "Replace Node\n\nSignature: bool replaceNode(NodePtr& node, const NodePtr& target, const NodePtr& replacement)\nMethod: replaceNode\nReturns: bool\nParameters:\n    node        NodePtr&\n    target      const NodePtr&\n    replacement const NodePtr&\nCalled By:\n    [replaceNode](_Replace Node_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "97d6b02e",
+                "title": "Replace Pane",
+                "content": "Replace Pane\n\nSignature: bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement)\nMethod: replacePane\nReturns: bool\nParameters:\n    node        NodePtr&\n    paneId      int\n    replacement const NodePtr&\nCalled By:\n    [replacePane](_Replace Pane_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "d1c2e73a",
+            "title": "node.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "3c152b05",
+                "title": "Forward Declarations",
+                "content": "Forward Declarations\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane);\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio = 0.5);\nNodePtr findPane(const NodePtr& node, int paneId);\nNodePtr findParent(const NodePtr& node, int paneId);\nNodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind);\nbool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);\nbool replaceNode(NodePtr& node, const NodePtr& target, const NodePtr& replacement);",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "9b6543f9",
+                "title": "Node Struct (and variables)",
+                "content": "Node Struct (and variables)\n\nclass Node;\nusing NodePtr = std::shared_ptr<Node>;\nenum class SplitKind { SideBySide, Stacked };\n\nstruct Node\n{\n    enum class Type { Leaf, Split };\n\n    Type type = Type::Leaf;\n    SplitKind kind = SplitKind::SideBySide;\n    double ratio = 0.5;\n    NodePtr first;\n    NodePtr second;\n    std::shared_ptr<Pane> pane;\n};",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
           }
         ],
         "expanded": false
