@@ -40,6 +40,9 @@ void Buffer::enterAlternateScreen() {
   state.style = current_style_;
   state.saved_style = saved_style_;
   state.scroll_offset = scroll_offset_;
+  state.scroll_top = scroll_top_;
+  state.scroll_bottom = scroll_bottom_;
+  state.scroll_region_set = scroll_region_set_;
   state.wrap_pending = wrap_pending_;
   state.navigation = navigation_;
   saved_screen_ = std::move(state);
@@ -52,6 +55,9 @@ void Buffer::enterAlternateScreen() {
   current_style_ = Style{};
   saved_style_ = Style{};
   scroll_offset_ = 0;
+  scroll_top_ = 0;
+  scroll_bottom_ = -1;
+  scroll_region_set_ = false;
   wrap_pending_ = false;
   navigation_ = {0, rows_ - 1};
   clearSelection();
@@ -70,6 +76,9 @@ void Buffer::leaveAlternateScreen() {
   current_style_ = state.style;
   saved_style_ = state.saved_style;
   scroll_offset_ = state.scroll_offset;
+  scroll_top_ = state.scroll_top;
+  scroll_bottom_ = state.scroll_bottom;
+  scroll_region_set_ = state.scroll_region_set;
   wrap_pending_ = state.wrap_pending;
   navigation_ = state.navigation;
   clearSelection();
@@ -164,8 +173,19 @@ void Buffer::carriageReturn() {
 
 void Buffer::lineFeed() {
   wrap_pending_ = false;
-  ++cursor_y_;
-  ensureLine(cursor_y_);
+  if (scroll_region_set_) {
+    const auto bounds = scrollBounds();
+    if (cursor_y_ >= bounds.second) {
+      shiftLines(bounds.first, bounds.second, 1, false);
+      cursor_y_ = bounds.second;
+    } else {
+      ++cursor_y_;
+      ensureLine(cursor_y_);
+    }
+  } else {
+    ++cursor_y_;
+    ensureLine(cursor_y_);
+  }
   scroll_offset_ = 0;
   clearSelection();
 }
@@ -214,6 +234,71 @@ void Buffer::eraseDisplay(int mode) {
       lines_[y].assign(columns_, blankCell());
     }
   }
+}
+
+std::pair<int, int> Buffer::scrollBounds() const {
+  if (scroll_region_set_) {
+    const int base = visibleStart();
+    const int bottom = scroll_bottom_ < 0 ? rows_ - 1 : scroll_bottom_;
+    return {base + scroll_top_, base + bottom};
+  }
+  const int base = visibleStart();
+  return {base, base + rows_ - 1};
+}
+
+void Buffer::shiftLines(int top, int bottom, int count, bool down) {
+  if (top > bottom) return;
+  while (static_cast<int>(lines_.size()) <= bottom) {
+    lines_.emplace_back(columns_, blankCell());
+  }
+  count = clampInt(count, 0, bottom - top + 1);
+  for (int i = 0; i < count; ++i) {
+    if (down) {
+      lines_.insert(lines_.begin() + top,
+                    std::vector<Cell>(columns_, blankCell()));
+      lines_.erase(lines_.begin() + bottom + 1);
+    } else {
+      lines_.erase(lines_.begin() + top);
+      lines_.insert(lines_.begin() + bottom,
+                    std::vector<Cell>(columns_, blankCell()));
+    }
+  }
+  clearSelection();
+}
+
+void Buffer::setScrollRegion(int top, int bottom) {
+  if (top <= 0 && bottom <= 0) {
+    scroll_top_ = 0;
+    scroll_bottom_ = -1;
+    scroll_region_set_ = false;
+    return;
+  }
+  const int first = clampInt(top - 1, 0, rows_ - 1);
+  const int last = bottom > 0 ? clampInt(bottom - 1, first, rows_ - 1)
+                              : rows_ - 1;
+  scroll_top_ = first;
+  scroll_bottom_ = last;
+  scroll_region_set_ = true;
+}
+
+void Buffer::insertLines(int count) {
+  const auto bounds = scrollBounds();
+  shiftLines(bounds.first, bounds.second, count, true);
+}
+
+void Buffer::deleteLines(int count) {
+  const auto bounds = scrollBounds();
+  shiftLines(bounds.first, bounds.second, count, false);
+}
+
+void Buffer::scrollRegionUp(int count) {
+  const auto bounds = scrollBounds();
+  shiftLines(bounds.first, bounds.second, count, false);
+}
+
+void Buffer::scrollRegionDown(int count) {
+  const auto bounds = scrollBounds();
+  shiftLines(bounds.first, bounds.second, count, true);
 }
 
 void Buffer::insertBlanks(int count) {
@@ -266,6 +351,9 @@ void Buffer::reset() {
   current_style_ = Style{};
   saved_style_ = Style{};
   scroll_offset_ = 0;
+  scroll_top_ = 0;
+  scroll_bottom_ = -1;
+  scroll_region_set_ = false;
   clearSelection();
 }
 

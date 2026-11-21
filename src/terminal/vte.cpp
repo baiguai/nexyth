@@ -304,6 +304,11 @@ void Vte::handleCsi(unsigned char final) {
     case 'f': setCursor(std::max(0, second - 1), std::max(0, first - 1)); break;
     case 'J': buffer_.eraseDisplay(first); break;
     case 'K': buffer_.eraseLine(first); break;
+    case 'L': buffer_.insertLines(std::max(1, first)); break;
+    case 'M': buffer_.deleteLines(std::max(1, first)); break;
+    case 'r': buffer_.setScrollRegion(first, second); break;
+    case 'S': buffer_.scrollRegionUp(std::max(1, first)); break;
+    case 'T': buffer_.scrollRegionDown(std::max(1, first)); break;
     case '@': buffer_.insertBlanks(std::max(1, first)); break;
     case 'P': buffer_.deleteCharacters(std::max(1, first)); break;
     case 'X': buffer_.eraseCharacters(std::max(1, first)); break;
