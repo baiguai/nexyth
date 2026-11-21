@@ -702,64 +702,119 @@ namespace nexyth
     }
     //!
 
-void App::startSelection() {
-  if (mode_ != Mode::Visual || selecting_) return;
-  if (auto pane = workspace_.focusedPane()) {
-    std::lock_guard<std::mutex> lock(pane->mutex());
-    pane->buffer().setAnchor(pane->buffer().navigation());
-  }
-  selecting_ = true;
-  refresh();
-}
+    /*!
+        Start Selection
 
-void App::exitVisual() {
-  if (selecting_) {
-    selecting_ = false;
-    if (auto pane = workspace_.focusedPane()) {
-      std::lock_guard<std::mutex> lock(pane->mutex());
-      pane->buffer().clearSelection();
+        !_method
+    */
+    void App::startSelection()
+    {
+        if (mode_ != Mode::Visual || selecting_) return;
+
+        if (auto pane = workspace_.focusedPane())
+        {
+            std::lock_guard<std::mutex> lock(pane->mutex());
+            pane->buffer().setAnchor(pane->buffer().navigation());
+        }
+
+        selecting_ = true;
+        refresh();
     }
-    refresh();
-    return;
-  }
-  setMode(Mode::Normal);
-}
+    //!
 
-void App::toggleHelp() {
-  if (overlay_ == Overlay::Help) {
-    closeOverlay();
-    return;
-  }
-  overlay_ = Overlay::Help;
-  help_filter_.clear();
-  help_filtering_ = false;
-  help_offset_ = 0;
-  clearPending();
-  refresh();
-}
+    /*!
+        Exit Visual Mode
 
-void App::closeOverlay() {
-  overlay_ = Overlay::None;
-  clearPending();
-  refresh();
-}
+        !_method
+    */
+    void App::exitVisual() {
+        if (selecting_)
+        {
+            selecting_ = false;
 
-void App::toggleTabs() {
-  overlay_ = overlay_ == Overlay::Tabs ? Overlay::None : Overlay::Tabs;
-  clearPending();
-  refresh();
-}
+            if (auto pane = workspace_.focusedPane())
+            {
+                std::lock_guard<std::mutex> lock(pane->mutex());
+                pane->buffer().clearSelection();
+            }
 
-void App::toggleThemes() {
-  if (overlay_ == Overlay::Themes) {
-    themeCancel();
-    return;
-  }
-  overlay_ = Overlay::Themes;
-  theme_index_ = 0;
-  clearPending();
-  refresh();
-}
+            refresh();
+            return;
+        }
+
+        setMode(Mode::Normal);
+    }
+    //!
+
+    /*!
+        Toggle Help
+
+        !_method
+    */
+    void App::toggleHelp()
+    {
+        if (overlay_ == Overlay::Help)
+        {
+            closeOverlay();
+            return;
+        }
+
+        overlay_ = Overlay::Help;
+        help_filter_.clear();
+        help_filtering_ = false;
+        help_offset_ = 0;
+
+        clearPending();
+        refresh();
+    }
+    //!
+
+    /*!
+        Close the Overlay
+
+        !_method
+    */
+    void App::closeOverlay()
+    {
+        overlay_ = Overlay::None;
+
+        clearPending();
+        refresh();
+    }
+    //!
+
+    /*!
+        Toggle Tabs
+
+        !_method
+    */
+    void App::toggleTabs()
+    {
+        overlay_ = overlay_ == Overlay::Tabs ? Overlay::None : Overlay::Tabs;
+        clearPending();
+        refresh();
+    }
+    //!
+
+    /*!
+        Toggle the Themes
+
+        !_method
+    */
+    void App::toggleThemes()
+    {
+        if (overlay_ == Overlay::Themes)
+        {
+            themeCancel();
+            return;
+        }
+
+        overlay_ = Overlay::Themes;
+        theme_index_ = 0;
+        clearPending();
+        refresh();
+    }
+    //!
 
 void App::themeNext() {
   if (config_.themes.empty()) return;

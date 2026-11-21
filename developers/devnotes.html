@@ -1068,14 +1068,14 @@
               {
                 "id": "4a06c696",
                 "title": "List the Bindings",
-                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [app.cpp:1292](_app.cpp_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "16578984",
                 "title": "Load Configuration",
-                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [Ftxui App](_Ftxui App_)\n    [setMode](_Set the Mode_)",
+                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [app.cpp:1272](_app.cpp_)\n    [app.cpp:1275](_app.cpp_)\n    [Ftxui App](_Ftxui App_)",
                 "children": [],
                 "expanded": false
               },
@@ -1110,14 +1110,14 @@
               {
                 "id": "f934a0d3",
                 "title": "Resolve Command",
-                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [app.cpp:1236](_app.cpp_)\n    [app.cpp:1238](_app.cpp_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "af032daa",
                 "title": "Save the Color Settings",
-                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [setMode](_Set the Mode_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
+                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [app.cpp:835](_app.cpp_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
                 "children": [],
                 "expanded": false
               },
@@ -1248,7 +1248,7 @@
               {
                 "id": "38aa0acf",
                 "title": "Execute",
-                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [app.cpp:1239](_app.cpp_)",
                 "children": [],
                 "expanded": false
               },
@@ -1313,14 +1313,42 @@
               {
                 "id": "1289a1e4",
                 "title": "Case Insensitive Contains",
-                "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [app.cpp:1296](_app.cpp_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "dd8b228f",
+                "title": "Close the Overlay",
+                "content": "Close the Overlay\n\nSignature: void App::closeOverlay()\nMethod: closeOverlay\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleHelp](_Toggle Help_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "642d0f75",
+                "title": "Enter Normal Mode",
+                "content": "Enter Normal Mode\n\nSignature: void App::enterNormal(bool home, bool end)\nMethod: enterNormal\nReturns: void App\nParameters:\n    home bool\n    end  bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "1682a68d",
+                "title": "Enter Visual Mode",
+                "content": "Enter Visual Mode\n\nSignature: void App::enterVisual()\nMethod: enterVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "880f8da8",
+                "title": "Exit Visual Mode",
+                "content": "Exit Visual Mode\n\nSignature: void App::exitVisual()\nMethod: exitVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "c1f7ffb3",
                 "title": "For Each Split",
-                "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [forEachSplit](_For Each Split_)\n    [setMode](_Set the Mode_)",
+                "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [app.cpp:1071](_app.cpp_)\n    [forEachSplit](_For Each Split_)",
                 "children": [],
                 "expanded": false
               },
@@ -1383,21 +1411,49 @@
               {
                 "id": "9bdd6c4d",
                 "title": "Set the Mode",
-                "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [setMode](_Set the Mode_)\n    [The Action Registry](_The Action Registry_)",
+                "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [app.cpp:1204](_app.cpp_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b7b09b1f",
+                "title": "Start Selection",
+                "content": "Start Selection\n\nSignature: void App::startSelection()\nMethod: startSelection\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "3cafdcca",
+                "title": "Toggle Help",
+                "content": "Toggle Help\n\nSignature: void App::toggleHelp()\nMethod: toggleHelp\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f0f7f185",
+                "title": "Toggle Tabs",
+                "content": "Toggle Tabs\n\nSignature: void App::toggleTabs()\nMethod: toggleTabs\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "8dfc9bde",
+                "title": "Toggle the Themes",
+                "content": "Toggle the Themes\n\nSignature: void App::toggleThemes()\nMethod: toggleThemes\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "e3d8fab6",
                 "title": "Unescape Keys",
-                "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [app.cpp:1218](_app.cpp_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "55b63276",
                 "title": "Write System Clipboard",
-                "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
+                "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [app.cpp:1227](_app.cpp_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
                 "children": [],
                 "expanded": false
               }
