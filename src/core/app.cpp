@@ -24,448 +24,683 @@
 #include "../layout/node.hpp"
 #include "../utils.hpp"
 
-namespace nexyth {
-namespace {
+namespace nexyth
+{
+    namespace
+    {
+        /*!
+            Refresh Token
 
-constexpr const char* kRefreshToken = "__nexyth_refresh__";
+        */
+        //>>
+        constexpr const char* kRefreshToken = "__nexyth_refresh__";
+        //<<
+        //!
 
-std::string unescapeKeys(const std::string& text) {
-  std::string result;
-  for (std::size_t i = 0; i < text.size(); ++i) {
-    if (text[i] != '\\' || i + 1 >= text.size()) {
-      result += text[i];
-      continue;
+        /*!
+            Unescape Keys
+
+            !_method
+        */
+        std::string unescapeKeys(const std::string& text)
+        {
+            std::string result;
+
+            for (std::size_t i = 0; i < text.size(); ++i)
+            {
+                if (text[i] != '\\' || i + 1 >= text.size())
+                {
+                    result += text[i];
+                    continue;
+                }
+
+                const char next = text[++i];
+
+                if (next == 'n') result += '\n';
+                else if (next == 'r') result += '\r';
+                else if (next == 't') result += '\t';
+                else if (next == 'e') result += '\x1B';
+                else if (next == '\\') result += '\\';
+                else
+                {
+                    result += '\\';
+                    result += next;
+                }
+            }
+            return result;
+        }
+        //!
+
+        /*!
+            Case Insensitive Contains
+
+            !_method
+        */
+        bool containsInsensitive(const std::string& haystack, const std::string& needle)
+        {
+            return lower(haystack).find(lower(needle)) != std::string::npos;
+        }
+        //!
+
+        /*!
+            For Each Split
+
+            !_method
+        */
+        void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)
+        {
+            if (!node || node->type != Node::Type::Split) return;
+
+            callback(node);
+            forEachSplit(node->first, callback);
+            forEachSplit(node->second, callback);
+        }
+        //!
+
+        /*!
+            Run Clipboard Command
+
+            !_method
+        */
+        bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)
+        {
+            int pipes[2];
+            if (pipe(pipes) != 0) return false;
+            const pid_t pid = fork();
+
+            if (pid < 0)
+            {
+                close(pipes[0]);
+                close(pipes[1]);
+                return false;
+            }
+
+            if (pid == 0)
+            {
+                close(pipes[1]);
+                dup2(pipes[0], STDIN_FILENO);
+                close(pipes[0]);
+                const int devnull = open("/dev/null", O_WRONLY);
+
+                if (devnull >= 0)
+                {
+                    dup2(devnull, STDOUT_FILENO);
+                    dup2(devnull, STDERR_FILENO);
+                    close(devnull);
+                }
+
+                std::vector<char*> args;
+
+                for (const auto& argument : argv)
+                {
+                    args.push_back(const_cast<char*>(argument.c_str()));
+                }
+
+                args.push_back(nullptr);
+                execvp(args[0], args.data());
+                _exit(127);
+            }
+
+            close(pipes[0]);
+            struct sigaction ignorePipe {};
+            struct sigaction previousPipe {};
+            ignorePipe.sa_handler = SIG_IGN;
+            sigemptyset(&ignorePipe.sa_mask);
+            sigaction(SIGPIPE, &ignorePipe, &previousPipe);
+            std::size_t offset = 0;
+
+            while (offset < text.size())
+            {
+                const ssize_t written =
+                write(pipes[1], text.data() + offset, text.size() - offset);
+
+                if (written > 0)
+                {
+                    offset += static_cast<std::size_t>(written);
+                    continue;
+                }
+                if (written < 0 && errno == EINTR) continue;
+                break;
+            }
+
+            close(pipes[1]);
+            sigaction(SIGPIPE, &previousPipe, nullptr);
+
+            int status = 0;
+
+            while (waitpid(pid, &status, 0) < 0 && errno == EINTR)
+            {
+            }
+
+            return WIFEXITED(status) && WEXITSTATUS(status) == 0;
+        }
+        //!
+
+        /*!
+            Write System Clipboard
+
+            !_method
+        */
+        bool writeSystemClipboard(const std::string& text)
+        {
+            /*|
+                Commands:
+
+            */
+            //>>
+            static const std::vector<std::vector<std::string>> commands = {
+                {"wl-copy"},
+                {"xclip", "-selection", "clipboard"},
+                {"xsel", "--clipboard", "--input"},
+                {"pbcopy"},
+                {"clip.exe"},
+            };
+            //<<
+            //!
+
+            for (const auto& command : commands)
+            {
+                if (runClipboardCommand(command, text)) return true;
+            }
+            return false;
+        }
+        //!
     }
-    const char next = text[++i];
-    if (next == 'n') result += '\n';
-    else if (next == 'r') result += '\r';
-    else if (next == 't') result += '\t';
-    else if (next == 'e') result += '\x1B';
-    else if (next == '\\') result += '\\';
-    else {
-      result += '\\';
-      result += next;
+
+    /*!
+        Ftxui App
+
+    */
+    //>>
+    App::App(ftxui::ScreenInteractive* screen, std::string configPath)
+        : screen_(screen),
+          config_(Config::load(configPath)),
+          workspace_(config_.settings.shell, config_.settings.scrollback,
+                     [this](int) { refresh(); }),
+          renderer_(*this)
+    {
+        workspace_.createInitial(80, 24);
+        for (const auto& error : config_.errors) statusMessage(error);
+        refresh_thread_ = std::thread([this] { refreshLoop(); });
     }
-  }
-  return result;
-}
+    //<<
+    //!
 
-bool containsInsensitive(const std::string& haystack,
-                         const std::string& needle) {
-  return lower(haystack).find(lower(needle)) != std::string::npos;
-}
+    /*!
+        Ftxui App Destructor
 
-void forEachSplit(const NodePtr& node,
-                  const std::function<void(const NodePtr&)>& callback) {
-  if (!node || node->type != Node::Type::Split) return;
-  callback(node);
-  forEachSplit(node->first, callback);
-  forEachSplit(node->second, callback);
-}
-
-bool runClipboardCommand(const std::vector<std::string>& argv,
-                         const std::string& text) {
-  int pipes[2];
-  if (pipe(pipes) != 0) return false;
-  const pid_t pid = fork();
-  if (pid < 0) {
-    close(pipes[0]);
-    close(pipes[1]);
-    return false;
-  }
-  if (pid == 0) {
-    close(pipes[1]);
-    dup2(pipes[0], STDIN_FILENO);
-    close(pipes[0]);
-    const int devnull = open("/dev/null", O_WRONLY);
-    if (devnull >= 0) {
-      dup2(devnull, STDOUT_FILENO);
-      dup2(devnull, STDERR_FILENO);
-      close(devnull);
+    */
+    //>>
+    App::~App()
+    {
+        refresh_running_.store(false, std::memory_order_relaxed);
+        if (refresh_thread_.joinable()) refresh_thread_.join();
     }
-    std::vector<char*> args;
-    for (const auto& argument : argv) {
-      args.push_back(const_cast<char*>(argument.c_str()));
+    //<<
+    //!
+
+    /*!
+        Ftxui Render
+
+    */
+    //>>
+    ftxui::Element App::Render()
+    {
+        const auto size = ftxui::Terminal::Size();
+        const int width = std::max(10, size.dimx);
+        const int height = std::max(4, size.dimy);
+        renderer_.computeLayout(width, height);
+
+        if (auto* active = ftxui::ScreenInteractive::Active())
+        {
+            ftxui::Screen::Cursor cursor;
+            cursor.shape = ftxui::Screen::Cursor::Hidden;
+
+            if (const auto position = renderer_.terminalCursorScreenPosition())
+            {
+                cursor.x = position->x;
+                cursor.y = position->y;
+                cursor.shape = ftxui::Screen::Cursor::Bar;
+            }
+            active->SetCursor(cursor);
+        }
+
+        return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)
+        {
+            renderer_.draw(c, width, height);
+        }) |
+        ftxui::flex;
     }
-    args.push_back(nullptr);
-    execvp(args[0], args.data());
-    _exit(127);
-  }
+    //<<
+    //!
 
-  close(pipes[0]);
-  struct sigaction ignorePipe {};
-  struct sigaction previousPipe {};
-  ignorePipe.sa_handler = SIG_IGN;
-  sigemptyset(&ignorePipe.sa_mask);
-  sigaction(SIGPIPE, &ignorePipe, &previousPipe);
-  std::size_t offset = 0;
-  while (offset < text.size()) {
-    const ssize_t written =
-        write(pipes[1], text.data() + offset, text.size() - offset);
-    if (written > 0) {
-      offset += static_cast<std::size_t>(written);
-      continue;
+    /*!
+        Ftxui On Event
+
+        !_method
+    */
+    bool App::OnEvent(ftxui::Event event)
+    {
+        if (event.input() == kRefreshToken) return true;
+        if (event.is_mouse()) return handleMouse(event);
+        if (event.input().empty()) return false;
+        return handleKey(event);
     }
-    if (written < 0 && errno == EINTR) continue;
-    break;
-  }
-  close(pipes[1]);
-  sigaction(SIGPIPE, &previousPipe, nullptr);
+    //!
 
-  int status = 0;
-  while (waitpid(pid, &status, 0) < 0 && errno == EINTR) {
-  }
-  return WIFEXITED(status) && WEXITSTATUS(status) == 0;
-}
+    /*!
+        Handle the Key Combination
 
-bool writeSystemClipboard(const std::string& text) {
-  static const std::vector<std::vector<std::string>> commands = {
-      {"wl-copy"},
-      {"xclip", "-selection", "clipboard"},
-      {"xsel", "--clipboard", "--input"},
-      {"pbcopy"},
-      {"clip.exe"},
-  };
-  for (const auto& command : commands) {
-    if (runClipboardCommand(command, text)) return true;
-  }
-  return false;
-}
+        !_method
+    */
+    bool App::handleKey(const ftxui::Event& event)
+    {
+        const std::string raw = event.input();
+        std::string token = keys::normalizeToken(raw);
 
-}  // namespace
+        if (raw == "\x1B\x1B") token = "<C-Esc>";
 
-App::App(ftxui::ScreenInteractive* screen, std::string configPath)
-    : screen_(screen),
-      config_(Config::load(configPath)),
-      workspace_(config_.settings.shell, config_.settings.scrollback,
-                 [this](int) { refresh(); }),
-      renderer_(*this) {
-  workspace_.createInitial(80, 24);
-  for (const auto& error : config_.errors) statusMessage(error);
-  refresh_thread_ = std::thread([this] { refreshLoop(); });
-}
+        if (raw == "\x1B" && mode_ == Mode::Insert)
+        {
+            const auto now = std::chrono::steady_clock::now();
 
-App::~App() {
-  refresh_running_.store(false, std::memory_order_relaxed);
-  if (refresh_thread_.joinable()) refresh_thread_.join();
-}
+            if (now - last_escape_time_ < std::chrono::milliseconds(350))
+            {
+                token = "<C-Esc>";
+                last_escape_time_ = {};
+            }
+            else
+            {
+                last_escape_time_ = now;
+            }
+        }
 
-ftxui::Element App::Render() {
-  const auto size = ftxui::Terminal::Size();
-  const int width = std::max(10, size.dimx);
-  const int height = std::max(4, size.dimy);
-  renderer_.computeLayout(width, height);
+        if (token.empty()) return false;
 
-  if (auto* active = ftxui::ScreenInteractive::Active()) {
-    ftxui::Screen::Cursor cursor;
-    cursor.shape = ftxui::Screen::Cursor::Hidden;
-    if (const auto position = renderer_.terminalCursorScreenPosition()) {
-      cursor.x = position->x;
-      cursor.y = position->y;
-      cursor.shape = ftxui::Screen::Cursor::Bar;
-    }
-    active->SetCursor(cursor);
-  }
+        if (clock_active_ && (token == "q" || mode_ == Mode::Insert))
+        {
+            if (auto pane = workspace_.focusedPane())
+            {
+                if (pane->id() == clock_pane_id_)
+                {
+                    closeClock();
+                    return true;
+                }
+            }
+        }
 
-  return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c) {
-           renderer_.draw(c, width, height);
-         }) |
-         ftxui::flex;
-}
+        if (overlay_ == Overlay::Rename)
+        {
+            if (token == "<Esc>")
+            {
+                renameTabCancel();
+                return true;
+            }
 
-bool App::OnEvent(ftxui::Event event) {
-  if (event.input() == kRefreshToken) return true;
-  if (event.is_mouse()) return handleMouse(event);
-  if (event.input().empty()) return false;
-  return handleKey(event);
-}
+            if (token == "<CR>")
+            {
+                renameTabApply();
+                return true;
+            }
 
-bool App::handleKey(const ftxui::Event& event) {
-  const std::string raw = event.input();
-  std::string token = keys::normalizeToken(raw);
+            if (token == "<BS>" || raw == "\x7F")
+            {
+                backspaceRenameChar();
+                return true;
+            }
 
-  if (raw == "\x1B\x1B") token = "<C-Esc>";
-  if (raw == "\x1B" && mode_ == Mode::Insert) {
-    const auto now = std::chrono::steady_clock::now();
-    if (now - last_escape_time_ < std::chrono::milliseconds(350)) {
-      token = "<C-Esc>";
-      last_escape_time_ = {};
-    } else {
-      last_escape_time_ = now;
-    }
-  }
+            if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20)
+            {
+                appendRenameChar(raw[0]);
+                return true;
+            }
 
-  if (token.empty()) return false;
+            return true;
+        }
 
-  if (clock_active_ &&
-      (token == "q" || mode_ == Mode::Insert)) {
-    if (auto pane = workspace_.focusedPane()) {
-      if (pane->id() == clock_pane_id_) {
-        closeClock();
+        if (overlay_ == Overlay::Help)
+        {
+            if (token == "<Up>")
+            {
+                helpScroll(-1);
+                return true;
+            }
+            if (token == "<Down>")
+            {
+                helpScroll(1);
+                return true;
+            }
+            if (token == "<C-u>")
+            {
+                helpScroll(-1);
+                return true;
+            }
+            if (token == "<C-d>")
+            {
+                helpScroll(1);
+                return true;
+            }
+            if (token == "<BS>" || raw == "\x7F")
+            {
+                backspaceHelpFilter();
+                return true;
+            }
+
+            if (token == "<Esc>")
+            {
+                if (help_filtering_)
+                {
+                    help_filtering_ = false;
+                    help_filter_.clear();
+                    help_offset_ = 0;
+                    refresh();
+                }
+                else
+                {
+                    closeOverlay();
+                }
+                return true;
+            }
+
+            if (token == "<CR>")
+            {
+                closeOverlay();
+                return true;
+            }
+
+            if (token == "/" && !help_filtering_)
+            {
+                help_filtering_ = true;
+                help_filter_.clear();
+                help_offset_ = 0;
+                refresh();
+                return true;
+            }
+
+            if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20)
+            {
+                appendHelpFilter(raw[0]);
+                return true;
+            }
+
+            return true;
+        }
+
+        if (overlay_ == Overlay::Tabs) {
+            if (token == "<Esc>" || token == "q")
+            {
+                closeOverlay();
+                return true;
+            }
+
+            if (token.size() == 1 && std::isdigit(static_cast<unsigned char>(token[0])))
+            {
+                selectTab(token[0] - '0');
+                closeOverlay();
+                return true;
+            }
+
+            return true;
+        }
+
+        if (overlay_ == Overlay::Themes)
+        {
+            if (token == "<Esc>" || token == "q" || (token == "?" && !help_filtering_))
+            {
+                themeCancel();
+                return true;
+            }
+            if (token == "<Up>" || token == "k")
+            {
+                themePrevious();
+                return true;
+            }
+            if (token == "<Down>" || token == "j")
+            {
+                themeNext();
+                return true;
+            }
+            if (token == "<CR>" || token == "Enter")
+            {
+                themeApply();
+                return true;
+            }
+
+            return true;
+        }
+
+        if (resize_mode_ && token == "<Esc>")
+        {
+            resize_mode_ = false;
+            refresh();
+            return true;
+        }
+
+        if (resize_mode_)
+        {
+            if (token == "h" || token == "H")
+            {
+                resizeFocused(-1, 0);
+                return true;
+            }
+            if (token == "l" || token == "L")
+            {
+                resizeFocused(1, 0);
+                return true;
+            }
+            if (token == "k" || token == "K")
+            {
+                resizeFocused(0, -1);
+                return true;
+            }
+            if (token == "j" || token == "J")
+            {
+                resizeFocused(0, 1);
+                return true;
+            }
+            if (token == "=")
+            {
+                resizeEqual();
+                return true;
+            }
+        }
+
+        const auto now = std::chrono::steady_clock::now();
+
+        if (!pending_.empty() && now - pending_time_ > std::chrono::milliseconds(1200))
+        {
+            clearPending();
+        }
+
+        if (!pending_.empty())
+        {
+            const std::string sequence = pending_ + token;
+
+            if (const Binding* sequenceBinding = config_.findBinding(mode_, sequence))
+            {
+                clearPending();
+                runCommand(sequenceBinding->command.action,
+                sequenceBinding->command.args);
+                return true;
+            }
+
+            if (config_.hasPrefix(mode_, sequence))
+            {
+                pending_ = sequence;
+                pending_time_ = now;
+                refresh();
+                return true;
+            }
+
+            clearPending();
+        }
+
+        const Binding* binding = config_.findBinding(mode_, token);
+
+        if (binding != nullptr)
+        {
+            clearPending();
+            runCommand(binding->command.action, binding->command.args);
+            return true;
+        }
+
+        if (mode_ == Mode::Insert)
+        {
+            clearPending();
+            if (auto pane = workspace_.focusedPane())
+            {
+                pane->write(token == "<CR>" ? "\r" : raw);
+            }
+            return true;
+        }
+
+        const std::string sequence = token;
+        binding = config_.findBinding(mode_, sequence);
+
+        if (binding != nullptr) {
+            clearPending();
+            runCommand(binding->command.action, binding->command.args);
+            return true;
+        }
+
+        if (config_.hasPrefix(mode_, sequence))
+        {
+            pending_ = sequence;
+            pending_time_ = now;
+            refresh();
+            return true;
+        }
+
+        clearPending();
+        statusMessage("unbound key: " + sequence);
         return true;
-      }
     }
-  }
+    //!
 
-  if (overlay_ == Overlay::Rename) {
-    if (token == "<Esc>") {
-      renameTabCancel();
-      return true;
-    }
-    if (token == "<CR>") {
-      renameTabApply();
-      return true;
-    }
-    if (token == "<BS>" || raw == "\x7F") {
-      backspaceRenameChar();
-      return true;
-    }
-    if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20) {
-      appendRenameChar(raw[0]);
-      return true;
-    }
-    return true;
-  }
+    /*!
+        Handle the Mouse
 
-  if (overlay_ == Overlay::Help) {
-    if (token == "<Up>") {
-      helpScroll(-1);
-      return true;
+        !_method
+    */
+    bool App::handleMouse(ftxui::Event event) {
+        const auto mouse = event.mouse();
+
+        for (const auto& entry : renderer_.paneRects())
+        {
+            if (!entry.pane || !entry.border.contains(mouse.x, mouse.y)) continue;
+            workspace_.setFocus(entry.pane->id());
+
+            if (mouse.button == ftxui::Mouse::WheelUp || mouse.button == ftxui::Mouse::WheelDown)
+            {
+                scroll(mouse.button == ftxui::Mouse::WheelUp ? -3 : 3);
+                return true;
+            }
+
+            if (mouse.button == ftxui::Mouse::Left)
+            {
+                if (mode_ != Mode::Visual) setMode(Mode::Visual);
+
+                selecting_ = true;
+
+                {
+                    std::lock_guard<std::mutex> lock(entry.pane->mutex());
+                    Buffer& buffer = entry.pane->buffer();
+                    const int x = std::clamp(mouse.x - entry.inner.x, 0, buffer.columns() - 1);
+                    const int y = std::clamp(
+                        mouse.y - entry.inner.y +
+                        buffer.visibleStart(),
+                        0,
+                        std::max
+                        (
+                            0, static_cast<int>(
+                            buffer.lines().size()) -
+                            1
+                        )
+                    );
+                    buffer.setAnchor({x, y});
+                    buffer.setNavigation({x, y});
+                }
+                refresh();
+                return true;
+            }
+            return true;
+        }
+        return false;
     }
-    if (token == "<Down>") {
-      helpScroll(1);
-      return true;
-    }
-    if (token == "<C-u>") {
-      helpScroll(-1);
-      return true;
-    }
-    if (token == "<C-d>") {
-      helpScroll(1);
-      return true;
-    }
-    if (token == "<BS>" || raw == "\x7F") {
-      backspaceHelpFilter();
-      return true;
-    }
-    if (token == "<Esc>") {
-      if (help_filtering_) {
-        help_filtering_ = false;
-        help_filter_.clear();
-        help_offset_ = 0;
+    //!
+
+    /*!
+        Set the Mode
+
+        !_method
+    */
+    void App::setMode(Mode mode)
+    {
+        if (mode_ == mode) return;
+
+        if (mode != Mode::Visual && selecting_)
+        {
+            selecting_ = false;
+
+            if (auto pane = workspace_.focusedPane())
+            {
+                std::lock_guard<std::mutex> lock(pane->mutex());
+                pane->buffer().clearSelection();
+            }
+        }
+
+        mode_ = mode;
+        clearPending();
+
+        if (mode == Mode::Insert)
+        {
+            if (auto pane = workspace_.focusedPane())
+            {
+                std::lock_guard<std::mutex> lock(pane->mutex());
+                pane->buffer().scrollToBottom();
+            }
+        }
         refresh();
-      } else {
-        closeOverlay();
-      }
-      return true;
     }
-    if (token == "<CR>") {
-      closeOverlay();
-      return true;
-    }
-    if (token == "/" && !help_filtering_) {
-      help_filtering_ = true;
-      help_filter_.clear();
-      help_offset_ = 0;
-      refresh();
-      return true;
-    }
-    if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20) {
-      appendHelpFilter(raw[0]);
-      return true;
-    }
-    return true;
-  }
+    //!
 
-  if (overlay_ == Overlay::Tabs) {
-    if (token == "<Esc>" || token == "q") {
-      closeOverlay();
-      return true;
-    }
-    if (token.size() == 1 && std::isdigit(static_cast<unsigned char>(token[0]))) {
-      selectTab(token[0] - '0');
-      closeOverlay();
-      return true;
-    }
-    return true;
-  }
+    /*!
+        Enter Normal Mode
 
-  if (overlay_ == Overlay::Themes) {
-    if (token == "<Esc>" || token == "q" ||
-        (token == "?" && !help_filtering_)) {
-      themeCancel();
-      return true;
-    }
-    if (token == "<Up>" || token == "k") {
-      themePrevious();
-      return true;
-    }
-    if (token == "<Down>" || token == "j") {
-      themeNext();
-      return true;
-    }
-    if (token == "<CR>" || token == "Enter") {
-      themeApply();
-      return true;
-    }
-    return true;
-  }
+        !_method
+    */
+    void App::enterNormal(bool home, bool end)
+    {
+        setMode(Mode::Insert);
 
-  if (resize_mode_ && token == "<Esc>") {
-    resize_mode_ = false;
-    refresh();
-    return true;
-  }
-  if (resize_mode_) {
-    if (token == "h" || token == "H") {
-      resizeFocused(-1, 0);
-      return true;
-    }
-    if (token == "l" || token == "L") {
-      resizeFocused(1, 0);
-      return true;
-    }
-    if (token == "k" || token == "K") {
-      resizeFocused(0, -1);
-      return true;
-    }
-    if (token == "j" || token == "J") {
-      resizeFocused(0, 1);
-      return true;
-    }
-    if (token == "=") {
-      resizeEqual();
-      return true;
-    }
-  }
+        if (auto pane = workspace_.focusedPane())
+        {
+            std::lock_guard<std::mutex> lock(pane->mutex());
 
-  const auto now = std::chrono::steady_clock::now();
-  if (!pending_.empty() &&
-      now - pending_time_ > std::chrono::milliseconds(1200)) {
-    clearPending();
-  }
-  if (!pending_.empty()) {
-    const std::string sequence = pending_ + token;
-    if (const Binding* sequenceBinding = config_.findBinding(mode_, sequence)) {
-      clearPending();
-      runCommand(sequenceBinding->command.action,
-                 sequenceBinding->command.args);
-      return true;
+            if (home) pane->write("\x1B[H");
+            if (end) pane->write("\x1B[F");
+        }
     }
-    if (config_.hasPrefix(mode_, sequence)) {
-      pending_ = sequence;
-      pending_time_ = now;
-      refresh();
-      return true;
+    //!
+
+    /*!
+        Enter Visual Mode
+
+        !_method
+    */
+    void App::enterVisual()
+    {
+        selecting_ = false;
+
+        if (auto pane = workspace_.focusedPane())
+        {
+            std::lock_guard<std::mutex> lock(pane->mutex());
+            pane->buffer().clearSelection();
+        }
+
+        setMode(Mode::Visual);
     }
-    clearPending();
-  }
-
-  const Binding* binding = config_.findBinding(mode_, token);
-  if (binding != nullptr) {
-    clearPending();
-    runCommand(binding->command.action, binding->command.args);
-    return true;
-  }
-
-  if (mode_ == Mode::Insert) {
-    clearPending();
-    if (auto pane = workspace_.focusedPane()) {
-      pane->write(token == "<CR>" ? "\r" : raw);
-    }
-    return true;
-  }
-
-  const std::string sequence = token;
-  binding = config_.findBinding(mode_, sequence);
-  if (binding != nullptr) {
-    clearPending();
-    runCommand(binding->command.action, binding->command.args);
-    return true;
-  }
-  if (config_.hasPrefix(mode_, sequence)) {
-    pending_ = sequence;
-    pending_time_ = now;
-    refresh();
-    return true;
-  }
-  clearPending();
-  statusMessage("unbound key: " + sequence);
-  return true;
-}
-
-bool App::handleMouse(ftxui::Event event) {
-  const auto mouse = event.mouse();
-  for (const auto& entry : renderer_.paneRects()) {
-    if (!entry.pane || !entry.border.contains(mouse.x, mouse.y)) continue;
-    workspace_.setFocus(entry.pane->id());
-    if (mouse.button == ftxui::Mouse::WheelUp ||
-        mouse.button == ftxui::Mouse::WheelDown) {
-      scroll(mouse.button == ftxui::Mouse::WheelUp ? -3 : 3);
-      return true;
-    }
-    if (mouse.button == ftxui::Mouse::Left) {
-      if (mode_ != Mode::Visual) setMode(Mode::Visual);
-      selecting_ = true;
-      {
-        std::lock_guard<std::mutex> lock(entry.pane->mutex());
-        Buffer& buffer = entry.pane->buffer();
-        const int x = std::clamp(mouse.x - entry.inner.x, 0,
-                                 buffer.columns() - 1);
-        const int y = std::clamp(mouse.y - entry.inner.y +
-                                     buffer.visibleStart(),
-                                 0,
-                                 std::max(0, static_cast<int>(
-                                                 buffer.lines().size()) -
-                                                1));
-        buffer.setAnchor({x, y});
-        buffer.setNavigation({x, y});
-      }
-      refresh();
-      return true;
-    }
-    return true;
-  }
-  return false;
-}
-
-void App::setMode(Mode mode) {
-  if (mode_ == mode) return;
-  if (mode != Mode::Visual && selecting_) {
-    selecting_ = false;
-    if (auto pane = workspace_.focusedPane()) {
-      std::lock_guard<std::mutex> lock(pane->mutex());
-      pane->buffer().clearSelection();
-    }
-  }
-  mode_ = mode;
-  clearPending();
-  if (mode == Mode::Insert) {
-    if (auto pane = workspace_.focusedPane()) {
-      std::lock_guard<std::mutex> lock(pane->mutex());
-      pane->buffer().scrollToBottom();
-    }
-  }
-  refresh();
-}
-
-void App::enterNormal(bool home, bool end) {
-  setMode(Mode::Insert);
-  if (auto pane = workspace_.focusedPane()) {
-    std::lock_guard<std::mutex> lock(pane->mutex());
-    if (home) pane->write("\x1B[H");
-    if (end) pane->write("\x1B[F");
-  }
-}
-
-void App::enterVisual() {
-  selecting_ = false;
-  if (auto pane = workspace_.focusedPane()) {
-    std::lock_guard<std::mutex> lock(pane->mutex());
-    pane->buffer().clearSelection();
-  }
-  setMode(Mode::Visual);
-}
+    //!
 
 void App::startSelection() {
   if (mode_ != Mode::Visual || selecting_) return;
@@ -1011,4 +1246,4 @@ std::vector<std::pair<std::string, std::string>> App::filteredBindings() const {
   return result;
 }
 
-}  // namespace nexyth
+}
