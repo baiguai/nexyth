@@ -1068,14 +1068,14 @@
               {
                 "id": "4a06c696",
                 "title": "List the Bindings",
-                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [app.cpp:1290](_app.cpp_)",
+                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [filteredBindings](_Filtered Bindings_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "16578984",
                 "title": "Load Configuration",
-                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [app.cpp:1270](_app.cpp_)\n    [app.cpp:1273](_app.cpp_)\n    [Ftxui App](_Ftxui App_)",
+                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [Ftxui App](_Ftxui App_)\n    [refreshLoop](_Refresh Loop_)",
                 "children": [],
                 "expanded": false
               },
@@ -1110,14 +1110,14 @@
               {
                 "id": "f934a0d3",
                 "title": "Resolve Command",
-                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [app.cpp:1234](_app.cpp_)\n    [app.cpp:1236](_app.cpp_)",
+                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [runCommand](_Run Command_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "af032daa",
                 "title": "Save the Color Settings",
-                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [app.cpp:835](_app.cpp_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
+                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [themeApply](_Select Theme to Apply_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
                 "children": [],
                 "expanded": false
               },
@@ -1248,7 +1248,7 @@
               {
                 "id": "38aa0acf",
                 "title": "Execute",
-                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [app.cpp:1237](_app.cpp_)",
+                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [runCommand](_Run Command_)",
                 "children": [],
                 "expanded": false
               },
@@ -1311,150 +1311,567 @@
             "content": "",
             "children": [
               {
-                "id": "1289a1e4",
-                "title": "Case Insensitive Contains",
-                "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [app.cpp:1294](_app.cpp_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "dd8b228f",
-                "title": "Close the Overlay",
-                "content": "Close the Overlay\n\nSignature: void App::closeOverlay()\nMethod: closeOverlay\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleHelp](_Toggle Help_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "642d0f75",
-                "title": "Enter Normal Mode",
-                "content": "Enter Normal Mode\n\nSignature: void App::enterNormal(bool home, bool end)\nMethod: enterNormal\nReturns: void App\nParameters:\n    home bool\n    end  bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "1682a68d",
-                "title": "Enter Visual Mode",
-                "content": "Enter Visual Mode\n\nSignature: void App::enterVisual()\nMethod: enterVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "880f8da8",
-                "title": "Exit Visual Mode",
-                "content": "Exit Visual Mode\n\nSignature: void App::exitVisual()\nMethod: exitVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "c1f7ffb3",
-                "title": "For Each Split",
-                "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [app.cpp:1069](_app.cpp_)\n    [forEachSplit](_For Each Split_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "4daee8ba",
-                "title": "Ftxui App",
-                "content": "Ftxui App\n\nApp::App(ftxui::ScreenInteractive* screen, std::string configPath)\n    : screen_(screen),\n      config_(Config::load(configPath)),\n      workspace_(config_.settings.shell, config_.settings.scrollback,\n                 [this](int) { refresh(); }),\n      renderer_(*this)\n{\n    workspace_.createInitial(80, 24);\n    for (const auto& error : config_.errors) statusMessage(error);\n    refresh_thread_ = std::thread([this] { refreshLoop(); });\n}",
-                "children": [],
+                "id": "bcd444fd",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "e666c479",
+                    "title": "Case Insensitive Contains",
+                    "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [filteredBindings](_Filtered Bindings_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e77d70b9",
+                    "title": "For Each Split",
+                    "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [resizeEqual](_Equal Size All Panes_)\n    [forEachSplit](_For Each Split_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "13b5eb31",
+                    "title": "Refresh Token",
+                    "content": "Refresh Token\n\nconstexpr const char* kRefreshToken = \"__nexyth_refresh__\";",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2f289b6c",
+                    "title": "Run Clipboard Command",
+                    "content": "Run Clipboard Command\n\nSignature: bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)\nMethod: runClipboardCommand\nReturns: bool\nParameters:\n    argv const std::vector<std::string>&\n    text const std::string&\nCalled By:\n    [Helper Methods](_Helper Methods_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b1fb8f4f",
+                    "title": "Unescape Keys",
+                    "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [sendKeys](_Send Keys_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "140c9f40",
+                    "title": "Write System Clipboard",
+                    "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [emitClipboard](_Emit Clipboard_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
                 "id": "f709f42d",
-                "title": "Ftxui App Destructor",
-                "content": "Ftxui App Destructor\n\nApp::~App()\n{\n    refresh_running_.store(false, std::memory_order_relaxed);\n    if (refresh_thread_.joinable()) refresh_thread_.join();\n}",
-                "children": [],
+                "title": "Ftxui Methods",
+                "content": "Ftxui Methods",
+                "children": [
+                  {
+                    "id": "15981694",
+                    "title": "Ftxui App",
+                    "content": "Ftxui App\n\nApp::App(ftxui::ScreenInteractive* screen, std::string configPath)\n    : screen_(screen),\n      config_(Config::load(configPath)),\n      workspace_(config_.settings.shell, config_.settings.scrollback,\n                 [this](int) { refresh(); }),\n      renderer_(*this)\n{\n    workspace_.createInitial(80, 24);\n    for (const auto& error : config_.errors) statusMessage(error);\n    refresh_thread_ = std::thread([this] { refreshLoop(); });\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "538a5993",
+                    "title": "Ftxui App Destructor",
+                    "content": "Ftxui App Destructor\n\nApp::~App()\n{\n    refresh_running_.store(false, std::memory_order_relaxed);\n    if (refresh_thread_.joinable()) refresh_thread_.join();\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "52c0f436",
+                    "title": "Ftxui On Event",
+                    "content": "Ftxui On Event\n\nSignature: bool App::OnEvent(ftxui::Event event)\nMethod: OnEvent\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ca3ccc8f",
+                    "title": "Ftxui Render",
+                    "content": "Ftxui Render\n\nftxui::Element App::Render()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "77086d03",
+                    "title": "Handle the Key Combination",
+                    "content": "Handle the Key Combination\n\nSignature: bool App::handleKey(const ftxui::Event& event)\nMethod: handleKey\nReturns: bool App\nParameters:\n    event const ftxui::Event&\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "28d4eb0d",
+                    "title": "Handle the Mouse",
+                    "content": "Handle the Mouse\n\nSignature: bool App::handleMouse(ftxui::Event event)\nMethod: handleMouse\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "4e13e38b",
-                "title": "Ftxui On Event",
-                "content": "Ftxui On Event\n\nSignature: bool App::OnEvent(ftxui::Event event)\nMethod: OnEvent\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By: (none found)",
-                "children": [],
+                "id": "1682a68d",
+                "title": "App Methods",
+                "content": "App Methods",
+                "children": [
+                  {
+                    "id": "3c78e59e",
+                    "title": "Clear Pending",
+                    "content": "Clear Pending\n\nSignature: void App::clearPending()\nMethod: clearPending\nReturns: void App\nCalled By:\n    [closeOverlay](_Close the Overlay_)\n    [handleKey](_Handle the Key Combination_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleThemes](_Toggle the Themes_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1cc9192c",
+                    "title": "Quit",
+                    "content": "Quit\n\nSignature: void App::quit()\nMethod: quit\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ab5a99e5",
+                    "title": "Refresh",
+                    "content": "Refresh\n\nSignature: void App::refresh()\nMethod: refresh\nReturns: void App\nCalled By:\n    [renameTabApply](_Apply the Rename_)\n    [applyTheme](_Apply Theme_)\n    [renameTabCancel](_Cancel Rename_)\n    [themeCancel](_Cancel Theme Dialog_)\n    [closePane](_Close Current Pane_)\n    [closeTab](_Close Current Tab_)\n    [closeClock](_Close the Clock_)\n    [closeOverlay](_Close the Overlay_)\n    [newTab](_Create a New Tab_)\n    [toggleResizeMode](_Deprecated: Toggle Resize Mode_)\n    [focusDirection](_Directional Pane Focus_)\n    [resizeEqual](_Equal Size All Panes_)\n    [exitVisual](_Exit Visual Mode_)\n    [focusNext](_Focus Next Pane_)\n    [focusPrevious](_Focus Previous Pane_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [handleMouse](_Handle the Mouse_)\n    [backspaceHelpFilter](_Help Filter: Remove Character_)\n    [appendHelpFilter](_Help Filter: Type Character_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [appendRenameChar](_Rename: Add Character_)\n    [backspaceRenameChar](_Rename: Remove Character_)\n    [resizeFocused](_Resize Focused Pane_)\n    [helpScroll](_Scroll Help Dialog_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [themeApply](_Select Theme to Apply_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [statusMessage](_Status Message_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleClock](_Toggle the Clock_)\n    [toggleThemes](_Toggle the Themes_)\n    [toggleZoom](_Toggle Zoom_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6bbfea3e",
+                    "title": "Refresh Loop",
+                    "content": "Refresh Loop\n\nSignature: void App::refreshLoop()\nMethod: refreshLoop\nReturns: void App\nCalled By:\n    [Ftxui App](_Ftxui App_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b75f2506",
+                    "title": "Run Command",
+                    "content": "Run Command\n\nSignature: void App::runCommand(const std::string& name, const std::vector<std::string>& args)\nMethod: runCommand\nReturns: void App\nParameters:\n    name const std::string&\n    args const std::vector<std::string>&\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [runCommand](_Run Command_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c2018b0b",
+                    "title": "Status Message",
+                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ba122141",
+                    "title": "Status Message String",
+                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "acc55f14",
-                "title": "Ftxui Render",
-                "content": "Ftxui Render\n\nftxui::Element App::Render()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
-                "children": [],
+                "id": "bdad1937",
+                "title": "Focus Handling",
+                "content": "Focus Handling",
+                "children": [
+                  {
+                    "id": "52d839e1",
+                    "title": "Directional Pane Focus",
+                    "content": "Directional Pane Focus\n\nSignature: void App::focusDirection(int dx, int dy)\nMethod: focusDirection\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1ff933f2",
+                    "title": "Focus Next Pane",
+                    "content": "Focus Next Pane\n\nSignature: void App::focusNext()\nMethod: focusNext\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8b63a724",
+                    "title": "Focus Previous Pane",
+                    "content": "Focus Previous Pane\n\nSignature: void App::focusPrevious()\nMethod: focusPrevious\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "cd2f8ae1",
-                "title": "Handle the Key Combination",
-                "content": "Handle the Key Combination\n\nSignature: bool App::handleKey(const ftxui::Event& event)\nMethod: handleKey\nReturns: bool App\nParameters:\n    event const ftxui::Event&\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
-                "children": [],
+                "id": "85fc9c3a",
+                "title": "Help Dialog",
+                "content": "Help Dialog",
+                "children": [
+                  {
+                    "id": "c1170ae1",
+                    "title": "Close the Overlay",
+                    "content": "Close the Overlay\n\nSignature: void App::closeOverlay()\nMethod: closeOverlay\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleHelp](_Toggle Help_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c99d94f8",
+                    "title": "Filtered Bindings",
+                    "content": "Filtered Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> App::filteredBindings() const\nMethod: filteredBindings\nReturns: std::vector<std::pair<std::string, std::string>> App\nQualifiers: const\nCalled By:\n    [helpScroll](_Scroll Help Dialog_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "a3223ca1",
+                    "title": "Help Filter: Remove Character",
+                    "content": "Help Filter: Remove Character\n\nSignature: void App::backspaceHelpFilter()\nMethod: backspaceHelpFilter\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "39ef3d5c",
+                    "title": "Help Filter: Type Character",
+                    "content": "Help Filter: Type Character\n\nSignature: void App::appendHelpFilter(char character)\nMethod: appendHelpFilter\nReturns: void App\nParameters:\n    character char\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f4f7737b",
+                    "title": "Scroll Help Dialog",
+                    "content": "Scroll Help Dialog\n\nSignature: void App::helpScroll(int delta)\nMethod: helpScroll\nReturns: void App\nParameters:\n    delta int\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "59f57e64",
+                    "title": "Toggle Help",
+                    "content": "Toggle Help\n\nSignature: void App::toggleHelp()\nMethod: toggleHelp\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "f30fae4e",
-                "title": "Handle the Mouse",
-                "content": "Handle the Mouse\n\nSignature: bool App::handleMouse(ftxui::Event event)\nMethod: handleMouse\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
-                "children": [],
+                "id": "f36cc180",
+                "title": "Mode Switching",
+                "content": "Mode Switching",
+                "children": [
+                  {
+                    "id": "9465851b",
+                    "title": "Enter Normal Mode",
+                    "content": "Enter Normal Mode\n\nSignature: void App::enterNormal(bool home, bool end)\nMethod: enterNormal\nReturns: void App\nParameters:\n    home bool\n    end  bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e0c75cac",
+                    "title": "Enter Visual Mode",
+                    "content": "Enter Visual Mode\n\nSignature: void App::enterVisual()\nMethod: enterVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "9a6d554b",
+                    "title": "Exit Visual Mode",
+                    "content": "Exit Visual Mode\n\nSignature: void App::exitVisual()\nMethod: exitVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f818d83a",
+                    "title": "Set the Mode",
+                    "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "bcd444fd",
-                "title": "Refresh Token",
-                "content": "Refresh Token\n\nconstexpr const char* kRefreshToken = \"__nexyth_refresh__\";",
-                "children": [],
+                "id": "97a496cb",
+                "title": "Pane Handling",
+                "content": "Pane Handling",
+                "children": [
+                  {
+                    "id": "44f9c86c",
+                    "title": "Close Current Pane",
+                    "content": "Close Current Pane\n\nSignature: void App::closePane()\nMethod: closePane\nReturns: void App\nCalled By:\n    [closePane](_Close Current Pane_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6d099ca6",
+                    "title": "Close the Clock",
+                    "content": "Close the Clock\n\nSignature: void App::closeClock()\nMethod: closeClock\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleClock](_Toggle the Clock_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "972f6ead",
+                    "title": "Deprecated: Toggle Resize Mode",
+                    "content": "Deprecated: Toggle Resize Mode\n\nSignature: void App::toggleResizeMode()\nMethod: toggleResizeMode\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "371bcc54",
+                    "title": "Equal Size All Panes",
+                    "content": "Equal Size All Panes\n\nSignature: void App::resizeEqual()\nMethod: resizeEqual\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bd04ba3e",
+                    "title": "Move Navigation",
+                    "content": "Move Navigation\n\nSignature: void App::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [moveNavigation](_Move Navigation_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "44d8a184",
+                    "title": "Move Navigation Edge",
+                    "content": "Move Navigation Edge\n\nSignature: void App::moveNavigationEdge(bool top, bool line)\nMethod: moveNavigationEdge\nReturns: void App\nParameters:\n    top  bool\n    line bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ccc6fd9e",
+                    "title": "Resize Focused Pane",
+                    "content": "Resize Focused Pane\n\nSignature: void App::resizeFocused(int dx, int dy, int amount)\nMethod: resizeFocused\nReturns: void App\nParameters:\n    dx     int\n    dy     int\n    amount int\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "13088909",
+                    "title": "Scroll Pane",
+                    "content": "Scroll Pane\n\nSignature: void App::scroll(int delta)\nMethod: scroll\nReturns: void App\nParameters:\n    delta int\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "eaab8372",
+                    "title": "Scroll To Edge",
+                    "content": "Scroll To Edge\n\nSignature: void App::scrollToEdge(bool top)\nMethod: scrollToEdge\nReturns: void App\nParameters:\n    top bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3f2e68c7",
+                    "title": "Select Here",
+                    "content": "Select Here\n\nSignature: void App::selectHere()\nMethod: selectHere\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "44aaa393",
+                    "title": "Send Keys",
+                    "content": "Send Keys\n\nSignature: void App::sendKeys(const std::string& data)\nMethod: sendKeys\nReturns: void App\nParameters:\n    data const std::string&\nCalled By:\n    [paste](_Paste_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "d1f50343",
+                    "title": "Split Current Pane",
+                    "content": "Split Current Pane\n\nSignature: void App::splitFocused(bool vertical)\nMethod: splitFocused\nReturns: void App\nParameters:\n    vertical bool\nCalled By:\n    [splitFocused](_Split Current Pane_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "fd2520dc",
+                    "title": "Split Window",
+                    "content": "Split Window\n\nSignature: void App::splitWindow(bool vertical)\nMethod: splitWindow\nReturns: void App\nParameters:\n    vertical bool\nCalled By:\n    [splitWindow](_Split Window_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ccdf6096",
+                    "title": "Toggle the Clock",
+                    "content": "Toggle the Clock\n\nSignature: void App::toggleClock()\nMethod: toggleClock\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "096aba85",
+                    "title": "Toggle Zoom",
+                    "content": "Toggle Zoom\n\nSignature: void App::toggleZoom()\nMethod: toggleZoom\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "e0e09a4c",
-                "title": "Run Clipboard Command",
-                "content": "Run Clipboard Command\n\nSignature: bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)\nMethod: runClipboardCommand\nReturns: bool\nParameters:\n    argv const std::vector<std::string>&\n    text const std::string&\nCalled By:\n    [app.cpp:203](_app.cpp_)",
-                "children": [],
+                "id": "48ce8346",
+                "title": "Selection Handling",
+                "content": "Selection Handling",
+                "children": [
+                  {
+                    "id": "6f04953c",
+                    "title": "Emit Clipboard",
+                    "content": "Emit Clipboard\n\nSignature: void App::emitClipboard(const std::string& text)\nMethod: emitClipboard\nReturns: void App\nParameters:\n    text const std::string&\nCalled By:\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b55b3011",
+                    "title": "Paste",
+                    "content": "Paste\n\nSignature: void App::paste()\nMethod: paste\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b8f1c5e2",
+                    "title": "Start Selection",
+                    "content": "Start Selection\n\nSignature: void App::startSelection()\nMethod: startSelection\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "cdd10a4d",
+                    "title": "Yank",
+                    "content": "Yank\n\nSignature: void App::yank(bool wholeLine)\nMethod: yank\nReturns: void App\nParameters:\n    wholeLine bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "9bdd6c4d",
-                "title": "Set the Mode",
-                "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [app.cpp:1202](_app.cpp_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
+                "id": "7851b60e",
+                "title": "Tabs Handling",
+                "content": "Tabs Handling",
+                "children": [
+                  {
+                    "id": "af0557be",
+                    "title": "Close Current Tab",
+                    "content": "Close Current Tab\n\nSignature: void App::closeTab()\nMethod: closeTab\nReturns: void App\nCalled By:\n    [closeTab](_Close Current Tab_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e95b1af2",
+                    "title": "Create a New Tab",
+                    "content": "Create a New Tab\n\nSignature: void App::newTab()\nMethod: newTab\nReturns: void App\nCalled By:\n    [newTab](_Create a New Tab_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "51941800",
+                    "title": "Renaming Tabs",
+                    "content": "Renaming Tabs",
+                    "children": [
+                      {
+                        "id": "60789c43",
+                        "title": "Apply the Rename",
+                        "content": "Apply the Rename\n\nSignature: void App::renameTabApply()\nMethod: renameTabApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "e9b7a7b6",
+                        "title": "Cancel Rename",
+                        "content": "Cancel Rename\n\nSignature: void App::renameTabCancel()\nMethod: renameTabCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "34c3d902",
+                        "title": "Rename: Add Character",
+                        "content": "Rename: Add Character\n\nSignature: void App::appendRenameChar(char character)\nMethod: appendRenameChar\nReturns: void App\nParameters:\n    character char\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "9d9e0da6",
+                        "title": "Rename: Remove Character",
+                        "content": "Rename: Remove Character\n\nSignature: void App::backspaceRenameChar()\nMethod: backspaceRenameChar\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "c1905334",
+                        "title": "Show the Rename Dialog",
+                        "content": "Show the Rename Dialog\n\nSignature: void App::startRenameTab()\nMethod: startRenameTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                        "children": [],
+                        "expanded": false
+                      }
+                    ],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1216cbf2",
+                    "title": "Select Next Tab",
+                    "content": "Select Next Tab\n\nSignature: void App::nextTab()\nMethod: nextTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "7cec662f",
+                    "title": "Select Previous Tab",
+                    "content": "Select Previous Tab\n\nSignature: void App::previousTab()\nMethod: previousTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e095cc19",
+                    "title": "Select Tab By Number",
+                    "content": "Select Tab By Number\n\nSignature: void App::selectTab(int oneBased)\nMethod: selectTab\nReturns: void App\nParameters:\n    oneBased int\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5cee7dc3",
+                    "title": "Toggle Tabs",
+                    "content": "Toggle Tabs\n\nSignature: void App::toggleTabs()\nMethod: toggleTabs\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "b7b09b1f",
-                "title": "Start Selection",
-                "content": "Start Selection\n\nSignature: void App::startSelection()\nMethod: startSelection\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "3cafdcca",
-                "title": "Toggle Help",
-                "content": "Toggle Help\n\nSignature: void App::toggleHelp()\nMethod: toggleHelp\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "f0f7f185",
-                "title": "Toggle Tabs",
-                "content": "Toggle Tabs\n\nSignature: void App::toggleTabs()\nMethod: toggleTabs\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "8dfc9bde",
-                "title": "Toggle the Themes",
-                "content": "Toggle the Themes\n\nSignature: void App::toggleThemes()\nMethod: toggleThemes\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "e3d8fab6",
-                "title": "Unescape Keys",
-                "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [app.cpp:1216](_app.cpp_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "55b63276",
-                "title": "Write System Clipboard",
-                "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [app.cpp:1225](_app.cpp_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
-                "children": [],
+                "id": "8436d555",
+                "title": "Theme Handling",
+                "content": "Theme Handling",
+                "children": [
+                  {
+                    "id": "e7560e80",
+                    "title": "Apply Theme",
+                    "content": "Apply Theme\n\nSignature: void App::applyTheme(const Theme& theme)\nMethod: applyTheme\nReturns: void App\nParameters:\n    theme const Theme&\nCalled By:\n    [themeNext](_Select Next Theme_)\n    [themePrevious](_Select Previous Theme_)\n    [themeApply](_Select Theme to Apply_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "322a16c7",
+                    "title": "Cancel Theme Dialog",
+                    "content": "Cancel Theme Dialog\n\nSignature: void App::themeCancel()\nMethod: themeCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleThemes](_Toggle the Themes_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "156443d1",
+                    "title": "Select Next Theme",
+                    "content": "Select Next Theme\n\nSignature: void App::themeNext()\nMethod: themeNext\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8b6761e0",
+                    "title": "Select Previous Theme",
+                    "content": "Select Previous Theme\n\nSignature: void App::themePrevious()\nMethod: themePrevious\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3f92ea3e",
+                    "title": "Select Theme to Apply",
+                    "content": "Select Theme to Apply\n\nSignature: void App::themeApply()\nMethod: themeApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "16cbfd17",
+                    "title": "Toggle the Themes",
+                    "content": "Toggle the Themes\n\nSignature: void App::toggleThemes()\nMethod: toggleThemes\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               }
             ],
