@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace nexyth {
@@ -73,6 +74,11 @@ class Buffer {
   void tab();
   void eraseLine(int mode);
   void eraseDisplay(int mode);
+  void setScrollRegion(int top, int bottom);
+  void insertLines(int count);
+  void deleteLines(int count);
+  void scrollRegionUp(int count);
+  void scrollRegionDown(int count);
   void insertBlanks(int count);
   void deleteCharacters(int count);
   void eraseCharacters(int count);
@@ -97,6 +103,9 @@ class Buffer {
   int cursor_y_ = 0;
 
  private:
+  std::pair<int, int> scrollBounds() const;
+  void shiftLines(int top, int bottom, int count, bool down);
+
   struct ScreenState {
     std::vector<std::vector<Cell>> lines;
     int cursor_x = 0;
@@ -106,6 +115,9 @@ class Buffer {
     Style style;
     Style saved_style;
     int scroll_offset = 0;
+    int scroll_top = 0;
+    int scroll_bottom = -1;
+    bool scroll_region_set = false;
     bool wrap_pending = false;
     Pos navigation;
   };
@@ -116,6 +128,9 @@ class Buffer {
   int saved_x_ = 0;
   int saved_y_ = 0;
   int scroll_offset_ = 0;
+  int scroll_top_ = 0;
+  int scroll_bottom_ = -1;
+  bool scroll_region_set_ = false;
   Pos navigation_{0, 23};
   std::optional<Pos> anchor_;
   std::optional<Pos> head_;

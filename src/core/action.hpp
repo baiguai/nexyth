@@ -7,21 +7,35 @@
 
 #include "../config/config.hpp"
 
-namespace nexyth {
+namespace nexyth
+{
+    /*!
+        App Class
 
-class App;
+    */
+    //>>
+    class App;
+    //<<
+    //!
 
-class ActionRegistry {
- public:
-  using Handler = std::function<void(App&, const std::vector<std::string>&)>;
-  static ActionRegistry& instance();
-  void execute(const std::string& name, App& app,
-               const std::vector<std::string>& args);
-  void registerAction(const std::string& name, Handler handler);
+    /*!
+        Action Registry Class
 
- private:
-  ActionRegistry();
-  std::map<std::string, Handler> handlers_;
-};
+    */
+    //>>
+    class ActionRegistry
+    {
+        public:
+        using Handler = std::function<void(App&, const std::vector<std::string>&)>;
 
-}  // namespace nexyth
+        static ActionRegistry& instance();
+        void execute(const std::string& name, App& app, const std::vector<std::string>& args);
+        void registerAction(const std::string& name, Handler handler);
+
+        private:
+        ActionRegistry();
+        std::map<std::string, Handler> handlers_;
+    };
+    //<<
+    //!
+}

@@ -1,34 +1,44 @@
 #pragma once
-
 #include <memory>
-
 #include "pane.hpp"
 
-namespace nexyth {
+namespace nexyth
+{
+    /*!
+        Node Struct (and variables)
 
-class Node;
-using NodePtr = std::shared_ptr<Node>;
+    */
+    //>>
+    class Node;
+    using NodePtr = std::shared_ptr<Node>;
+    enum class SplitKind { SideBySide, Stacked };
 
-enum class SplitKind { SideBySide, Stacked };
+    struct Node
+    {
+        enum class Type { Leaf, Split };
 
-struct Node {
-  enum class Type { Leaf, Split };
+        Type type = Type::Leaf;
+        SplitKind kind = SplitKind::SideBySide;
+        double ratio = 0.5;
+        NodePtr first;
+        NodePtr second;
+        std::shared_ptr<Pane> pane;
+    };
+    //<<
+    //!
 
-  Type type = Type::Leaf;
-  SplitKind kind = SplitKind::SideBySide;
-  double ratio = 0.5;
-  NodePtr first;
-  NodePtr second;
-  std::shared_ptr<Pane> pane;
-};
+    /*!
+        Forward Declarations
 
-NodePtr makePaneNode(std::shared_ptr<Pane> pane);
-NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind,
-                      double ratio = 0.5);
-NodePtr findPane(const NodePtr& node, int paneId);
-NodePtr findParent(const NodePtr& node, int paneId);
-bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);
-bool replaceNode(NodePtr& node, const NodePtr& target,
-                 const NodePtr& replacement);
-
-}  // namespace nexyth
+    */
+    //>>
+    NodePtr makePaneNode(std::shared_ptr<Pane> pane);
+    NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio = 0.5);
+    NodePtr findPane(const NodePtr& node, int paneId);
+    NodePtr findParent(const NodePtr& node, int paneId);
+    NodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind);
+    bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);
+    bool replaceNode(NodePtr& node, const NodePtr& target, const NodePtr& replacement);
+    //<<
+    //!
+}
