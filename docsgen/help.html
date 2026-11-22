@@ -962,7 +962,14 @@
       {
         "id": "b69d31cb",
         "title": "//!_key=value",
-        "content": "Config marker (line comment)\n\n    //!_coderoot=/Source Code\n\nRecognized keys:\n    coderoot   path the source-code nodes hang from (default /src)\nThe last one wins.",
+        "content": "Config marker (line comment)\n\n    //!_coderoot=/Source Code\n    //!_structure=/Project Structure\n\nRecognized keys:\n    coderoot    path the source-code nodes hang from (default /src)\n    structure   a single topic node holding an ASCII tree of the project directories\nThe last marker of each key wins.",
+        "children": [],
+        "expanded": false
+      },
+      {
+        "id": "1f4a2c79",
+        "title": "//!_structure",
+        "content": "Structure topic node\n\n    //!_structure=/Project Structure\n    //!_structure=/Project Structure=../\n\nCreates one top-level note named after the last path segment (Project Structure). Its content is a text tree of the directories it walks:\n\n    src/\n    |-- config/\n    |   `-- config.cpp\n    `-- main.cpp\n\nBy default it walks the source root (src/). Append =dir to walk another directory; relative dir paths resolve against docsgen/, so ../ is the project root. Hidden directories, __pycache__, and the entries in IGNORE_PATHS at the top of harvest.py are skipped - build and build-windows by default, so =../ leaves build output out. A bare name in IGNORE_PATHS matches at any depth; an entry with a slash matches a path relative to the walked root, and a leading slash matches an absolute path. Symlinked directories are not descended into. The node is placed among the custom nodes according to the marker's source line.",
         "children": [],
         "expanded": false
       },
@@ -1063,7 +1070,7 @@
   {
     "id": "676f026d",
     "title": "Ordering",
-    "content": "The tree order is anchored to the file containing `int main`:\n\n    1. custom nodes before `int main` in the anchor file, plus custom nodes from any other file\n    2. the coderoot section (file folders -> doc blocks)\n    3. custom nodes after `int main` in the anchor file\nWithin a file, actions apply in source order.\n\nAlphabetical sorting (default): the source-code subtree is shown alphabetically by title (case-insensitive) at every level. Toggle off with `--no-sort` to keep pure source order.\n\nCustom nodes (`//[path]`, `/*[path]*/`) and pinned doc blocks (`/*> ... */`, `//> ...`) are always added in the order they are encountered - they hold their source slot and never move, even inside a sorted source subtree.",
+    "content": "The tree order is anchored to the file containing `int main`:\n\n    1. custom nodes before `int main` in the anchor file, plus custom nodes from any other file\n    2. the coderoot section (file folders -> doc blocks)\n    3. custom nodes after `int main` in the anchor file\nWithin a file, actions apply in source order.\n\nAlphabetical sorting (default): the source-code subtree is shown alphabetically by title (case-insensitive) at every level. Toggle off with `--no-sort` to keep pure source order.\n\nCustom nodes (`//[path]`, `/*[path]*/`), the `//!_structure` topic node, and pinned doc blocks (`/*> ... */`, `//> ...`) are always added in the order they are encountered - they hold their source slot and never move, even inside a sorted source subtree.",
     "children": [],
     "expanded": false
   },

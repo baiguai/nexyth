@@ -1001,22 +1001,43 @@
             /** @type {NodeT[]} */
             let treeData = [
   {
-    "id": "8e002da8",
-    "title": "src",
+    "id": "69277a1d",
+    "title": "Introduction",
+    "content": "Introduction\n\nNexyth is not really a multiplexer, however it is the front end that you usually see with them.\nYou can create panes and tabs etc.\n\nHOWEVER!\nNexyth is REALLY fast - because it uses MODES like Vim does!\nSo there are a LOT of actions you can take that require a single key press!",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "98bda0e9",
+    "title": "Scripts",
+    "content": "Scripts\n\nNexyth ships with some helpful scripts:\n\n* app.sh\n    This script JUST run Nexyth. It doesn't do a build etc.\n\n* build-windows.sh\n    Builds the Windows executable version of Nexyth.\n\n* build.sh\n    Builds Nexyth - if you call the script followed by the parameter 'r' like:\n    ./build.sh r\n    It will do a release build.\n    (note: when you do a build, this help system is re-generated)\n\n* leakcheck.sh\n    Run this - and do work in Nexyth for a bit - when you exit it will report any potential memory leaks.\n\n* run.sh\n    This will do a build and then run Nexyth from that build.\n\n* setup.sh\n    This will ensure that the dependencies are installed on your machine (Linux obviously).\n\n* upgrade.sh\n    This script will upgrade the dependencies that Nexyth uses.",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "dea8cf44",
+    "title": "Project Structure",
+    "content": "Project Structure\n\nnexyth/\n|-- app.sh\n|-- build-windows.sh\n|-- build.sh\n|-- CMakeLists.txt\n|-- CMakeLists.txt.in\n|-- config/\n|   |-- default.conf\n|   |-- default_1.conf\n|   |-- scribboleth.html\n|   `-- themes.conf\n|-- config.sh\n|-- developers/\n|   `-- devnotes.html\n|-- docsgen/\n|   |-- config/\n|   |   `-- main.json\n|   |-- gendocs.sh\n|   |-- harvest.py\n|   |-- help.html\n|   |-- langs/\n|   |   |-- cpp.json\n|   |   `-- python.json\n|   `-- run.sh\n|-- leakcheck.sh\n|-- patches/\n|   `-- ftxui-c0-delivery.patch\n|-- run.sh\n|-- setup.sh\n|-- src/\n|   |-- config/\n|   |   |-- config.cpp\n|   |   |-- config.hpp\n|   |   |-- keys.cpp\n|   |   `-- keys.hpp\n|   |-- core/\n|   |   |-- action.cpp\n|   |   |-- action.hpp\n|   |   |-- app.cpp\n|   |   |-- app.hpp\n|   |   `-- mode.hpp\n|   |-- layout/\n|   |   |-- node.cpp\n|   |   |-- node.hpp\n|   |   |-- pane.cpp\n|   |   |-- pane.hpp\n|   |   |-- workspace.cpp\n|   |   `-- workspace.hpp\n|   |-- main.cpp\n|   |-- terminal/\n|   |   |-- buffer.cpp\n|   |   |-- buffer.hpp\n|   |   |-- pty.cpp\n|   |   |-- pty.hpp\n|   |   |-- vte.cpp\n|   |   `-- vte.hpp\n|   |-- ui/\n|   |   |-- renderer.cpp\n|   |   `-- renderer.hpp\n|   |-- utils.cpp\n|   `-- utils.hpp\n`-- upgrade.sh",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "b116676c",
+    "title": "Source Code",
     "content": "",
     "children": [
       {
-        "id": "37ec687c",
+        "id": "a83cd58c",
         "title": "config",
         "content": "",
         "children": [
           {
-            "id": "b49b46d9",
+            "id": "93afd639",
             "title": "config.cpp",
             "content": "",
             "children": [
               {
-                "id": "e892fae5",
+                "id": "07c5ee85",
                 "title": "Introduction to Config.cpp",
                 "content": "Introduction to Config.cpp\n\nThe config code file handles all of the reading and writing of configuration items.",
                 "children": [],
@@ -1096,7 +1117,7 @@
               {
                 "id": "05cadb4e",
                 "title": "Path to the Default Config",
-                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [load](_Load Configuration_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
+                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [load](_Load Configuration_)\n    [main](_Main Method_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
                 "children": [],
                 "expanded": false
               },
@@ -1139,7 +1160,7 @@
             "expanded": false
           },
           {
-            "id": "7f2e152e",
+            "id": "a230afe1",
             "title": "config.hpp",
             "content": "",
             "children": [
@@ -1182,7 +1203,7 @@
             "expanded": false
           },
           {
-            "id": "75689abb",
+            "id": "1eb9c5ac",
             "title": "keys.cpp",
             "content": "",
             "children": [
@@ -1204,7 +1225,7 @@
             "expanded": false
           },
           {
-            "id": "47868d6f",
+            "id": "234d31b1",
             "title": "keys.hpp",
             "content": "",
             "children": [
@@ -1222,12 +1243,12 @@
         "expanded": false
       },
       {
-        "id": "2e9eb269",
+        "id": "761c857c",
         "title": "core",
         "content": "",
         "children": [
           {
-            "id": "9353f3f5",
+            "id": "89648447",
             "title": "action.cpp",
             "content": "",
             "children": [
@@ -1284,7 +1305,7 @@
             "expanded": false
           },
           {
-            "id": "0fc6544b",
+            "id": "955f4ae3",
             "title": "action.hpp",
             "content": "",
             "children": [
@@ -1306,7 +1327,7 @@
             "expanded": false
           },
           {
-            "id": "d04b41e7",
+            "id": "b4e270e7",
             "title": "app.cpp",
             "content": "",
             "children": [
@@ -1878,7 +1899,7 @@
             "expanded": false
           },
           {
-            "id": "a2990426",
+            "id": "532b6d94",
             "title": "app.hpp",
             "content": "",
             "children": [
@@ -1915,7 +1936,7 @@
             "expanded": false
           },
           {
-            "id": "b7995095",
+            "id": "03e5ccea",
             "title": "mode.hpp",
             "content": "",
             "children": [
@@ -1947,12 +1968,12 @@
         "expanded": false
       },
       {
-        "id": "ffd705f2",
+        "id": "92450527",
         "title": "layout",
         "content": "",
         "children": [
           {
-            "id": "e50743bc",
+            "id": "45a49c1e",
             "title": "node.cpp",
             "content": "",
             "children": [
@@ -2009,7 +2030,7 @@
             "expanded": false
           },
           {
-            "id": "d1c2e73a",
+            "id": "a3e82fc2",
             "title": "node.hpp",
             "content": "",
             "children": [
@@ -2031,7 +2052,7 @@
             "expanded": false
           },
           {
-            "id": "4ab11d94",
+            "id": "8d2741a6",
             "title": "pane.cpp",
             "content": "",
             "children": [
@@ -2102,7 +2123,7 @@
             "expanded": false
           },
           {
-            "id": "51cb09eb",
+            "id": "6544d251",
             "title": "pane.hpp",
             "content": "",
             "children": [
@@ -2132,7 +2153,7 @@
             "expanded": false
           },
           {
-            "id": "12c3eead",
+            "id": "8e043ee0",
             "title": "workspace.cpp",
             "content": "",
             "children": [
@@ -2259,7 +2280,7 @@
             "expanded": false
           },
           {
-            "id": "b408acd4",
+            "id": "72b4e35d",
             "title": "workspace.hpp",
             "content": "",
             "children": [
@@ -2299,12 +2320,27 @@
         "expanded": false
       },
       {
-        "id": "423d71a9",
+        "id": "ae2c4610",
+        "title": "main.cpp",
+        "content": "",
+        "children": [
+          {
+            "id": "886fe746",
+            "title": "Main Method",
+            "content": "Main Method\n\nSignature: int main(int argc, char** argv)\nMethod: main\nReturns: int\nParameters:\n    argc int\n    argv char**\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nint main(int argc, char** argv)\n{\n    using nexyth::App;\n    using nexyth::Config;\n    std::string configPath = Config::defaultPath();\n\n    if (argc > 1) configPath = argv[1];\n\n    auto screen = ftxui::ScreenInteractive::Fullscreen();\n    auto app = ftxui::Make<App>(&screen, configPath);\n    screen.Loop(app);\n\n    return 0;\n}",
+            "children": [],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "bb22205e",
         "title": "terminal",
         "content": "",
         "children": [
           {
-            "id": "3d866e67",
+            "id": "b04fe56a",
             "title": "buffer.cpp",
             "content": "",
             "children": [
