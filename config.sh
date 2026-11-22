@@ -41,3 +41,24 @@ HEADERS=(
     "src/terminal/vte.hpp"
     "src/ui/renderer.hpp"
 )
+
+clean_stale_cmake_cache() {
+    local build_dir="$1"
+    [ -d "$build_dir" ] || return 0
+    local source_dir cache cache_dir recorded_dir
+    source_dir=$(pwd -P)
+    while IFS= read -r -d '' cache; do
+        cache_dir=$(cd "$(dirname "$cache")" && pwd -P)
+        recorded_dir=$(sed -n 's/^CMAKE_CACHEFILE_DIR:INTERNAL=//p' "$cache" | head -1)
+        if [ "$recorded_dir" != "$cache_dir" ]; then
+            echo "Removing stale CMake cache in $cache_dir"
+            rm -rf "$cache" "$cache_dir/CMakeFiles"
+            continue
+        fi
+        if [ "$cache_dir" = "$(cd "$build_dir" && pwd -P)" ] &&
+           ! grep -Fq "CMAKE_HOME_DIRECTORY:INTERNAL=$source_dir" "$cache"; then
+            echo "Removing stale CMake cache in $cache_dir"
+            rm -rf "$cache" "$cache_dir/CMakeFiles"
+        fi
+    done < <(find "$build_dir" -name CMakeCache.txt -print0 2>/dev/null)
+}
