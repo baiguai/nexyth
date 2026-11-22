@@ -1001,22 +1001,43 @@
             /** @type {NodeT[]} */
             let treeData = [
   {
-    "id": "8e002da8",
-    "title": "src",
+    "id": "69277a1d",
+    "title": "Introduction",
+    "content": "Introduction\n\nNexyth is not really a multiplexer, however it is the front end that you usually see with them.\nYou can create panes and tabs etc.\n\nHOWEVER!\nNexyth is REALLY fast - because it uses MODES like Vim does!\nSo there are a LOT of actions you can take that require a single key press!",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "98bda0e9",
+    "title": "Scripts",
+    "content": "Scripts\n\nNexyth ships with some helpful scripts:\n\n* app.sh\n    This script JUST run Nexyth. It doesn't do a build etc.\n\n* build-windows.sh\n    Builds the Windows executable version of Nexyth.\n\n* build.sh\n    Builds Nexyth - if you call the script followed by the parameter 'r' like:\n    ./build.sh r\n    It will do a release build.\n    (note: when you do a build, this help system is re-generated)\n\n* leakcheck.sh\n    Run this - and do work in Nexyth for a bit - when you exit it will report any potential memory leaks.\n\n* run.sh\n    This will do a build and then run Nexyth from that build.\n\n* setup.sh\n    This will ensure that the dependencies are installed on your machine (Linux obviously).\n\n* upgrade.sh\n    This script will upgrade the dependencies that Nexyth uses.",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "dea8cf44",
+    "title": "Project Structure",
+    "content": "Project Structure\n\nnexyth/\n|-- app.sh\n|-- build-windows.sh\n|-- build.sh\n|-- CMakeLists.txt\n|-- CMakeLists.txt.in\n|-- config/\n|   |-- default.conf\n|   |-- default_1.conf\n|   |-- scribboleth.html\n|   `-- themes.conf\n|-- config.sh\n|-- developers/\n|   `-- devnotes.html\n|-- docsgen/\n|   |-- config/\n|   |   `-- main.json\n|   |-- gendocs.sh\n|   |-- harvest.py\n|   |-- help.html\n|   |-- langs/\n|   |   |-- cpp.json\n|   |   `-- python.json\n|   `-- run.sh\n|-- leakcheck.sh\n|-- patches/\n|   `-- ftxui-c0-delivery.patch\n|-- run.sh\n|-- setup.sh\n|-- src/\n|   |-- config/\n|   |   |-- config.cpp\n|   |   |-- config.hpp\n|   |   |-- keys.cpp\n|   |   `-- keys.hpp\n|   |-- core/\n|   |   |-- action.cpp\n|   |   |-- action.hpp\n|   |   |-- app.cpp\n|   |   |-- app.hpp\n|   |   `-- mode.hpp\n|   |-- layout/\n|   |   |-- node.cpp\n|   |   |-- node.hpp\n|   |   |-- pane.cpp\n|   |   |-- pane.hpp\n|   |   |-- workspace.cpp\n|   |   `-- workspace.hpp\n|   |-- main.cpp\n|   |-- terminal/\n|   |   |-- buffer.cpp\n|   |   |-- buffer.hpp\n|   |   |-- pty.cpp\n|   |   |-- pty.hpp\n|   |   |-- vte.cpp\n|   |   `-- vte.hpp\n|   |-- ui/\n|   |   |-- renderer.cpp\n|   |   `-- renderer.hpp\n|   |-- utils.cpp\n|   `-- utils.hpp\n`-- upgrade.sh",
+    "children": [],
+    "expanded": false
+  },
+  {
+    "id": "b116676c",
+    "title": "Source Code",
     "content": "",
     "children": [
       {
-        "id": "37ec687c",
+        "id": "a83cd58c",
         "title": "config",
         "content": "",
         "children": [
           {
-            "id": "b49b46d9",
+            "id": "93afd639",
             "title": "config.cpp",
             "content": "",
             "children": [
               {
-                "id": "e892fae5",
+                "id": "07c5ee85",
                 "title": "Introduction to Config.cpp",
                 "content": "Introduction to Config.cpp\n\nThe config code file handles all of the reading and writing of configuration items.",
                 "children": [],
@@ -1068,14 +1089,14 @@
               {
                 "id": "4a06c696",
                 "title": "List the Bindings",
-                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "List the Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> Config::listBindings(Mode mode) const\nMethod: listBindings\nReturns: std::vector<std::pair<std::string, std::string>> Config\nQualifiers: const\nParameters:\n    mode Mode\nCalled By:\n    [filteredBindings](_Filtered Bindings_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "16578984",
                 "title": "Load Configuration",
-                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [Ftxui App](_Ftxui App_)\n    [setMode](_Set the Mode_)",
+                "content": "Load Configuration\n\nSignature: Config Config::load(const std::string& path)\nMethod: load\nReturns: Config Config\nParameters:\n    path const std::string&\nCalled By:\n    [Ftxui App](_Ftxui App_)\n    [refreshLoop](_Refresh Loop_)",
                 "children": [],
                 "expanded": false
               },
@@ -1096,7 +1117,7 @@
               {
                 "id": "05cadb4e",
                 "title": "Path to the Default Config",
-                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [load](_Load Configuration_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
+                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [load](_Load Configuration_)\n    [main](_Main Method_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
                 "children": [],
                 "expanded": false
               },
@@ -1110,14 +1131,14 @@
               {
                 "id": "f934a0d3",
                 "title": "Resolve Command",
-                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Resolve Command\n\nSignature: std::vector<Command> Config::resolve(const std::string& name) const\nMethod: resolve\nReturns: std::vector<Command> Config\nQualifiers: const\nParameters:\n    name const std::string&\nCalled By:\n    [runCommand](_Run Command_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "af032daa",
                 "title": "Save the Color Settings",
-                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [setMode](_Set the Mode_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
+                "content": "Save the Color Settings\n\nSignature: bool Config::saveColorSettings(const std::string& path, const Settings& settings)\nMethod: saveColorSettings\nReturns: bool Config\nParameters:\n    path     const std::string&\n    settings const Settings&\nCalled By:\n    [themeApply](_Select Theme to Apply_)\n\nPossible Color Settings:\n\n{\"foreground\", settings.foreground},\n{\"background\", settings.background},\n{\"status-foreground\", settings.status_foreground},\n{\"status-background\", settings.status_background},\n{\"border\", settings.border},\n{\"focus-border\", settings.focused_border},\n{\"selection\", settings.selection_background}",
                 "children": [],
                 "expanded": false
               },
@@ -1139,7 +1160,7 @@
             "expanded": false
           },
           {
-            "id": "7f2e152e",
+            "id": "a230afe1",
             "title": "config.hpp",
             "content": "",
             "children": [
@@ -1182,7 +1203,7 @@
             "expanded": false
           },
           {
-            "id": "75689abb",
+            "id": "1eb9c5ac",
             "title": "keys.cpp",
             "content": "",
             "children": [
@@ -1204,7 +1225,7 @@
             "expanded": false
           },
           {
-            "id": "47868d6f",
+            "id": "234d31b1",
             "title": "keys.hpp",
             "content": "",
             "children": [
@@ -1222,12 +1243,12 @@
         "expanded": false
       },
       {
-        "id": "2e9eb269",
+        "id": "761c857c",
         "title": "core",
         "content": "",
         "children": [
           {
-            "id": "9353f3f5",
+            "id": "89648447",
             "title": "action.cpp",
             "content": "",
             "children": [
@@ -1248,14 +1269,14 @@
               {
                 "id": "38aa0acf",
                 "title": "Execute",
-                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "content": "Execute\n\nSignature: void ActionRegistry::execute(const std::string& name, App& app, const std::vector<std::string>& args)\nMethod: execute\nReturns: void ActionRegistry\nParameters:\n    name const std::string&\n    app  App&\n    args const std::vector<std::string>&\nCalled By:\n    [runCommand](_Run Command_)",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "1999155d",
                 "title": "Join",
-                "content": "Join\n\nSignature: std::string join(const std::vector<std::string>& args)\nMethod: join\nReturns: std::string\nParameters:\n    args const std::vector<std::string>&\nCalled By:\n    [Ftxui App Destructor](_Ftxui App Destructor_)\n    [The Action Registry](_The Action Registry_)",
+                "content": "Join\n\nSignature: std::string join(const std::vector<std::string>& args)\nMethod: join\nReturns: std::string\nParameters:\n    args const std::vector<std::string>&\nCalled By:\n    [Ftxui App Destructor](_Ftxui App Destructor_)\n    [~Pane](_Pane Destructor_)\n    [The Action Registry](_The Action Registry_)",
                 "children": [],
                 "expanded": false
               },
@@ -1284,7 +1305,7 @@
             "expanded": false
           },
           {
-            "id": "0fc6544b",
+            "id": "955f4ae3",
             "title": "action.hpp",
             "content": "",
             "children": [
@@ -1306,99 +1327,1348 @@
             "expanded": false
           },
           {
-            "id": "d04b41e7",
+            "id": "b4e270e7",
             "title": "app.cpp",
             "content": "",
             "children": [
               {
-                "id": "1289a1e4",
-                "title": "Case Insensitive Contains",
-                "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "c1f7ffb3",
-                "title": "For Each Split",
-                "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [forEachSplit](_For Each Split_)\n    [setMode](_Set the Mode_)",
-                "children": [],
-                "expanded": false
-              },
-              {
-                "id": "4daee8ba",
-                "title": "Ftxui App",
-                "content": "Ftxui App\n\nApp::App(ftxui::ScreenInteractive* screen, std::string configPath)\n    : screen_(screen),\n      config_(Config::load(configPath)),\n      workspace_(config_.settings.shell, config_.settings.scrollback,\n                 [this](int) { refresh(); }),\n      renderer_(*this)\n{\n    workspace_.createInitial(80, 24);\n    for (const auto& error : config_.errors) statusMessage(error);\n    refresh_thread_ = std::thread([this] { refreshLoop(); });\n}",
-                "children": [],
+                "id": "bcd444fd",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "e666c479",
+                    "title": "Case Insensitive Contains",
+                    "content": "Case Insensitive Contains\n\nSignature: bool containsInsensitive(const std::string& haystack, const std::string& needle)\nMethod: containsInsensitive\nReturns: bool\nParameters:\n    haystack const std::string&\n    needle   const std::string&\nCalled By:\n    [filteredBindings](_Filtered Bindings_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e77d70b9",
+                    "title": "For Each Split",
+                    "content": "For Each Split\n\nSignature: void forEachSplit(const NodePtr& node, const std::function<void(const NodePtr&)>& callback)\nMethod: forEachSplit\nReturns: void\nParameters:\n    node     const NodePtr&\n    callback const std::function<void(const NodePtr&)>&\nCalled By:\n    [resizeEqual](_Equal Size All Panes_)\n    [forEachSplit](_For Each Split_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "13b5eb31",
+                    "title": "Refresh Token",
+                    "content": "Refresh Token\n\nconstexpr const char* kRefreshToken = \"__nexyth_refresh__\";",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2f289b6c",
+                    "title": "Run Clipboard Command",
+                    "content": "Run Clipboard Command\n\nSignature: bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)\nMethod: runClipboardCommand\nReturns: bool\nParameters:\n    argv const std::vector<std::string>&\n    text const std::string&\nCalled By:\n    [Helper Methods](_Helper Methods_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b1fb8f4f",
+                    "title": "Unescape Keys",
+                    "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [sendKeys](_Send Keys_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "140c9f40",
+                    "title": "Write System Clipboard",
+                    "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [emitClipboard](_Emit Clipboard_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
                 "id": "f709f42d",
-                "title": "Ftxui App Destructor",
-                "content": "Ftxui App Destructor\n\nApp::~App()\n{\n    refresh_running_.store(false, std::memory_order_relaxed);\n    if (refresh_thread_.joinable()) refresh_thread_.join();\n}",
+                "title": "Ftxui Methods",
+                "content": "Ftxui Methods",
+                "children": [
+                  {
+                    "id": "15981694",
+                    "title": "Ftxui App",
+                    "content": "Ftxui App\n\nApp::App(ftxui::ScreenInteractive* screen, std::string configPath)\n    : screen_(screen),\n      config_(Config::load(configPath)),\n      workspace_(config_.settings.shell, config_.settings.scrollback,\n                 [this](int) { refresh(); }),\n      renderer_(*this)\n{\n    workspace_.createInitial(80, 24);\n    for (const auto& error : config_.errors) statusMessage(error);\n    refresh_thread_ = std::thread([this] { refreshLoop(); });\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "538a5993",
+                    "title": "Ftxui App Destructor",
+                    "content": "Ftxui App Destructor\n\nApp::~App()\n{\n    refresh_running_.store(false, std::memory_order_relaxed);\n    if (refresh_thread_.joinable()) refresh_thread_.join();\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "52c0f436",
+                    "title": "Ftxui On Event",
+                    "content": "Ftxui On Event\n\nSignature: bool App::OnEvent(ftxui::Event event)\nMethod: OnEvent\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ca3ccc8f",
+                    "title": "Ftxui Render",
+                    "content": "Ftxui Render\n\nftxui::Element App::Render()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "77086d03",
+                    "title": "Handle the Key Combination",
+                    "content": "Handle the Key Combination\n\nSignature: bool App::handleKey(const ftxui::Event& event)\nMethod: handleKey\nReturns: bool App\nParameters:\n    event const ftxui::Event&\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "28d4eb0d",
+                    "title": "Handle the Mouse",
+                    "content": "Handle the Mouse\n\nSignature: bool App::handleMouse(ftxui::Event event)\nMethod: handleMouse\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "1682a68d",
+                "title": "App Methods",
+                "content": "App Methods",
+                "children": [
+                  {
+                    "id": "3c78e59e",
+                    "title": "Clear Pending",
+                    "content": "Clear Pending\n\nSignature: void App::clearPending()\nMethod: clearPending\nReturns: void App\nCalled By:\n    [closeOverlay](_Close the Overlay_)\n    [handleKey](_Handle the Key Combination_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleThemes](_Toggle the Themes_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1cc9192c",
+                    "title": "Quit",
+                    "content": "Quit\n\nSignature: void App::quit()\nMethod: quit\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ab5a99e5",
+                    "title": "Refresh",
+                    "content": "Refresh\n\nSignature: void App::refresh()\nMethod: refresh\nReturns: void App\nCalled By:\n    [renameTabApply](_Apply the Rename_)\n    [applyTheme](_Apply Theme_)\n    [renameTabCancel](_Cancel Rename_)\n    [themeCancel](_Cancel Theme Dialog_)\n    [closePane](_Close Current Pane_)\n    [closeTab](_Close Current Tab_)\n    [closeClock](_Close the Clock_)\n    [closeOverlay](_Close the Overlay_)\n    [newTab](_Create a New Tab_)\n    [toggleResizeMode](_Deprecated: Toggle Resize Mode_)\n    [focusDirection](_Directional Pane Focus_)\n    [resizeEqual](_Equal Size All Panes_)\n    [exitVisual](_Exit Visual Mode_)\n    [focusNext](_Focus Next Pane_)\n    [focusPrevious](_Focus Previous Pane_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [handleMouse](_Handle the Mouse_)\n    [backspaceHelpFilter](_Help Filter: Remove Character_)\n    [appendHelpFilter](_Help Filter: Type Character_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [appendRenameChar](_Rename: Add Character_)\n    [backspaceRenameChar](_Rename: Remove Character_)\n    [resizeFocused](_Resize Focused Pane_)\n    [helpScroll](_Scroll Help Dialog_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [themeApply](_Select Theme to Apply_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [statusMessage](_Status Message_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleClock](_Toggle the Clock_)\n    [toggleThemes](_Toggle the Themes_)\n    [toggleZoom](_Toggle Zoom_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6bbfea3e",
+                    "title": "Refresh Loop",
+                    "content": "Refresh Loop\n\nSignature: void App::refreshLoop()\nMethod: refreshLoop\nReturns: void App\nCalled By:\n    [Ftxui App](_Ftxui App_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b75f2506",
+                    "title": "Run Command",
+                    "content": "Run Command\n\nSignature: void App::runCommand(const std::string& name, const std::vector<std::string>& args)\nMethod: runCommand\nReturns: void App\nParameters:\n    name const std::string&\n    args const std::vector<std::string>&\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [runCommand](_Run Command_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c2018b0b",
+                    "title": "Status Message",
+                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ba122141",
+                    "title": "Status Message String",
+                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "bdad1937",
+                "title": "Focus Handling",
+                "content": "Focus Handling",
+                "children": [
+                  {
+                    "id": "52d839e1",
+                    "title": "Directional Pane Focus",
+                    "content": "Directional Pane Focus\n\nSignature: void App::focusDirection(int dx, int dy)\nMethod: focusDirection\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1ff933f2",
+                    "title": "Focus Next Pane",
+                    "content": "Focus Next Pane\n\nSignature: void App::focusNext()\nMethod: focusNext\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8b63a724",
+                    "title": "Focus Previous Pane",
+                    "content": "Focus Previous Pane\n\nSignature: void App::focusPrevious()\nMethod: focusPrevious\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "85fc9c3a",
+                "title": "Help Dialog",
+                "content": "Help Dialog",
+                "children": [
+                  {
+                    "id": "c1170ae1",
+                    "title": "Close the Overlay",
+                    "content": "Close the Overlay\n\nSignature: void App::closeOverlay()\nMethod: closeOverlay\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleHelp](_Toggle Help_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c99d94f8",
+                    "title": "Filtered Bindings",
+                    "content": "Filtered Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> App::filteredBindings() const\nMethod: filteredBindings\nReturns: std::vector<std::pair<std::string, std::string>> App\nQualifiers: const\nCalled By:\n    [helpScroll](_Scroll Help Dialog_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "a3223ca1",
+                    "title": "Help Filter: Remove Character",
+                    "content": "Help Filter: Remove Character\n\nSignature: void App::backspaceHelpFilter()\nMethod: backspaceHelpFilter\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "39ef3d5c",
+                    "title": "Help Filter: Type Character",
+                    "content": "Help Filter: Type Character\n\nSignature: void App::appendHelpFilter(char character)\nMethod: appendHelpFilter\nReturns: void App\nParameters:\n    character char\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f4f7737b",
+                    "title": "Scroll Help Dialog",
+                    "content": "Scroll Help Dialog\n\nSignature: void App::helpScroll(int delta)\nMethod: helpScroll\nReturns: void App\nParameters:\n    delta int\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "59f57e64",
+                    "title": "Toggle Help",
+                    "content": "Toggle Help\n\nSignature: void App::toggleHelp()\nMethod: toggleHelp\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "f36cc180",
+                "title": "Mode Switching",
+                "content": "Mode Switching",
+                "children": [
+                  {
+                    "id": "9465851b",
+                    "title": "Enter Normal Mode",
+                    "content": "Enter Normal Mode\n\nSignature: void App::enterNormal(bool home, bool end)\nMethod: enterNormal\nReturns: void App\nParameters:\n    home bool\n    end  bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e0c75cac",
+                    "title": "Enter Visual Mode",
+                    "content": "Enter Visual Mode\n\nSignature: void App::enterVisual()\nMethod: enterVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "9a6d554b",
+                    "title": "Exit Visual Mode",
+                    "content": "Exit Visual Mode\n\nSignature: void App::exitVisual()\nMethod: exitVisual\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f818d83a",
+                    "title": "Set the Mode",
+                    "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "97a496cb",
+                "title": "Pane Handling",
+                "content": "Pane Handling",
+                "children": [
+                  {
+                    "id": "44f9c86c",
+                    "title": "Close Current Pane",
+                    "content": "Close Current Pane\n\nSignature: void App::closePane()\nMethod: closePane\nReturns: void App\nCalled By:\n    [closePane](_Close Current Pane_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6d099ca6",
+                    "title": "Close the Clock",
+                    "content": "Close the Clock\n\nSignature: void App::closeClock()\nMethod: closeClock\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleClock](_Toggle the Clock_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "972f6ead",
+                    "title": "Deprecated: Toggle Resize Mode",
+                    "content": "Deprecated: Toggle Resize Mode\n\nSignature: void App::toggleResizeMode()\nMethod: toggleResizeMode\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "371bcc54",
+                    "title": "Equal Size All Panes",
+                    "content": "Equal Size All Panes\n\nSignature: void App::resizeEqual()\nMethod: resizeEqual\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bd04ba3e",
+                    "title": "Move Navigation",
+                    "content": "Move Navigation\n\nSignature: void App::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [moveNavigation](_Move Navigation_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "44d8a184",
+                    "title": "Move Navigation Edge",
+                    "content": "Move Navigation Edge\n\nSignature: void App::moveNavigationEdge(bool top, bool line)\nMethod: moveNavigationEdge\nReturns: void App\nParameters:\n    top  bool\n    line bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ccc6fd9e",
+                    "title": "Resize Focused Pane",
+                    "content": "Resize Focused Pane\n\nSignature: void App::resizeFocused(int dx, int dy, int amount)\nMethod: resizeFocused\nReturns: void App\nParameters:\n    dx     int\n    dy     int\n    amount int\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "13088909",
+                    "title": "Scroll Pane",
+                    "content": "Scroll Pane\n\nSignature: void App::scroll(int delta)\nMethod: scroll\nReturns: void App\nParameters:\n    delta int\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "eaab8372",
+                    "title": "Scroll To Edge",
+                    "content": "Scroll To Edge\n\nSignature: void App::scrollToEdge(bool top)\nMethod: scrollToEdge\nReturns: void App\nParameters:\n    top bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3f2e68c7",
+                    "title": "Select Here",
+                    "content": "Select Here\n\nSignature: void App::selectHere()\nMethod: selectHere\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "44aaa393",
+                    "title": "Send Keys",
+                    "content": "Send Keys\n\nSignature: void App::sendKeys(const std::string& data)\nMethod: sendKeys\nReturns: void App\nParameters:\n    data const std::string&\nCalled By:\n    [paste](_Paste_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "d1f50343",
+                    "title": "Split Current Pane",
+                    "content": "Split Current Pane\n\nSignature: void App::splitFocused(bool vertical)\nMethod: splitFocused\nReturns: void App\nParameters:\n    vertical bool\nCalled By:\n    [splitFocused](_Split Current Pane_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "fd2520dc",
+                    "title": "Split Window",
+                    "content": "Split Window\n\nSignature: void App::splitWindow(bool vertical)\nMethod: splitWindow\nReturns: void App\nParameters:\n    vertical bool\nCalled By:\n    [splitWindow](_Split Window_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ccdf6096",
+                    "title": "Toggle the Clock",
+                    "content": "Toggle the Clock\n\nSignature: void App::toggleClock()\nMethod: toggleClock\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "096aba85",
+                    "title": "Toggle Zoom",
+                    "content": "Toggle Zoom\n\nSignature: void App::toggleZoom()\nMethod: toggleZoom\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "48ce8346",
+                "title": "Selection Handling",
+                "content": "Selection Handling",
+                "children": [
+                  {
+                    "id": "6f04953c",
+                    "title": "Emit Clipboard",
+                    "content": "Emit Clipboard\n\nSignature: void App::emitClipboard(const std::string& text)\nMethod: emitClipboard\nReturns: void App\nParameters:\n    text const std::string&\nCalled By:\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b55b3011",
+                    "title": "Paste",
+                    "content": "Paste\n\nSignature: void App::paste()\nMethod: paste\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "b8f1c5e2",
+                    "title": "Start Selection",
+                    "content": "Start Selection\n\nSignature: void App::startSelection()\nMethod: startSelection\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "cdd10a4d",
+                    "title": "Yank",
+                    "content": "Yank\n\nSignature: void App::yank(bool wholeLine)\nMethod: yank\nReturns: void App\nParameters:\n    wholeLine bool\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "7851b60e",
+                "title": "Tabs Handling",
+                "content": "Tabs Handling",
+                "children": [
+                  {
+                    "id": "af0557be",
+                    "title": "Close Current Tab",
+                    "content": "Close Current Tab\n\nSignature: void App::closeTab()\nMethod: closeTab\nReturns: void App\nCalled By:\n    [closeTab](_Close Current Tab_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e95b1af2",
+                    "title": "Create a New Tab",
+                    "content": "Create a New Tab\n\nSignature: void App::newTab()\nMethod: newTab\nReturns: void App\nCalled By:\n    [newTab](_Create a New Tab_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "51941800",
+                    "title": "Renaming Tabs",
+                    "content": "Renaming Tabs",
+                    "children": [
+                      {
+                        "id": "60789c43",
+                        "title": "Apply the Rename",
+                        "content": "Apply the Rename\n\nSignature: void App::renameTabApply()\nMethod: renameTabApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "e9b7a7b6",
+                        "title": "Cancel Rename",
+                        "content": "Cancel Rename\n\nSignature: void App::renameTabCancel()\nMethod: renameTabCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "34c3d902",
+                        "title": "Rename: Add Character",
+                        "content": "Rename: Add Character\n\nSignature: void App::appendRenameChar(char character)\nMethod: appendRenameChar\nReturns: void App\nParameters:\n    character char\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "9d9e0da6",
+                        "title": "Rename: Remove Character",
+                        "content": "Rename: Remove Character\n\nSignature: void App::backspaceRenameChar()\nMethod: backspaceRenameChar\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "c1905334",
+                        "title": "Show the Rename Dialog",
+                        "content": "Show the Rename Dialog\n\nSignature: void App::startRenameTab()\nMethod: startRenameTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                        "children": [],
+                        "expanded": false
+                      }
+                    ],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1216cbf2",
+                    "title": "Select Next Tab",
+                    "content": "Select Next Tab\n\nSignature: void App::nextTab()\nMethod: nextTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "7cec662f",
+                    "title": "Select Previous Tab",
+                    "content": "Select Previous Tab\n\nSignature: void App::previousTab()\nMethod: previousTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "e095cc19",
+                    "title": "Select Tab By Number",
+                    "content": "Select Tab By Number\n\nSignature: void App::selectTab(int oneBased)\nMethod: selectTab\nReturns: void App\nParameters:\n    oneBased int\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5cee7dc3",
+                    "title": "Toggle Tabs",
+                    "content": "Toggle Tabs\n\nSignature: void App::toggleTabs()\nMethod: toggleTabs\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "8436d555",
+                "title": "Theme Handling",
+                "content": "Theme Handling",
+                "children": [
+                  {
+                    "id": "e7560e80",
+                    "title": "Apply Theme",
+                    "content": "Apply Theme\n\nSignature: void App::applyTheme(const Theme& theme)\nMethod: applyTheme\nReturns: void App\nParameters:\n    theme const Theme&\nCalled By:\n    [themeNext](_Select Next Theme_)\n    [themePrevious](_Select Previous Theme_)\n    [themeApply](_Select Theme to Apply_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "322a16c7",
+                    "title": "Cancel Theme Dialog",
+                    "content": "Cancel Theme Dialog\n\nSignature: void App::themeCancel()\nMethod: themeCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleThemes](_Toggle the Themes_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "156443d1",
+                    "title": "Select Next Theme",
+                    "content": "Select Next Theme\n\nSignature: void App::themeNext()\nMethod: themeNext\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8b6761e0",
+                    "title": "Select Previous Theme",
+                    "content": "Select Previous Theme\n\nSignature: void App::themePrevious()\nMethod: themePrevious\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3f92ea3e",
+                    "title": "Select Theme to Apply",
+                    "content": "Select Theme to Apply\n\nSignature: void App::themeApply()\nMethod: themeApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "16cbfd17",
+                    "title": "Toggle the Themes",
+                    "content": "Toggle the Themes\n\nSignature: void App::toggleThemes()\nMethod: toggleThemes\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "532b6d94",
+            "title": "app.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "80db4b50",
+                "title": "App Class",
+                "content": "App Class",
+                "children": [
+                  {
+                    "id": "81d2d004",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nvoid refreshLoop();\nbool handleKey(const ftxui::Event& event);\nbool handleMouse(ftxui::Event event);\nvoid clearPending();\nvoid emitClipboard(const std::string& text);\nvoid applyTheme(const Theme& theme);\n\nftxui::ScreenInteractive* screen_ = nullptr;\nConfig config_;\nWorkspace workspace_;\nRenderer renderer_;\nMode mode_ = Mode::Normal;\nOverlay overlay_ = Overlay::None;\nbool zoom_ = false;\nbool resize_mode_ = false;\nbool selecting_ = false;\nstd::atomic<bool> clock_active_{false};\nint clock_pane_id_ = -1;\nstd::string pending_;\nstd::string message_;\nstd::string help_filter_;\nbool help_filtering_ = false;\nstd::string rename_buffer_;\nstd::string clipboard_;\nstd::size_t help_offset_ = 0;\nstd::size_t theme_index_ = 0;\nstd::chrono::steady_clock::time_point pending_time_;\nstd::chrono::steady_clock::time_point message_time_;\nstd::chrono::steady_clock::time_point last_escape_time_;\nstd::atomic<bool> refresh_pending_{false};\nstd::atomic<bool> refresh_running_{true};\nstd::thread refresh_thread_;\nmutable std::mutex message_mutex_;",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "937a7fc9",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nApp(ftxui::ScreenInteractive* screen, std::string configPath);\n~App() override;\n\nftxui::Element Render() override;\nbool OnEvent(ftxui::Event event) override;\n\nConfig& config() { return config_; }\nWorkspace& workspace() { return workspace_; }\nRenderer& renderer() { return renderer_; }\nMode mode() const { return mode_; }\nOverlay overlay() const { return overlay_; }\nbool zoom() const { return zoom_; }\nbool clockActive() const { return clock_active_; }\nint clockPaneId() const { return clock_pane_id_; }\nbool helpVisible() const { return overlay_ == Overlay::Help; }\nstd::string pendingKeys() const { return pending_; }\nstd::string statusMessage() const;\nstd::string helpFilter() const { return help_filter_; }\nbool helpFiltering() const { return help_filtering_; }\nstd::size_t helpOffset() const { return help_offset_; }\nbool selecting() const { return selecting_; }\nbool resizeMode() const { return resize_mode_; }\nstd::size_t themeIndex() const { return theme_index_; }\nstd::string renameBuffer() const { return rename_buffer_; }\nstd::vector<std::pair<std::string, std::string>> filteredBindings() const;\n\nvoid refresh();\nvoid statusMessage(std::string message);\nvoid quit();\nvoid runCommand(const std::string& name,\nconst std::vector<std::string>& args);\n\nvoid setMode(Mode mode);\nvoid enterNormal(bool home = false, bool end = false);\nvoid enterVisual();\nvoid startSelection();\nvoid exitVisual();\nvoid toggleHelp();\nvoid closeOverlay();\nvoid toggleTabs();\nvoid toggleThemes();\nvoid themeNext();\nvoid themePrevious();\nvoid themeApply();\nvoid themeCancel();\nvoid startRenameTab();\nvoid appendRenameChar(char character);\nvoid backspaceRenameChar();\nvoid renameTabApply();\nvoid renameTabCancel();\nvoid helpScroll(int delta);\nvoid appendHelpFilter(char character);\nvoid backspaceHelpFilter();\nvoid toggleZoom();\nvoid toggleResizeMode();\nvoid toggleClock();\nvoid closeClock();\n\nvoid focusDirection(int dx, int dy);\nvoid focusNext();\nvoid focusPrevious();\nvoid splitFocused(bool vertical);\nvoid splitWindow(bool vertical);\nvoid closePane();\nvoid newTab();\nvoid closeTab();\nvoid selectTab(int oneBased);\nvoid nextTab();\nvoid previousTab();\n\nvoid resizeFocused(int dx, int dy, int amount = 0);\nvoid resizeEqual();\nvoid scroll(int delta);\nvoid scrollToEdge(bool top);\nvoid moveNavigation(int dx, int dy);\nvoid moveNavigationWord(int direction);\nvoid moveNavigationEdge(bool top, bool line);\nvoid selectHere();\nvoid yank(bool wholeLine);\nvoid paste();\nvoid sendKeys(const std::string& data);",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "07f907e5",
+                "title": "Overlay Enum Class",
+                "content": "Overlay Enum Class\n\nenum class Overlay { None, Help, Tabs, Themes, Rename };",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "03e5ccea",
+            "title": "mode.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "05b1776f",
+                "title": "Mode Enum Class",
+                "content": "Mode Enum Class\n\nenum class Mode { Normal, Insert, Visual };",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "4e13e38b",
-                "title": "Ftxui On Event",
-                "content": "Ftxui On Event\n\nSignature: bool App::OnEvent(ftxui::Event event)\nMethod: OnEvent\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By: (none found)",
+                "id": "fa75dda9",
+                "title": "Mode Name",
+                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "acc55f14",
-                "title": "Ftxui Render",
-                "content": "Ftxui Render\n\nftxui::Element App::Render()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
+                "id": "37bacfd0",
+                "title": "Parse Mode",
+                "content": "Parse Mode\n\nSignature: inline bool parseMode(const std::string& text, Mode& mode)\nMethod: parseMode\nReturns: inline bool\nParameters:\n    text const std::string&\n    mode Mode&\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\ninline bool parseMode(const std::string& text, Mode& mode)\n{\n    const std::string value = text == \"insert\" ? \"normal\" : text;\n    if (value == \"plex\" || value == \"normal-mode\")\n    {\n        mode = Mode::Normal;\n    }\n    else if (value == \"normal\" || value == \"insert\")\n    {\n        mode = Mode::Insert;\n    }\n    else if (value == \"visual\")\n    {\n        mode = Mode::Visual;\n    }\n    else\n    {\n        return false;\n    }\n\n    return true;\n}",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "92450527",
+        "title": "layout",
+        "content": "",
+        "children": [
+          {
+            "id": "45a49c1e",
+            "title": "node.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "0db03d65",
+                "title": "Find Pane",
+                "content": "Find Pane\n\nSignature: NodePtr findPane(const NodePtr& node, int paneId)\nMethod: findPane\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\nCalled By:\n    [closePane](_Close Pane_)\n    [findPane](_Find Pane_)\n    [findResizeSplit](_Find Resize Split_)\n    [focusedPane](_Focus Pane_)\n    [setFocus](_Set Focus_)\n    [splitFocused](_Split Focused_)",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "cd2f8ae1",
-                "title": "Handle the Key Combination",
-                "content": "Handle the Key Combination\n\nSignature: bool App::handleKey(const ftxui::Event& event)\nMethod: handleKey\nReturns: bool App\nParameters:\n    event const ftxui::Event&\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                "id": "7492e672",
+                "title": "Find Parent",
+                "content": "Find Parent\n\nSignature: NodePtr findParent(const NodePtr& node, int paneId)\nMethod: findParent\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\nCalled By:\n    [closePane](_Close Pane_)\n    [findParent](_Find Parent_)",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "f30fae4e",
-                "title": "Handle the Mouse",
-                "content": "Handle the Mouse\n\nSignature: bool App::handleMouse(ftxui::Event event)\nMethod: handleMouse\nReturns: bool App\nParameters:\n    event ftxui::Event\nCalled By:\n    [OnEvent](_Ftxui On Event_)",
+                "id": "8056df09",
+                "title": "Find Resize Split",
+                "content": "Find Resize Split\n\nSignature: NodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind)\nMethod: findResizeSplit\nReturns: NodePtr\nParameters:\n    node   const NodePtr&\n    paneId int\n    kind   SplitKind\nCalled By:\n    [findResizeSplit](_Find Resize Split_)\n    [resizeFocused](_Resize Focused Pane_)\n\n--------------------------------------------------------------------------------\n\nNodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind)\n{\n    if (!node || node->type != Node::Type::Split) return nullptr;\n\n    const NodePtr child = findPane(node->first, paneId) ? node->first : node->second;\n\n    if (!child || !findPane(child, paneId)) return nullptr;\n\n    if (auto found = findResizeSplit(child, paneId, kind)) return found;\n\n    return node->kind == kind ? node : nullptr;\n}",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "bcd444fd",
-                "title": "Refresh Token",
-                "content": "Refresh Token\n\nconstexpr const char* kRefreshToken = \"__nexyth_refresh__\";",
+                "id": "54b6b787",
+                "title": "Make Pane Node",
+                "content": "Make Pane Node\n\nSignature: NodePtr makePaneNode(std::shared_ptr<Pane> pane)\nMethod: makePaneNode\nReturns: NodePtr\nParameters:\n    pane std::shared_ptr<Pane>\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Leaf;\n    node->pane = std::move(pane);\n\n    return node;\n}",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "e0e09a4c",
-                "title": "Run Clipboard Command",
-                "content": "Run Clipboard Command\n\nSignature: bool runClipboardCommand(const std::vector<std::string>& argv, const std::string& text)\nMethod: runClipboardCommand\nReturns: bool\nParameters:\n    argv const std::vector<std::string>&\n    text const std::string&\nCalled By:\n    [app.cpp:203](_app.cpp_)",
+                "id": "8338a200",
+                "title": "Make Split Node",
+                "content": "Make Split Node\n\nSignature: NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\nMethod: makeSplitNode\nReturns: NodePtr\nParameters:\n    first  NodePtr\n    second NodePtr\n    kind   SplitKind\n    ratio  double\nCalled By:\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Split;\n    node->kind = kind;\n    node->ratio = ratio;\n    node->first = std::move(first);\n    node->second = std::move(second);\n\n    return node;\n}",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "9bdd6c4d",
-                "title": "Set the Mode",
-                "content": "Set the Mode\n\nSignature: void App::setMode(Mode mode)\nMethod: setMode\nReturns: void App\nParameters:\n    mode Mode\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [setMode](_Set the Mode_)\n    [The Action Registry](_The Action Registry_)",
+                "id": "b3b7a7e8",
+                "title": "Replace Node",
+                "content": "Replace Node\n\nSignature: bool replaceNode(NodePtr& node, const NodePtr& target, const NodePtr& replacement)\nMethod: replaceNode\nReturns: bool\nParameters:\n    node        NodePtr&\n    target      const NodePtr&\n    replacement const NodePtr&\nCalled By:\n    [closePane](_Close Pane_)\n    [replaceNode](_Replace Node_)",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "e3d8fab6",
-                "title": "Unescape Keys",
-                "content": "Unescape Keys\n\nSignature: std::string unescapeKeys(const std::string& text)\nMethod: unescapeKeys\nReturns: std::string\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)",
+                "id": "97d6b02e",
+                "title": "Replace Pane",
+                "content": "Replace Pane\n\nSignature: bool replacePane(NodePtr& node, int paneId, const NodePtr& replacement)\nMethod: replacePane\nReturns: bool\nParameters:\n    node        NodePtr&\n    paneId      int\n    replacement const NodePtr&\nCalled By:\n    [replacePane](_Replace Pane_)\n    [splitFocused](_Split Focused_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "a3e82fc2",
+            "title": "node.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "3c152b05",
+                "title": "Forward Declarations",
+                "content": "Forward Declarations\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane);\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio = 0.5);\nNodePtr findPane(const NodePtr& node, int paneId);\nNodePtr findParent(const NodePtr& node, int paneId);\nNodePtr findResizeSplit(const NodePtr& node, int paneId, SplitKind kind);\nbool replacePane(NodePtr& node, int paneId, const NodePtr& replacement);\nbool replaceNode(NodePtr& node, const NodePtr& target, const NodePtr& replacement);",
                 "children": [],
                 "expanded": false
               },
               {
-                "id": "55b63276",
-                "title": "Write System Clipboard",
-                "content": "Write System Clipboard\n\nSignature: bool writeSystemClipboard(const std::string& text)\nMethod: writeSystemClipboard\nReturns: bool\nParameters:\n    text const std::string&\nCalled By:\n    [setMode](_Set the Mode_)\n\nCommands:\n\nstatic const std::vector<std::vector<std::string>> commands = {\n    {\"wl-copy\"},\n    {\"xclip\", \"-selection\", \"clipboard\"},\n    {\"xsel\", \"--clipboard\", \"--input\"},\n    {\"pbcopy\"},\n    {\"clip.exe\"},\n};",
+                "id": "9b6543f9",
+                "title": "Node Struct (and variables)",
+                "content": "Node Struct (and variables)\n\nclass Node;\nusing NodePtr = std::shared_ptr<Node>;\nenum class SplitKind { SideBySide, Stacked };\n\nstruct Node\n{\n    enum class Type { Leaf, Split };\n\n    Type type = Type::Leaf;\n    SplitKind kind = SplitKind::SideBySide;\n    double ratio = 0.5;\n    NodePtr first;\n    NodePtr second;\n    std::shared_ptr<Pane> pane;\n};",
                 "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "8d2741a6",
+            "title": "pane.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "3e44b917",
+                "title": "Alive Bool",
+                "content": "Alive Bool\n\nSignature: bool Pane::alive() const\nMethod: alive\nReturns: bool Pane\nQualifiers: const\nCalled By:\n    [readLoop](_Read Loop_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "093a1fec",
+                "title": "Pane Constructor",
+                "content": "Pane Constructor\n\nSignature: Pane::Pane(int id, std::string command, int columns, int rows, int scrollback, std::function<void(int)> onData) : id_(id), command_(std::move(command)), buffer_(columns, rows, scrollback), onData_(std::move(onData))\nConstructor: Pane\nParameters:\n    id         int\n    command    std::string\n    columns    int\n    rows       int\n    scrollback int\n    onData     std::function<void(int)>\nInitializers:\n    id_      id\n    command_ std::move(command)\n    buffer_  columns, rows, scrollback\n    onData_  std::move(onData)\nCalled By:\n    [makePane](_Make Pane_)\n    [~Pane](_Pane Destructor_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "6d84af58",
+                "title": "Pane Destructor",
+                "content": "Pane Destructor\n\nSignature: Pane::~Pane()\nMethod: ~Pane\nReturns: Pane\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nPane::~Pane()\n{\n    running_ = false;\n    if (reader_.joinable()) reader_.join();\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "d6f1ed74",
+                "title": "Pane Tile",
+                "content": "Pane Tile\n\nSignature: std::string Pane::title() const\nMethod: title\nReturns: std::string Pane\nQualifiers: const\nCalled By:\n    [setTitle](_Set Title_)\n    [tabLabel](_Tab Label_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b130dece",
+                "title": "Read Loop",
+                "content": "Read Loop\n\nSignature: void Pane::readLoop()\nMethod: readLoop\nReturns: void Pane\nCalled By:\n    [start](_Start_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "84ee3826",
+                "title": "Resize",
+                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "4bacf79c",
+                "title": "Set Title",
+                "content": "Set Title\n\nSignature: void Pane::setTitle(std::string title)\nMethod: setTitle\nReturns: void Pane\nParameters:\n    title std::string\nCalled By:\n    [readLoop](_Read Loop_)\n    [start](_Start_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "6c05ed6a",
+                "title": "Start",
+                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "30a9a079",
+                "title": "Write",
+                "content": "Write\n\nSignature: void Pane::write(const std::string& data)\nMethod: write\nReturns: void Pane\nParameters:\n    data const std::string&\nCalled By:\n    [enterNormal](_Enter Normal Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [runClipboardCommand](_Run Clipboard Command_)\n    [sendKeys](_Send Keys_)\n    [write](_Write_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::write(const std::string& data)\n{\n    pty_.write(data);\n}",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "6544d251",
+            "title": "pane.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "4650dba7",
+                "title": "Pane Class",
+                "content": "Pane Class",
+                "children": [
+                  {
+                    "id": "3f50e55a",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nvoid readLoop();\n\nint id_ = 0;\nstd::string command_;\nBuffer buffer_;\nstd::function<void(int)> onData_;\nPty pty_;\nstd::thread reader_;\nstd::mutex mutex_;\nmutable std::mutex title_mutex_;\nstd::string title_;\nstd::atomic<bool> running_{true};\nstd::atomic<bool> alive_{true};",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "45443f55",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nPane(int id, std::string command, int columns, int rows, int scrollback,\nstd::function<void(int)> onData);\n~Pane();\nPane(const Pane&) = delete;\nPane& operator=(const Pane&) = delete;\n\nvoid start();\nvoid write(const std::string& data);\nvoid resize(int columns, int rows);\nint id() const { return id_; }\nstd::string title() const;\nvoid setTitle(std::string title);\nbool alive() const;\nBuffer& buffer() { return buffer_; }\nstd::mutex& mutex() { return mutex_; }",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "8e043ee0",
+            "title": "workspace.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "5a53db49",
+                "title": "Close Pane",
+                "content": "Close Pane\n\nSignature: void Workspace::closePane()\nMethod: closePane\nReturns: void Workspace\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "e73cc7e2",
+                "title": "Close Tab",
+                "content": "Close Tab\n\nSignature: void Workspace::closeTab()\nMethod: closeTab\nReturns: void Workspace\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "218a595d",
+                "title": "Collect Panes",
+                "content": "Collect Panes\n\nSignature: void Workspace::collectPanes(const NodePtr& node, std::vector<int>& out) const\nMethod: collectPanes\nReturns: void Workspace\nQualifiers: const\nParameters:\n    node const NodePtr&\n    out  std::vector<int>&\nCalled By:\n    [closePane](_Close Pane_)\n    [collectPanes](_Collect Panes_)\n    [focusNextPane](_Focus Next Pane_)\n    [focusPreviousPane](_Focus Previous Pane_)\n    [normalizeFocus](_Normalize Focus_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f9964e9a",
+                "title": "Create Initial",
+                "content": "Create Initial\n\nSignature: void Workspace::createInitial(int columns, int rows)\nMethod: createInitial\nReturns: void Workspace\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [Ftxui App](_Ftxui App_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "94547c88",
+                "title": "Focus Next Pane",
+                "content": "Focus Next Pane\n\nSignature: void Workspace::focusNextPane()\nMethod: focusNextPane\nReturns: void Workspace\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [focusNext](_Focus Next Pane_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "580dec50",
+                "title": "Focus Pane",
+                "content": "Focus Pane\n\nSignature: std::shared_ptr<Pane> Workspace::focusedPane() const\nMethod: focusedPane\nReturns: std::shared_ptr<Pane> Workspace\nQualifiers: const\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resizeFocused](_Resize Focused Pane_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [sendKeys](_Send Keys_)\n    [setMode](_Set the Mode_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [tabLabel](_Tab Label_)\n    [toggleClock](_Toggle the Clock_)\n    [yank](_Yank_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b7cf100d",
+                "title": "Focus Previous Pane",
+                "content": "Focus Previous Pane\n\nSignature: void Workspace::focusPreviousPane()\nMethod: focusPreviousPane\nReturns: void Workspace\nCalled By:\n    [focusPrevious](_Focus Previous Pane_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "87751cc3",
+                "title": "Make Pane",
+                "content": "Make Pane\n\nSignature: std::shared_ptr<Pane> Workspace::makePane(int columns, int rows)\nMethod: makePane\nReturns: std::shared_ptr<Pane> Workspace\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nstd::shared_ptr<Pane> Workspace::makePane(int columns, int rows)\n{\n    const int id = next_id_++;\n    auto pane = std::make_shared<Pane>(id, shell_, columns, rows, scrollback_, onData_);\n    pane->start();\n    return pane;\n}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "c995508b",
+                "title": "New Tab",
+                "content": "New Tab\n\nSignature: void Workspace::newTab(int columns, int rows)\nMethod: newTab\nReturns: void Workspace\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "fa014a97",
+                "title": "Normalize Focus",
+                "content": "Normalize Focus\n\nSignature: void Workspace::normalizeFocus(Tab& tab)\nMethod: normalizeFocus\nReturns: void Workspace\nParameters:\n    tab Tab&\nCalled By:\n    [closeTab](_Close Tab_)\n    [selectTab](_Select Tab_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "8eb83d04",
+                "title": "Select Tab",
+                "content": "Select Tab\n\nSignature: void Workspace::selectTab(int oneBased)\nMethod: selectTab\nReturns: void Workspace\nParameters:\n    oneBased int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "7308bf43",
+                "title": "Set Focus",
+                "content": "Set Focus\n\nSignature: void Workspace::setFocus(int paneId)\nMethod: setFocus\nReturns: void Workspace\nParameters:\n    paneId int\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [handleMouse](_Handle the Mouse_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "35823180",
+                "title": "Set Tab Name",
+                "content": "Set Tab Name\n\nSignature: void Workspace::setTabName(std::string name)\nMethod: setTabName\nReturns: void Workspace\nParameters:\n    name std::string\nCalled By:\n    [renameTabApply](_Apply the Rename_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "8590af20",
+                "title": "Split Focused",
+                "content": "Split Focused\n\nSignature: void Workspace::splitFocused(bool vertical, int columns, int rows)\nMethod: splitFocused\nReturns: void Workspace\nParameters:\n    vertical bool\n    columns  int\n    rows     int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "fc4b20b4",
+                "title": "Split Window",
+                "content": "Split Window\n\nSignature: void Workspace::splitWindow(bool vertical, int columns, int rows)\nMethod: splitWindow\nReturns: void Workspace\nParameters:\n    vertical bool\n    columns  int\n    rows     int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "734191bf",
+                "title": "Tab Label",
+                "content": "Tab Label\n\nSignature: std::string Workspace::tabLabel(int index) const\nMethod: tabLabel\nReturns: std::string Workspace\nQualifiers: const\nParameters:\n    index int\nCalled By: (none found)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "895f0253",
+                "title": "Workspace Constructor",
+                "content": "Workspace Constructor\n\nSignature: Workspace::Workspace(std::string shell, int scrollback, std::function<void(int)> onData) : shell_(std::move(shell)), scrollback_(scrollback), onData_(std::move(onData))\nConstructor: Workspace\nParameters:\n    shell      std::string\n    scrollback int\n    onData     std::function<void(int)>\nInitializers:\n    shell_      std::move(shell)\n    scrollback_ scrollback\n    onData_     std::move(onData)\nCalled By: (none found)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "72b4e35d",
+            "title": "workspace.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "de3aeb0a",
+                "title": "Tab Struct",
+                "content": "Tab Struct\n\nstruct Tab\n{\n    NodePtr root;\n    int focusId = -1;\n    std::string name;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "40cd5c50",
+                "title": "Workspace Class",
+                "content": "Workspace Class",
+                "children": [
+                  {
+                    "id": "5b582b06",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nstd::shared_ptr<Pane> makePane(int columns, int rows);\nvoid normalizeFocus(Tab& tab);\n\nstd::string shell_;\nint scrollback_ = 20000;\nstd::function<void(int)> onData_;\nstd::vector<Tab> tabs_;\nint active_ = 0;\nint next_id_ = 1;",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "da39970f",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nWorkspace(std::string shell, int scrollback, std::function<void(int)> onData);\n\nvoid createInitial(int columns, int rows);\nstd::vector<Tab>& tabs() { return tabs_; }\nconst std::vector<Tab>& tabs() const { return tabs_; }\nTab& active() { return tabs_[active_]; }\nint activeIndex() const { return active_; }\nint tabCount() const { return static_cast<int>(tabs_.size()); }\nstd::string tabLabel(int index) const;\nvoid setTabName(std::string name);\n\nstd::shared_ptr<Pane> focusedPane() const;\nvoid setFocus(int paneId);\nvoid focusNextPane();\nvoid focusPreviousPane();\nvoid collectPanes(const NodePtr& node, std::vector<int>& out) const;\n\nvoid selectTab(int oneBased);\nvoid newTab(int columns, int rows);\nvoid closeTab();\n\nvoid splitFocused(bool vertical, int columns, int rows);\nvoid splitWindow(bool vertical, int columns, int rows);\nvoid closePane();",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "ae2c4610",
+        "title": "main.cpp",
+        "content": "",
+        "children": [
+          {
+            "id": "886fe746",
+            "title": "Main Method",
+            "content": "Main Method\n\nSignature: int main(int argc, char** argv)\nMethod: main\nReturns: int\nParameters:\n    argc int\n    argv char**\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nint main(int argc, char** argv)\n{\n    using nexyth::App;\n    using nexyth::Config;\n    std::string configPath = Config::defaultPath();\n\n    if (argc > 1) configPath = argv[1];\n\n    auto screen = ftxui::ScreenInteractive::Fullscreen();\n    auto app = ftxui::Make<App>(&screen, configPath);\n    screen.Loop(app);\n\n    return 0;\n}",
+            "children": [],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "bb22205e",
+        "title": "terminal",
+        "content": "",
+        "children": [
+          {
+            "id": "b04fe56a",
+            "title": "buffer.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "c3dfebfc",
+                "title": "Buffer",
+                "content": "Buffer",
+                "children": [
+                  {
+                    "id": "193424eb",
+                    "title": "Black Cell",
+                    "content": "Black Cell\n\nSignature: Cell Buffer::blankCell() const\nMethod: blankCell\nReturns: Cell Buffer\nQualifiers: const\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [ensureLine](_Ensure Line_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseDisplay](_Erase Display_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [putGrapheme](_Put Grapheme_)\n    [reset](_Reset_)\n    [resize](_Resize_)\n    [shiftLines](_Shift Lines_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "4939a357",
+                    "title": "Buffer Constructor",
+                    "content": "Buffer Constructor\n\nSignature: Buffer::Buffer(int columns, int rows, int scrollback) : columns_(std::max(1, columns)), rows_(std::max(1, rows)), scrollback_limit_(std::max(0, scrollback))\nConstructor: Buffer\nParameters:\n    columns    int\n    rows       int\n    scrollback int\nInitializers:\n    columns_          std::max(1, columns)\n    rows_             std::max(1, rows)\n    scrollback_limit_ std::max(0, scrollback)\nCalled By:\n    [~Buffer](_Buffer Destructor_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5257b939",
+                    "title": "Buffer Destructor",
+                    "content": "Buffer Destructor\n\nSignature: Buffer::~Buffer()\nMethod: ~Buffer\nReturns: Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nBuffer::~Buffer() { delete parser_; }",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5f582503",
+                    "title": "Buffer Feed",
+                    "content": "Buffer Feed\n\nSignature: void Buffer::feed(std::string_view data)\nMethod: feed\nReturns: void Buffer\nParameters:\n    data std::string_view\nCalled By:\n    [feed](_Buffer Feed_)\n    [readLoop](_Read Loop_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "de30bb00",
+                    "title": "Enter Alternate Screen",
+                    "content": "Enter Alternate Screen\n\nSignature: void Buffer::enterAlternateScreen()\nMethod: enterAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis manages state.\n\nScreenState state;\nstate.lines = lines_;\nstate.cursor_x = cursor_x_;\nstate.cursor_y = cursor_y_;\nstate.saved_x = saved_x_;\nstate.saved_y = saved_y_;\nstate.style = current_style_;\nstate.saved_style = saved_style_;\nstate.scroll_offset = scroll_offset_;\nstate.scroll_top = scroll_top_;\nstate.scroll_bottom = scroll_bottom_;\nstate.scroll_region_set = scroll_region_set_;\nstate.wrap_pending = wrap_pending_;\nstate.navigation = navigation_;\nsaved_screen_ = std::move(state);\n\nlines_.assign(rows_, std::vector<Cell>(columns_, Cell{}));\ncursor_x_ = 0;\ncursor_y_ = 0;\nsaved_x_ = 0;\nsaved_y_ = 0;\ncurrent_style_ = Style{};\nsaved_style_ = Style{};\nscroll_offset_ = 0;\nscroll_top_ = 0;\nscroll_bottom_ = -1;\nscroll_region_set_ = false;\nwrap_pending_ = false;\nnavigation_ = {0, rows_ - 1};\nclearSelection();",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "35c193e2",
+                    "title": "Erase Display",
+                    "content": "Erase Display\n\nSignature: void Buffer::eraseDisplay(int mode)\nMethod: eraseDisplay\nReturns: void Buffer\nParameters:\n    mode int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "01af5db9",
+                    "title": "Leave Alternate Screen",
+                    "content": "Leave Alternate Screen\n\nSignature: void Buffer::leaveAlternateScreen()\nMethod: leaveAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis restores from state.\n\nScreenState state = std::move(*saved_screen_);\nsaved_screen_.reset();\n\nlines_ = std::move(state.lines);\ncursor_x_ = state.cursor_x;\ncursor_y_ = state.cursor_y;\nsaved_x_ = state.saved_x;\nsaved_y_ = state.saved_y;\ncurrent_style_ = state.style;\nsaved_style_ = state.saved_style;\nscroll_offset_ = state.scroll_offset;\nscroll_top_ = state.scroll_top;\nscroll_bottom_ = state.scroll_bottom;\nscroll_region_set_ = state.scroll_region_set;\nwrap_pending_ = state.wrap_pending;\nnavigation_ = state.navigation;\nclearSelection();",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "0487d6e1",
+                    "title": "Put Grapheme",
+                    "content": "Put Grapheme\n\nSignature: void Buffer::putGrapheme(const std::string& grapheme)\nMethod: putGrapheme\nReturns: void Buffer\nParameters:\n    grapheme const std::string&\nCalled By:\n    [putText](_Put Text_)\n\n--------------------------------------------------------------------------------\n\nWhat is grapheme?\n\n#todo",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "01a022f0",
+                    "title": "Reset",
+                    "content": "Reset\n\nSignature: void Buffer::reset()\nMethod: reset\nReturns: void Buffer\nCalled By:\n    [clearSelection](_Clear Selection_)\n    [closePane](_Close Pane_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ae2774cd",
+                    "title": "Shift Lines",
+                    "content": "Shift Lines\n\nSignature: void Buffer::shiftLines(int top, int bottom, int count, bool down)\nMethod: shiftLines\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\n    count  int\n    down   bool\nCalled By:\n    [deleteLines](_Delete Lines_)\n    [insertLines](_Insert Lines_)\n    [lineFeed](_Line Feed_)\n    [scrollRegionDown](_Scroll Region Down_)\n    [scrollRegionUp](_Scroll Region Up_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "082aee62",
+                "title": "Cursor Handlers",
+                "content": "Cursor Handlers",
+                "children": [
+                  {
+                    "id": "b5f2be52",
+                    "title": "Restore Cursor",
+                    "content": "Restore Cursor\n\nSignature: void Buffer::restoreCursor()\nMethod: restoreCursor\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "eda73069",
+                    "title": "Save Cursor",
+                    "content": "Save Cursor\n\nSignature: void Buffer::saveCursor()\nMethod: saveCursor\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "48dd7ffb",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "52ca8a2d",
+                    "title": "Clamp Int",
+                    "content": "Clamp Int\n\nSignature: int clampInt(int value, int low, int high)\nMethod: clampInt\nReturns: int\nParameters:\n    value int\n    low   int\n    high  int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [insertBlanks](_Insert Blanks_)\n    [resize](_Resize_)\n    [restoreCursor](_Restore Cursor_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n    [setScrollRegion](_Set Scroll Region_)\n    [shiftLines](_Shift Lines_)\n\n--------------------------------------------------------------------------------\n\nint clampInt(int value, int low, int high)\n{\n    if (high < low) return low;\n    return std::max(low, std::min(high, value));\n}",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "6d533813",
+                "title": "Scrolling Handlers",
+                "content": "Scrolling Handlers",
+                "children": [
+                  {
+                    "id": "5e947012",
+                    "title": "Max Scroll Offset",
+                    "content": "Max Scroll Offset\n\nSignature: int Buffer::maxScrollOffset() const\nMethod: maxScrollOffset\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [scrollToTop](_Scroll To Top_)\n    [setNavigation](_Set Navigation_)\n    [visibleStart](_Visible Start_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bb57dbaa",
+                    "title": "Move Navigation",
+                    "content": "Move Navigation\n\nSignature: void Buffer::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void Buffer\nParameters:\n    dx int\n    dy int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ab74d47d",
+                    "title": "Resize",
+                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5c4a1f7c",
+                    "title": "Scroll Bounds",
+                    "content": "Scroll Bounds\n\nSignature: std::pair<int, int> Buffer::scrollBounds() const\nMethod: scrollBounds\nReturns: std::pair<int, int> Buffer\nQualifiers: const\nCalled By:\n    [deleteLines](_Delete Lines_)\n    [insertLines](_Insert Lines_)\n    [lineFeed](_Line Feed_)\n    [scrollRegionDown](_Scroll Region Down_)\n    [scrollRegionUp](_Scroll Region Up_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "64fabf1b",
+                    "title": "Scroll By",
+                    "content": "Scroll By\n\nSignature: void Buffer::scrollBy(int delta)\nMethod: scrollBy\nReturns: void Buffer\nParameters:\n    delta int\nCalled By:\n    [scroll](_Scroll Pane_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bcd012ac",
+                    "title": "Scroll Region Down",
+                    "content": "Scroll Region Down\n\nSignature: void Buffer::scrollRegionDown(int count)\nMethod: scrollRegionDown\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ec65e26e",
+                    "title": "Scroll Region Up",
+                    "content": "Scroll Region Up\n\nSignature: void Buffer::scrollRegionUp(int count)\nMethod: scrollRegionUp\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "dfe9c82f",
+                    "title": "Scroll To Bottom",
+                    "content": "Scroll To Bottom\n\nSignature: void Buffer::scrollToBottom()\nMethod: scrollToBottom\nReturns: void Buffer\nCalled By:\n    [scrollToEdge](_Scroll To Edge_)\n    [setMode](_Set the Mode_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8954c435",
+                    "title": "Scroll To Top",
+                    "content": "Scroll To Top\n\nSignature: void Buffer::scrollToTop()\nMethod: scrollToTop\nReturns: void Buffer\nCalled By:\n    [scrollToEdge](_Scroll To Edge_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "37961bd7",
+                    "title": "Set Anchor",
+                    "content": "Set Anchor\n\nSignature: void Buffer::setAnchor(Pos position)\nMethod: setAnchor\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [selectHere](_Select Here_)\n    [startSelection](_Start Selection_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c497d6b1",
+                    "title": "Set Head",
+                    "content": "Set Head\n\nSignature: void Buffer::setHead(Pos position)\nMethod: setHead\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2aac94f4",
+                    "title": "Set Navigation",
+                    "content": "Set Navigation\n\nSignature: void Buffer::setNavigation(Pos position)\nMethod: setNavigation\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "84db0b92",
+                    "title": "Set Scroll Region",
+                    "content": "Set Scroll Region\n\nSignature: void Buffer::setScrollRegion(int top, int bottom)\nMethod: setScrollRegion\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c6531171",
+                    "title": "Visible Start",
+                    "content": "Visible Start\n\nSignature: int Buffer::visibleStart() const\nMethod: visibleStart\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resize](_Resize_)\n    [scrollBounds](_Scroll Bounds_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "99d7583d",
+                "title": "Text Handlers",
+                "content": "Text Handlers",
+                "children": [
+                  {
+                    "id": "e52b6c6b",
+                    "title": "Back Space",
+                    "content": "Back Space\n\nSignature: void Buffer::backspace()\nMethod: backspace\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "851c760f",
+                    "title": "Carriage Return",
+                    "content": "Carriage Return\n\nSignature: void Buffer::carriageReturn()\nMethod: carriageReturn\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "a4539ee3",
+                    "title": "Clear Selection",
+                    "content": "Clear Selection\n\nSignature: void Buffer::clearSelection()\nMethod: clearSelection\nReturns: void Buffer\nCalled By:\n    [enterAlternateScreen](_Enter Alternate Screen_)\n    [enterVisual](_Enter Visual Mode_)\n    [eraseDisplay](_Erase Display_)\n    [exitVisual](_Exit Visual Mode_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)\n    [lineFeed](_Line Feed_)\n    [reset](_Reset_)\n    [setMode](_Set the Mode_)\n    [shiftLines](_Shift Lines_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "269e3e5c",
+                    "title": "Delete Characters",
+                    "content": "Delete Characters\n\nSignature: void Buffer::deleteCharacters(int count)\nMethod: deleteCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5dd8079c",
+                    "title": "Delete Lines",
+                    "content": "Delete Lines\n\nSignature: void Buffer::deleteLines(int count)\nMethod: deleteLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "992e069f",
+                    "title": "Ensure Line",
+                    "content": "Ensure Line\n\nSignature: void Buffer::ensureLine(int index)\nMethod: ensureLine\nReturns: void Buffer\nParameters:\n    index int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [lineFeed](_Line Feed_)\n    [putGrapheme](_Put Grapheme_)\n    [restoreCursor](_Restore Cursor_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f1d8b049",
+                    "title": "Erase Characters",
+                    "content": "Erase Characters\n\nSignature: void Buffer::eraseCharacters(int count)\nMethod: eraseCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "9cd2b4a4",
+                    "title": "Erase Line",
+                    "content": "Erase Line\n\nSignature: void Buffer::eraseLine(int mode)\nMethod: eraseLine\nReturns: void Buffer\nParameters:\n    mode int\nCalled By:\n    [eraseDisplay](_Erase Display_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1e42cd4c",
+                    "title": "Insert Blanks",
+                    "content": "Insert Blanks\n\nSignature: void Buffer::insertBlanks(int count)\nMethod: insertBlanks\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3767485f",
+                    "title": "Insert Lines",
+                    "content": "Insert Lines\n\nSignature: void Buffer::insertLines(int count)\nMethod: insertLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6fd19f7e",
+                    "title": "Line Feed",
+                    "content": "Line Feed\n\nSignature: void Buffer::lineFeed()\nMethod: lineFeed\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "58631d2c",
+                    "title": "Put Text",
+                    "content": "Put Text\n\nSignature: void Buffer::putText(const std::string& text)\nMethod: putText\nReturns: void Buffer\nParameters:\n    text const std::string&\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "00a85326",
+                    "title": "Selected Text",
+                    "content": "Selected Text\n\nSignature: std::string Buffer::selectedText() const\nMethod: selectedText\nReturns: std::string Buffer\nQualifiers: const\nCalled By:\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "992d16af",
+                    "title": "Tab",
+                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               }
             ],
