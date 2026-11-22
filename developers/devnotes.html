@@ -2073,7 +2073,7 @@
               {
                 "id": "84ee3826",
                 "title": "Resize",
-                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [buffer.cpp:412](_buffer.cpp_)\n    [buffer.cpp:414](_buffer.cpp_)\n    [resize](_Resize_)",
+                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
                 "children": [],
                 "expanded": false
               },
@@ -2087,7 +2087,7 @@
               {
                 "id": "6c05ed6a",
                 "title": "Start",
-                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [buffer.cpp:198](_buffer.cpp_)\n    [buffer.cpp:425](_buffer.cpp_)\n    [buffer.cpp:438](_buffer.cpp_)\n    [buffer.cpp:446](_buffer.cpp_)\n    [buffer.cpp:495](_buffer.cpp_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
+                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2309,31 +2309,330 @@
             "content": "",
             "children": [
               {
-                "id": "ccebe15e",
-                "title": "Buffer Constructor",
-                "content": "Buffer Constructor\n\nSignature: Buffer::Buffer(int columns, int rows, int scrollback) : columns_(std::max(1, columns)), rows_(std::max(1, rows)), scrollback_limit_(std::max(0, scrollback))\nConstructor: Buffer\nParameters:\n    columns    int\n    rows       int\n    scrollback int\nInitializers:\n    columns_          std::max(1, columns)\n    rows_             std::max(1, rows)\n    scrollback_limit_ std::max(0, scrollback)\nCalled By:\n    [~Buffer](_Buffer Destructor_)",
-                "children": [],
-                "expanded": false
-              },
-              {
                 "id": "c3dfebfc",
-                "title": "Buffer Destructor",
-                "content": "Buffer Destructor\n\nSignature: Buffer::~Buffer()\nMethod: ~Buffer\nReturns: Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nBuffer::~Buffer() { delete parser_; }",
-                "children": [],
+                "title": "Buffer",
+                "content": "Buffer",
+                "children": [
+                  {
+                    "id": "193424eb",
+                    "title": "Black Cell",
+                    "content": "Black Cell\n\nSignature: Cell Buffer::blankCell() const\nMethod: blankCell\nReturns: Cell Buffer\nQualifiers: const\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [ensureLine](_Ensure Line_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseDisplay](_Erase Display_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [putGrapheme](_Put Grapheme_)\n    [reset](_Reset_)\n    [resize](_Resize_)\n    [shiftLines](_Shift Lines_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "4939a357",
+                    "title": "Buffer Constructor",
+                    "content": "Buffer Constructor\n\nSignature: Buffer::Buffer(int columns, int rows, int scrollback) : columns_(std::max(1, columns)), rows_(std::max(1, rows)), scrollback_limit_(std::max(0, scrollback))\nConstructor: Buffer\nParameters:\n    columns    int\n    rows       int\n    scrollback int\nInitializers:\n    columns_          std::max(1, columns)\n    rows_             std::max(1, rows)\n    scrollback_limit_ std::max(0, scrollback)\nCalled By:\n    [~Buffer](_Buffer Destructor_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5257b939",
+                    "title": "Buffer Destructor",
+                    "content": "Buffer Destructor\n\nSignature: Buffer::~Buffer()\nMethod: ~Buffer\nReturns: Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nBuffer::~Buffer() { delete parser_; }",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5f582503",
+                    "title": "Buffer Feed",
+                    "content": "Buffer Feed\n\nSignature: void Buffer::feed(std::string_view data)\nMethod: feed\nReturns: void Buffer\nParameters:\n    data std::string_view\nCalled By:\n    [feed](_Buffer Feed_)\n    [readLoop](_Read Loop_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "de30bb00",
+                    "title": "Enter Alternate Screen",
+                    "content": "Enter Alternate Screen\n\nSignature: void Buffer::enterAlternateScreen()\nMethod: enterAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis manages state.\n\nScreenState state;\nstate.lines = lines_;\nstate.cursor_x = cursor_x_;\nstate.cursor_y = cursor_y_;\nstate.saved_x = saved_x_;\nstate.saved_y = saved_y_;\nstate.style = current_style_;\nstate.saved_style = saved_style_;\nstate.scroll_offset = scroll_offset_;\nstate.scroll_top = scroll_top_;\nstate.scroll_bottom = scroll_bottom_;\nstate.scroll_region_set = scroll_region_set_;\nstate.wrap_pending = wrap_pending_;\nstate.navigation = navigation_;\nsaved_screen_ = std::move(state);\n\nlines_.assign(rows_, std::vector<Cell>(columns_, Cell{}));\ncursor_x_ = 0;\ncursor_y_ = 0;\nsaved_x_ = 0;\nsaved_y_ = 0;\ncurrent_style_ = Style{};\nsaved_style_ = Style{};\nscroll_offset_ = 0;\nscroll_top_ = 0;\nscroll_bottom_ = -1;\nscroll_region_set_ = false;\nwrap_pending_ = false;\nnavigation_ = {0, rows_ - 1};\nclearSelection();",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "35c193e2",
+                    "title": "Erase Display",
+                    "content": "Erase Display\n\nSignature: void Buffer::eraseDisplay(int mode)\nMethod: eraseDisplay\nReturns: void Buffer\nParameters:\n    mode int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "01af5db9",
+                    "title": "Leave Alternate Screen",
+                    "content": "Leave Alternate Screen\n\nSignature: void Buffer::leaveAlternateScreen()\nMethod: leaveAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis restores from state.\n\nScreenState state = std::move(*saved_screen_);\nsaved_screen_.reset();\n\nlines_ = std::move(state.lines);\ncursor_x_ = state.cursor_x;\ncursor_y_ = state.cursor_y;\nsaved_x_ = state.saved_x;\nsaved_y_ = state.saved_y;\ncurrent_style_ = state.style;\nsaved_style_ = state.saved_style;\nscroll_offset_ = state.scroll_offset;\nscroll_top_ = state.scroll_top;\nscroll_bottom_ = state.scroll_bottom;\nscroll_region_set_ = state.scroll_region_set;\nwrap_pending_ = state.wrap_pending;\nnavigation_ = state.navigation;\nclearSelection();",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "0487d6e1",
+                    "title": "Put Grapheme",
+                    "content": "Put Grapheme\n\nSignature: void Buffer::putGrapheme(const std::string& grapheme)\nMethod: putGrapheme\nReturns: void Buffer\nParameters:\n    grapheme const std::string&\nCalled By:\n    [putText](_Put Text_)\n\n--------------------------------------------------------------------------------\n\nWhat is grapheme?\n\n#todo",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "01a022f0",
+                    "title": "Reset",
+                    "content": "Reset\n\nSignature: void Buffer::reset()\nMethod: reset\nReturns: void Buffer\nCalled By:\n    [clearSelection](_Clear Selection_)\n    [closePane](_Close Pane_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ae2774cd",
+                    "title": "Shift Lines",
+                    "content": "Shift Lines\n\nSignature: void Buffer::shiftLines(int top, int bottom, int count, bool down)\nMethod: shiftLines\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\n    count  int\n    down   bool\nCalled By:\n    [deleteLines](_Delete Lines_)\n    [insertLines](_Insert Lines_)\n    [lineFeed](_Line Feed_)\n    [scrollRegionDown](_Scroll Region Down_)\n    [scrollRegionUp](_Scroll Region Up_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
-                "id": "c94db98d",
-                "title": "Buffer Feed",
-                "content": "Buffer Feed\n\nSignature: void Buffer::feed(std::string_view data)\nMethod: feed\nReturns: void Buffer\nParameters:\n    data std::string_view\nCalled By:\n    [feed](_Buffer Feed_)\n    [readLoop](_Read Loop_)",
-                "children": [],
+                "id": "082aee62",
+                "title": "Cursor Handlers",
+                "content": "Cursor Handlers",
+                "children": [
+                  {
+                    "id": "b5f2be52",
+                    "title": "Restore Cursor",
+                    "content": "Restore Cursor\n\nSignature: void Buffer::restoreCursor()\nMethod: restoreCursor\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "eda73069",
+                    "title": "Save Cursor",
+                    "content": "Save Cursor\n\nSignature: void Buffer::saveCursor()\nMethod: saveCursor\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               },
               {
                 "id": "48dd7ffb",
-                "title": "Clamp Int",
-                "content": "Clamp Int\n\nSignature: int clampInt(int value, int low, int high)\nMethod: clampInt\nReturns: int\nParameters:\n    value int\n    low   int\n    high  int\nCalled By:\n    [buffer.cpp:293](_buffer.cpp_)\n    [buffer.cpp:315](_buffer.cpp_)\n    [buffer.cpp:316](_buffer.cpp_)\n    [buffer.cpp:346](_buffer.cpp_)\n    [buffer.cpp:356](_buffer.cpp_)\n    [buffer.cpp:378](_buffer.cpp_)\n    [buffer.cpp:420](_buffer.cpp_)\n    [buffer.cpp:421](_buffer.cpp_)\n    [buffer.cpp:422](_buffer.cpp_)\n    [buffer.cpp:423](_buffer.cpp_)\n    [buffer.cpp:425](_buffer.cpp_)\n    [buffer.cpp:427](_buffer.cpp_)\n    [buffer.cpp:428](_buffer.cpp_)\n    [buffer.cpp:430](_buffer.cpp_)\n    [buffer.cpp:431](_buffer.cpp_)\n    [buffer.cpp:439](_buffer.cpp_)\n    [buffer.cpp:442](_buffer.cpp_)\n    [buffer.cpp:445](_buffer.cpp_)\n    [buffer.cpp:446](_buffer.cpp_)\n    [buffer.cpp:493](_buffer.cpp_)\n    [buffer.cpp:495](_buffer.cpp_)\n\n--------------------------------------------------------------------------------\n\nint clampInt(int value, int low, int high)\n{\n    if (high < low) return low;\n    return std::max(low, std::min(high, value));\n}",
-                "children": [],
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "52ca8a2d",
+                    "title": "Clamp Int",
+                    "content": "Clamp Int\n\nSignature: int clampInt(int value, int low, int high)\nMethod: clampInt\nReturns: int\nParameters:\n    value int\n    low   int\n    high  int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [insertBlanks](_Insert Blanks_)\n    [resize](_Resize_)\n    [restoreCursor](_Restore Cursor_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n    [setScrollRegion](_Set Scroll Region_)\n    [shiftLines](_Shift Lines_)\n\n--------------------------------------------------------------------------------\n\nint clampInt(int value, int low, int high)\n{\n    if (high < low) return low;\n    return std::max(low, std::min(high, value));\n}",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "6d533813",
+                "title": "Scrolling Handlers",
+                "content": "Scrolling Handlers",
+                "children": [
+                  {
+                    "id": "5e947012",
+                    "title": "Max Scroll Offset",
+                    "content": "Max Scroll Offset\n\nSignature: int Buffer::maxScrollOffset() const\nMethod: maxScrollOffset\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [scrollToTop](_Scroll To Top_)\n    [setNavigation](_Set Navigation_)\n    [visibleStart](_Visible Start_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bb57dbaa",
+                    "title": "Move Navigation",
+                    "content": "Move Navigation\n\nSignature: void Buffer::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void Buffer\nParameters:\n    dx int\n    dy int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ab74d47d",
+                    "title": "Resize",
+                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5c4a1f7c",
+                    "title": "Scroll Bounds",
+                    "content": "Scroll Bounds\n\nSignature: std::pair<int, int> Buffer::scrollBounds() const\nMethod: scrollBounds\nReturns: std::pair<int, int> Buffer\nQualifiers: const\nCalled By:\n    [deleteLines](_Delete Lines_)\n    [insertLines](_Insert Lines_)\n    [lineFeed](_Line Feed_)\n    [scrollRegionDown](_Scroll Region Down_)\n    [scrollRegionUp](_Scroll Region Up_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "64fabf1b",
+                    "title": "Scroll By",
+                    "content": "Scroll By\n\nSignature: void Buffer::scrollBy(int delta)\nMethod: scrollBy\nReturns: void Buffer\nParameters:\n    delta int\nCalled By:\n    [scroll](_Scroll Pane_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bcd012ac",
+                    "title": "Scroll Region Down",
+                    "content": "Scroll Region Down\n\nSignature: void Buffer::scrollRegionDown(int count)\nMethod: scrollRegionDown\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "ec65e26e",
+                    "title": "Scroll Region Up",
+                    "content": "Scroll Region Up\n\nSignature: void Buffer::scrollRegionUp(int count)\nMethod: scrollRegionUp\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "dfe9c82f",
+                    "title": "Scroll To Bottom",
+                    "content": "Scroll To Bottom\n\nSignature: void Buffer::scrollToBottom()\nMethod: scrollToBottom\nReturns: void Buffer\nCalled By:\n    [scrollToEdge](_Scroll To Edge_)\n    [setMode](_Set the Mode_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8954c435",
+                    "title": "Scroll To Top",
+                    "content": "Scroll To Top\n\nSignature: void Buffer::scrollToTop()\nMethod: scrollToTop\nReturns: void Buffer\nCalled By:\n    [scrollToEdge](_Scroll To Edge_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "37961bd7",
+                    "title": "Set Anchor",
+                    "content": "Set Anchor\n\nSignature: void Buffer::setAnchor(Pos position)\nMethod: setAnchor\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [selectHere](_Select Here_)\n    [startSelection](_Start Selection_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c497d6b1",
+                    "title": "Set Head",
+                    "content": "Set Head\n\nSignature: void Buffer::setHead(Pos position)\nMethod: setHead\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2aac94f4",
+                    "title": "Set Navigation",
+                    "content": "Set Navigation\n\nSignature: void Buffer::setNavigation(Pos position)\nMethod: setNavigation\nReturns: void Buffer\nParameters:\n    position Pos\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "84db0b92",
+                    "title": "Set Scroll Region",
+                    "content": "Set Scroll Region\n\nSignature: void Buffer::setScrollRegion(int top, int bottom)\nMethod: setScrollRegion\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c6531171",
+                    "title": "Visible Start",
+                    "content": "Visible Start\n\nSignature: int Buffer::visibleStart() const\nMethod: visibleStart\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resize](_Resize_)\n    [scrollBounds](_Scroll Bounds_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "99d7583d",
+                "title": "Text Handlers",
+                "content": "Text Handlers",
+                "children": [
+                  {
+                    "id": "e52b6c6b",
+                    "title": "Back Space",
+                    "content": "Back Space\n\nSignature: void Buffer::backspace()\nMethod: backspace\nReturns: void Buffer\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "851c760f",
+                    "title": "Carriage Return",
+                    "content": "Carriage Return\n\nSignature: void Buffer::carriageReturn()\nMethod: carriageReturn\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "a4539ee3",
+                    "title": "Clear Selection",
+                    "content": "Clear Selection\n\nSignature: void Buffer::clearSelection()\nMethod: clearSelection\nReturns: void Buffer\nCalled By:\n    [enterAlternateScreen](_Enter Alternate Screen_)\n    [enterVisual](_Enter Visual Mode_)\n    [eraseDisplay](_Erase Display_)\n    [exitVisual](_Exit Visual Mode_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)\n    [lineFeed](_Line Feed_)\n    [reset](_Reset_)\n    [setMode](_Set the Mode_)\n    [shiftLines](_Shift Lines_)\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "269e3e5c",
+                    "title": "Delete Characters",
+                    "content": "Delete Characters\n\nSignature: void Buffer::deleteCharacters(int count)\nMethod: deleteCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "5dd8079c",
+                    "title": "Delete Lines",
+                    "content": "Delete Lines\n\nSignature: void Buffer::deleteLines(int count)\nMethod: deleteLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "992e069f",
+                    "title": "Ensure Line",
+                    "content": "Ensure Line\n\nSignature: void Buffer::ensureLine(int index)\nMethod: ensureLine\nReturns: void Buffer\nParameters:\n    index int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [lineFeed](_Line Feed_)\n    [putGrapheme](_Put Grapheme_)\n    [restoreCursor](_Restore Cursor_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f1d8b049",
+                    "title": "Erase Characters",
+                    "content": "Erase Characters\n\nSignature: void Buffer::eraseCharacters(int count)\nMethod: eraseCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "9cd2b4a4",
+                    "title": "Erase Line",
+                    "content": "Erase Line\n\nSignature: void Buffer::eraseLine(int mode)\nMethod: eraseLine\nReturns: void Buffer\nParameters:\n    mode int\nCalled By:\n    [eraseDisplay](_Erase Display_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "1e42cd4c",
+                    "title": "Insert Blanks",
+                    "content": "Insert Blanks\n\nSignature: void Buffer::insertBlanks(int count)\nMethod: insertBlanks\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "3767485f",
+                    "title": "Insert Lines",
+                    "content": "Insert Lines\n\nSignature: void Buffer::insertLines(int count)\nMethod: insertLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "6fd19f7e",
+                    "title": "Line Feed",
+                    "content": "Line Feed\n\nSignature: void Buffer::lineFeed()\nMethod: lineFeed\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "58631d2c",
+                    "title": "Put Text",
+                    "content": "Put Text\n\nSignature: void Buffer::putText(const std::string& text)\nMethod: putText\nReturns: void Buffer\nParameters:\n    text const std::string&\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "00a85326",
+                    "title": "Selected Text",
+                    "content": "Selected Text\n\nSignature: std::string Buffer::selectedText() const\nMethod: selectedText\nReturns: std::string Buffer\nQualifiers: const\nCalled By:\n    [yank](_Yank_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "992d16af",
+                    "title": "Tab",
+                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               }
             ],
