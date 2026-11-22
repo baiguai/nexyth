@@ -3,15 +3,65 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
-#include <cwchar>
 #include <filesystem>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#else
+#include <cwchar>
 #include <limits.h>
 #include <unistd.h>
+#endif
 
 namespace nexyth {
 namespace {
 
 bool isSpace(char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }
+
+#ifdef _WIN32
+struct CodepointRange {
+  std::uint32_t first;
+  std::uint32_t last;
+};
+
+bool inRanges(std::uint32_t codepoint, const CodepointRange* ranges,
+              std::size_t count) {
+  for (std::size_t i = 0; i < count; ++i) {
+    if (codepoint < ranges[i].first) return false;
+    if (codepoint <= ranges[i].last) return true;
+  }
+  return false;
+}
+
+int wideCharWidth(std::uint32_t codepoint) {
+  if (codepoint == 0) return 0;
+  if (codepoint < 0x20 || (codepoint >= 0x7F && codepoint < 0xA0)) return -1;
+  if (codepoint == 0x200B || codepoint == 0x200C || codepoint == 0x200D ||
+      codepoint == 0xFEFF) {
+    return 0;
+  }
+
+  const wchar_t character = static_cast<wchar_t>(codepoint);
+  WORD type = 0;
+  if (GetStringTypeExW(LOCALE_USER_DEFAULT, CT_CTYPE3, &character, 1, &type) !=
+      0) {
+    if ((type & (C3_NONSPACING | C3_DIACRITIC | C3_VOWELMARK)) != 0) return 0;
+  }
+
+  static constexpr CodepointRange kWideRanges[] = {
+      {0x1100, 0x115F}, {0x2329, 0x232A}, {0x2E80, 0x303E},
+      {0x3040, 0xA4CF}, {0xAC00, 0xD7A3}, {0xF900, 0xFAFF},
+      {0xFE10, 0xFE19}, {0xFE30, 0xFE6F}, {0xFF00, 0xFF60},
+      {0xFFE0, 0xFFE6}, {0x1F300, 0x1FAFF}, {0x20000, 0x3FFFD}};
+  return inRanges(codepoint, kWideRanges,
+                  sizeof(kWideRanges) / sizeof(kWideRanges[0]))
+             ? 2
+             : 1;
+}
+#endif
 
 }  // namespace
 
@@ -161,23 +211,41 @@ bool utf8Decode(std::string_view data, std::size_t& position,
 
 int codepointWidth(std::uint32_t codepoint) {
   if (codepoint == 0) return 0;
+#ifdef _WIN32
+  const int width = wideCharWidth(codepoint);
+#else
   const int width = wcwidth(static_cast<wchar_t>(codepoint));
+#endif
   return width < 0 ? 1 : width;
 }
 
 std::string executableDir() {
+#ifdef _WIN32
+  std::vector<wchar_t> buffer(4096);
+  const DWORD length = GetModuleFileNameW(
+      nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
+  if (length > 0 && length < buffer.size()) {
+    return std::filesystem::path(buffer.data()).parent_path().string();
+  }
+#else
   char buffer[PATH_MAX] = {0};
   const ssize_t length = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
   if (length > 0) {
     buffer[length] = '\0';
     return std::filesystem::path(buffer).parent_path().string();
   }
+#endif
   return std::filesystem::current_path().string();
 }
 
 std::string expandHome(std::string path) {
   if (path == "~" || (path.size() > 2 && path.substr(0, 2) == "~/")) {
-    if (const char* home = std::getenv("HOME")) {
+#ifdef _WIN32
+    const char* home = std::getenv("USERPROFILE");
+#else
+    const char* home = std::getenv("HOME");
+#endif
+    if (home != nullptr) {
       return std::string(home) + (path.size() > 1 ? path.substr(1) : "");
     }
   }

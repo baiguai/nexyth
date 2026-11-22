@@ -1,8 +1,22 @@
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0A00
+#endif
+#ifndef NTDDI_VERSION
+#define NTDDI_VERSION 0x0A000006
+#endif
+#endif
+
 #include "pty.hpp"
 
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <errno.h>
 #include <fcntl.h>
-#include <poll.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,8 +24,10 @@
 #include <sys/wait.h>
 #include <termios.h>
 #include <unistd.h>
+#endif
 
 #include <algorithm>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -19,6 +35,7 @@
 namespace nexyth {
 namespace {
 
+#ifndef _WIN32
 std::vector<std::string> splitCommand(const std::string& command) {
   std::istringstream stream(command);
   std::vector<std::string> result;
@@ -26,10 +43,68 @@ std::vector<std::string> splitCommand(const std::string& command) {
   while (stream >> part) result.push_back(part);
   return result;
 }
+#endif
+
+#ifdef _WIN32
+void closeHandle(void*& handle) {
+  if (handle != nullptr && handle != INVALID_HANDLE_VALUE) {
+    CloseHandle(static_cast<HANDLE>(handle));
+  }
+  handle = INVALID_HANDLE_VALUE;
+}
+
+std::wstring utf8ToWide(const std::string& value) {
+  if (value.empty() ||
+      value.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
+    return L"";
+  }
+  const int length =
+      MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, value.data(),
+                          static_cast<int>(value.size()), nullptr, 0);
+  if (length <= 0) return L"";
+  std::wstring result(static_cast<std::size_t>(length), L'\0');
+  if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, value.data(),
+                          static_cast<int>(value.size()), result.data(),
+                          length) != length) {
+    return L"";
+  }
+  return result;
+}
+
+COORD consoleSize(int columns, int rows) {
+  COORD size{};
+  size.X = static_cast<SHORT>(std::min(
+      std::max(1, columns), static_cast<int>(std::numeric_limits<SHORT>::max())));
+  size.Y = static_cast<SHORT>(std::min(
+      std::max(1, rows), static_cast<int>(std::numeric_limits<SHORT>::max())));
+  return size;
+}
+#endif
 
 }  // namespace
 
 Pty::~Pty() {
+#ifdef _WIN32
+  if (process_ != nullptr) {
+    if (WaitForSingleObject(process_, 0) == WAIT_TIMEOUT) {
+      TerminateProcess(process_, 1);
+    }
+    WaitForSingleObject(process_, INFINITE);
+    CloseHandle(process_);
+    process_ = nullptr;
+  }
+  if (thread_ != nullptr) {
+    CloseHandle(thread_);
+    thread_ = nullptr;
+  }
+  if (console_ != nullptr) {
+    ClosePseudoConsole(console_);
+    console_ = nullptr;
+  }
+  closeHandle(inputWrite_);
+  closeHandle(outputRead_);
+  reaped_ = true;
+#else
   if (pid_ > 0 && !reaped_) {
     kill(pid_, SIGHUP);
     kill(pid_, SIGTERM);
@@ -42,9 +117,91 @@ Pty::~Pty() {
     waitpid(pid_, &status, 0);
   }
   if (master_ >= 0) close(master_);
+#endif
 }
 
 bool Pty::spawn(const std::string& command, int columns, int rows) {
+#ifdef _WIN32
+  if (console_ != nullptr || process_ != nullptr) return false;
+  columns_ = std::max(1, columns);
+  rows_ = std::max(1, rows);
+
+  SECURITY_ATTRIBUTES attributes{};
+  attributes.nLength = sizeof(attributes);
+  attributes.bInheritHandle = TRUE;
+
+  HANDLE inputRead = INVALID_HANDLE_VALUE;
+  HANDLE inputWrite = INVALID_HANDLE_VALUE;
+  HANDLE outputRead = INVALID_HANDLE_VALUE;
+  HANDLE outputWrite = INVALID_HANDLE_VALUE;
+  if (!CreatePipe(&inputRead, &inputWrite, &attributes, 0)) return false;
+  if (!CreatePipe(&outputRead, &outputWrite, &attributes, 0)) {
+    closeHandle(inputRead);
+    closeHandle(inputWrite);
+    return false;
+  }
+  SetHandleInformation(inputWrite, HANDLE_FLAG_INHERIT, 0);
+  SetHandleInformation(outputRead, HANDLE_FLAG_INHERIT, 0);
+
+  HPCON console = nullptr;
+  if (FAILED(CreatePseudoConsole(consoleSize(columns_, rows), inputRead,
+                                 outputWrite, 0, &console))) {
+    closeHandle(inputRead);
+    closeHandle(inputWrite);
+    closeHandle(outputRead);
+    closeHandle(outputWrite);
+    return false;
+  }
+
+  SIZE_T attributeSize = 0;
+  InitializeProcThreadAttributeList(nullptr, 1, 0, &attributeSize);
+  std::vector<char> attributeBuffer(attributeSize);
+  auto* attributeList =
+      reinterpret_cast<PPROC_THREAD_ATTRIBUTE_LIST>(attributeBuffer.data());
+  bool attributesInitialized =
+      InitializeProcThreadAttributeList(attributeList, 1, 0, &attributeSize) != 0;
+  const auto fail = [&]() {
+    if (attributesInitialized) DeleteProcThreadAttributeList(attributeList);
+    ClosePseudoConsole(console);
+    closeHandle(inputRead);
+    closeHandle(inputWrite);
+    closeHandle(outputRead);
+    closeHandle(outputWrite);
+    return false;
+  };
+  if (!attributesInitialized) return fail();
+  if (!UpdateProcThreadAttribute(attributeList, 0,
+                                 PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, &console,
+                                 sizeof(console), nullptr, nullptr)) {
+    return fail();
+  }
+
+  std::wstring commandLine = utf8ToWide(command);
+  if (commandLine.empty()) return fail();
+  _putenv_s("TERM", "xterm-256color");
+  _putenv_s("NEXYTH", "1");
+
+  STARTUPINFOEXW startup{};
+  startup.StartupInfo.cb = sizeof(startup);
+  startup.lpAttributeList = attributeList;
+  PROCESS_INFORMATION process{};
+  const BOOL created =
+      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, TRUE,
+                     EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
+                     nullptr, nullptr, &startup.StartupInfo, &process);
+  if (!created) return fail();
+
+  DeleteProcThreadAttributeList(attributeList);
+  CloseHandle(inputRead);
+  CloseHandle(outputWrite);
+  console_ = console;
+  process_ = process.hProcess;
+  thread_ = process.hThread;
+  inputWrite_ = inputWrite;
+  outputRead_ = outputRead;
+  reaped_ = false;
+  return true;
+#else
   if (master_ >= 0) return false;
   columns_ = std::max(1, columns);
   rows_ = std::max(1, rows);
@@ -99,10 +256,11 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   size.ws_row = static_cast<unsigned short>(rows_);
   ioctl(master_, TIOCSWINSZ, &size);
   return true;
+#endif
 }
 
 void Pty::respondToQueries(const std::string& data) {
-  if (master_ < 0 || data.empty()) return;
+  if (!hasProcess() || data.empty()) return;
   const auto respond = [this, &data](const std::string& query,
                                      const std::string& response) {
     if (data.find(query) != std::string::npos) write(response);
@@ -137,6 +295,22 @@ void Pty::respondToQueries(const std::string& data) {
 }
 
 void Pty::write(const std::string& data) {
+#ifdef _WIN32
+  if (inputWrite_ == INVALID_HANDLE_VALUE || data.empty()) return;
+  const std::size_t chunkLimit =
+      static_cast<std::size_t>(std::numeric_limits<DWORD>::max());
+  std::size_t writtenTotal = 0;
+  while (writtenTotal < data.size()) {
+    DWORD written = 0;
+    const std::size_t chunk = std::min(data.size() - writtenTotal, chunkLimit);
+    if (!WriteFile(inputWrite_, data.data() + writtenTotal,
+                   static_cast<DWORD>(chunk), &written, nullptr) ||
+        written == 0) {
+      break;
+    }
+    writtenTotal += written;
+  }
+#else
   if (master_ < 0 || data.empty()) return;
   std::size_t written = 0;
   while (written < data.size()) {
@@ -149,9 +323,31 @@ void Pty::write(const std::string& data) {
     if (count < 0 && (errno == EINTR || errno == EAGAIN)) continue;
     break;
   }
+#endif
 }
 
 std::string Pty::readAvailable() {
+#ifdef _WIN32
+  if (outputRead_ == INVALID_HANDLE_VALUE) return "";
+  std::string result;
+  char buffer[8192];
+  while (true) {
+    DWORD available = 0;
+    if (!PeekNamedPipe(outputRead_, nullptr, 0, nullptr, &available, nullptr) ||
+        available == 0) {
+      break;
+    }
+    DWORD read = 0;
+    const DWORD requested =
+        std::min(available, static_cast<DWORD>(sizeof(buffer)));
+    if (!ReadFile(outputRead_, buffer, requested, &read, nullptr) || read == 0) {
+      break;
+    }
+    result.append(buffer, read);
+  }
+  respondToQueries(result);
+  return result;
+#else
   if (master_ < 0) return "";
   std::string result;
   char buffer[8192];
@@ -167,9 +363,16 @@ std::string Pty::readAvailable() {
   }
   respondToQueries(result);
   return result;
+#endif
 }
 
 void Pty::resize(int columns, int rows) {
+#ifdef _WIN32
+  if (console_ == nullptr) return;
+  columns_ = std::max(1, columns);
+  rows_ = std::max(1, rows);
+  ResizePseudoConsole(console_, consoleSize(columns_, rows));
+#else
   if (master_ < 0) return;
   columns_ = std::max(1, columns);
   rows_ = std::max(1, rows);
@@ -178,9 +381,19 @@ void Pty::resize(int columns, int rows) {
   size.ws_row = static_cast<unsigned short>(rows_);
   ioctl(master_, TIOCSWINSZ, &size);
   if (pid_ > 0) kill(pid_, SIGWINCH);
+#endif
 }
 
 bool Pty::alive() {
+#ifdef _WIN32
+  if (process_ == nullptr || reaped_) return false;
+  const DWORD status = WaitForSingleObject(process_, 0);
+  if (status != WAIT_TIMEOUT) {
+    reaped_ = true;
+    return false;
+  }
+  return true;
+#else
   if (pid_ <= 0 || reaped_) return false;
   int status = 0;
   const pid_t result = waitpid(pid_, &status, WNOHANG);
@@ -193,6 +406,7 @@ bool Pty::alive() {
     return false;
   }
   return true;
+#endif
 }
 
 }  // namespace nexyth

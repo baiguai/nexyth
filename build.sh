@@ -22,6 +22,7 @@ if [ ! -d "build" ]; then
     echo "Creating build directory..."
     mkdir build
 fi
+clean_stale_cmake_cache build
 
 echo "Building Windows EXE..."
 ./build-windows.sh "$1" || echo "Warning: Windows build failed, continuing with Linux build..."

@@ -28,6 +28,7 @@ if ! command -v "${MINGW_CC:-x86_64-w64-mingw32-gcc}" >/dev/null 2>&1; then
 fi
 
 mkdir -p build-windows
+clean_stale_cmake_cache build-windows
 
 # Generate CMakeLists.txt from template
 cp CMakeLists.txt.in CMakeLists.txt
