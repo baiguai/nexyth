@@ -1474,14 +1474,14 @@
                   {
                     "id": "c2018b0b",
                     "title": "Status Message",
-                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "ba122141",
                     "title": "Status Message String",
-                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   }
@@ -1532,7 +1532,7 @@
                   {
                     "id": "c99d94f8",
                     "title": "Filtered Bindings",
-                    "content": "Filtered Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> App::filteredBindings() const\nMethod: filteredBindings\nReturns: std::vector<std::pair<std::string, std::string>> App\nQualifiers: const\nCalled By:\n    [helpScroll](_Scroll Help Dialog_)",
+                    "content": "Filtered Bindings\n\nSignature: std::vector<std::pair<std::string, std::string>> App::filteredBindings() const\nMethod: filteredBindings\nReturns: std::vector<std::pair<std::string, std::string>> App\nQualifiers: const\nCalled By:\n    [drawHelp](_Draw Help_)\n    [helpScroll](_Scroll Help Dialog_)",
                     "children": [],
                     "expanded": false
                   },
@@ -1639,7 +1639,7 @@
                   {
                     "id": "bd04ba3e",
                     "title": "Move Navigation",
-                    "content": "Move Navigation\n\nSignature: void App::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [moveNavigation](_Move Navigation_)\n    [The Action Registry](_The Action Registry_)",
+                    "content": "Move Navigation\n\nSignature: void App::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void App\nParameters:\n    dx int\n    dy int\nCalled By:\n    [Feed](_Feed_)\n    [moveNavigation](_Move Navigation_)\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
                     "expanded": false
                   },
@@ -1950,7 +1950,7 @@
               {
                 "id": "fa75dda9",
                 "title": "Mode Name",
-                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
+                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawStatus](_Draw Status_)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2080,7 +2080,7 @@
               {
                 "id": "d6f1ed74",
                 "title": "Pane Tile",
-                "content": "Pane Tile\n\nSignature: std::string Pane::title() const\nMethod: title\nReturns: std::string Pane\nQualifiers: const\nCalled By:\n    [setTitle](_Set Title_)\n    [tabLabel](_Tab Label_)",
+                "content": "Pane Tile\n\nSignature: std::string Pane::title() const\nMethod: title\nReturns: std::string Pane\nQualifiers: const\nCalled By:\n    [drawStatus](_Draw Status_)\n    [draw](_Renderer Draw_)\n    [setTitle](_Set Title_)\n    [tabLabel](_Tab Label_)",
                 "children": [],
                 "expanded": false
               },
@@ -2094,7 +2094,7 @@
               {
                 "id": "84ee3826",
                 "title": "Resize",
-                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
+                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [resize](_Resize_)",
                 "children": [],
                 "expanded": false
               },
@@ -2108,7 +2108,7 @@
               {
                 "id": "6c05ed6a",
                 "title": "Start",
-                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
+                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [parseParameters](_Parse Parameters_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2195,7 +2195,7 @@
               {
                 "id": "580dec50",
                 "title": "Focus Pane",
-                "content": "Focus Pane\n\nSignature: std::shared_ptr<Pane> Workspace::focusedPane() const\nMethod: focusedPane\nReturns: std::shared_ptr<Pane> Workspace\nQualifiers: const\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resizeFocused](_Resize Focused Pane_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [sendKeys](_Send Keys_)\n    [setMode](_Set the Mode_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [tabLabel](_Tab Label_)\n    [toggleClock](_Toggle the Clock_)\n    [yank](_Yank_)",
+                "content": "Focus Pane\n\nSignature: std::shared_ptr<Pane> Workspace::focusedPane() const\nMethod: focusedPane\nReturns: std::shared_ptr<Pane> Workspace\nQualifiers: const\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [focusDirection](_Directional Pane Focus_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [draw](_Renderer Draw_)\n    [resizeFocused](_Resize Focused Pane_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [sendKeys](_Send Keys_)\n    [setMode](_Set the Mode_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [tabLabel](_Tab Label_)\n    [toggleClock](_Toggle the Clock_)\n    [yank](_Yank_)",
                 "children": [],
                 "expanded": false
               },
@@ -2265,7 +2265,7 @@
               {
                 "id": "734191bf",
                 "title": "Tab Label",
-                "content": "Tab Label\n\nSignature: std::string Workspace::tabLabel(int index) const\nMethod: tabLabel\nReturns: std::string Workspace\nQualifiers: const\nParameters:\n    index int\nCalled By: (none found)",
+                "content": "Tab Label\n\nSignature: std::string Workspace::tabLabel(int index) const\nMethod: tabLabel\nReturns: std::string Workspace\nQualifiers: const\nParameters:\n    index int\nCalled By:\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabs](_Draw Tabs_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)",
                 "children": [],
                 "expanded": false
               },
@@ -2345,6 +2345,21 @@
             "content": "",
             "children": [
               {
+                "id": "48dd7ffb",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "52ca8a2d",
+                    "title": "Clamp Int",
+                    "content": "Clamp Int\n\nSignature: int clampInt(int value, int low, int high)\nMethod: clampInt\nReturns: int\nParameters:\n    value int\n    low   int\n    high  int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [insertBlanks](_Insert Blanks_)\n    [resize](_Resize_)\n    [restoreCursor](_Restore Cursor_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n    [setScrollRegion](_Set Scroll Region_)\n    [shiftLines](_Shift Lines_)\n\n--------------------------------------------------------------------------------\n\nint clampInt(int value, int low, int high)\n{\n    if (high < low) return low;\n    return std::max(low, std::min(high, value));\n}",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
                 "id": "c3dfebfc",
                 "title": "Buffer",
                 "content": "Buffer",
@@ -2380,35 +2395,35 @@
                   {
                     "id": "de30bb00",
                     "title": "Enter Alternate Screen",
-                    "content": "Enter Alternate Screen\n\nSignature: void Buffer::enterAlternateScreen()\nMethod: enterAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis manages state.\n\nScreenState state;\nstate.lines = lines_;\nstate.cursor_x = cursor_x_;\nstate.cursor_y = cursor_y_;\nstate.saved_x = saved_x_;\nstate.saved_y = saved_y_;\nstate.style = current_style_;\nstate.saved_style = saved_style_;\nstate.scroll_offset = scroll_offset_;\nstate.scroll_top = scroll_top_;\nstate.scroll_bottom = scroll_bottom_;\nstate.scroll_region_set = scroll_region_set_;\nstate.wrap_pending = wrap_pending_;\nstate.navigation = navigation_;\nsaved_screen_ = std::move(state);\n\nlines_.assign(rows_, std::vector<Cell>(columns_, Cell{}));\ncursor_x_ = 0;\ncursor_y_ = 0;\nsaved_x_ = 0;\nsaved_y_ = 0;\ncurrent_style_ = Style{};\nsaved_style_ = Style{};\nscroll_offset_ = 0;\nscroll_top_ = 0;\nscroll_bottom_ = -1;\nscroll_region_set_ = false;\nwrap_pending_ = false;\nnavigation_ = {0, rows_ - 1};\nclearSelection();",
+                    "content": "Enter Alternate Screen\n\nSignature: void Buffer::enterAlternateScreen()\nMethod: enterAlternateScreen\nReturns: void Buffer\nCalled By:\n    [handleCsi](_Handle Csi_)\n\n--------------------------------------------------------------------------------\n\nThis manages state.\n\nScreenState state;\nstate.lines = lines_;\nstate.cursor_x = cursor_x_;\nstate.cursor_y = cursor_y_;\nstate.saved_x = saved_x_;\nstate.saved_y = saved_y_;\nstate.style = current_style_;\nstate.saved_style = saved_style_;\nstate.scroll_offset = scroll_offset_;\nstate.scroll_top = scroll_top_;\nstate.scroll_bottom = scroll_bottom_;\nstate.scroll_region_set = scroll_region_set_;\nstate.wrap_pending = wrap_pending_;\nstate.navigation = navigation_;\nsaved_screen_ = std::move(state);\n\nlines_.assign(rows_, std::vector<Cell>(columns_, Cell{}));\ncursor_x_ = 0;\ncursor_y_ = 0;\nsaved_x_ = 0;\nsaved_y_ = 0;\ncurrent_style_ = Style{};\nsaved_style_ = Style{};\nscroll_offset_ = 0;\nscroll_top_ = 0;\nscroll_bottom_ = -1;\nscroll_region_set_ = false;\nwrap_pending_ = false;\nnavigation_ = {0, rows_ - 1};\nclearSelection();",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "35c193e2",
                     "title": "Erase Display",
-                    "content": "Erase Display\n\nSignature: void Buffer::eraseDisplay(int mode)\nMethod: eraseDisplay\nReturns: void Buffer\nParameters:\n    mode int\nCalled By: (none found)",
+                    "content": "Erase Display\n\nSignature: void Buffer::eraseDisplay(int mode)\nMethod: eraseDisplay\nReturns: void Buffer\nParameters:\n    mode int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "01af5db9",
                     "title": "Leave Alternate Screen",
-                    "content": "Leave Alternate Screen\n\nSignature: void Buffer::leaveAlternateScreen()\nMethod: leaveAlternateScreen\nReturns: void Buffer\nCalled By: (none found)\n\n--------------------------------------------------------------------------------\n\nThis restores from state.\n\nScreenState state = std::move(*saved_screen_);\nsaved_screen_.reset();\n\nlines_ = std::move(state.lines);\ncursor_x_ = state.cursor_x;\ncursor_y_ = state.cursor_y;\nsaved_x_ = state.saved_x;\nsaved_y_ = state.saved_y;\ncurrent_style_ = state.style;\nsaved_style_ = state.saved_style;\nscroll_offset_ = state.scroll_offset;\nscroll_top_ = state.scroll_top;\nscroll_bottom_ = state.scroll_bottom;\nscroll_region_set_ = state.scroll_region_set;\nwrap_pending_ = state.wrap_pending;\nnavigation_ = state.navigation;\nclearSelection();",
+                    "content": "Leave Alternate Screen\n\nSignature: void Buffer::leaveAlternateScreen()\nMethod: leaveAlternateScreen\nReturns: void Buffer\nCalled By:\n    [handleCsi](_Handle Csi_)\n\n--------------------------------------------------------------------------------\n\nThis restores from state.\n\nScreenState state = std::move(*saved_screen_);\nsaved_screen_.reset();\n\nlines_ = std::move(state.lines);\ncursor_x_ = state.cursor_x;\ncursor_y_ = state.cursor_y;\nsaved_x_ = state.saved_x;\nsaved_y_ = state.saved_y;\ncurrent_style_ = state.style;\nsaved_style_ = state.saved_style;\nscroll_offset_ = state.scroll_offset;\nscroll_top_ = state.scroll_top;\nscroll_bottom_ = state.scroll_bottom;\nscroll_region_set_ = state.scroll_region_set;\nwrap_pending_ = state.wrap_pending;\nnavigation_ = state.navigation;\nclearSelection();",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "0487d6e1",
                     "title": "Put Grapheme",
-                    "content": "Put Grapheme\n\nSignature: void Buffer::putGrapheme(const std::string& grapheme)\nMethod: putGrapheme\nReturns: void Buffer\nParameters:\n    grapheme const std::string&\nCalled By:\n    [putText](_Put Text_)\n\n--------------------------------------------------------------------------------\n\nWhat is grapheme?\n\n#todo",
+                    "content": "Put Grapheme\n\nSignature: void Buffer::putGrapheme(const std::string& grapheme)\nMethod: putGrapheme\nReturns: void Buffer\nParameters:\n    grapheme const std::string&\nCalled By:\n    [handleGround](_Handle Ground_)\n    [putText](_Put Text_)\n\n--------------------------------------------------------------------------------\n\nWhat is grapheme?\n\n#todo",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "01a022f0",
                     "title": "Reset",
-                    "content": "Reset\n\nSignature: void Buffer::reset()\nMethod: reset\nReturns: void Buffer\nCalled By:\n    [clearSelection](_Clear Selection_)\n    [closePane](_Close Pane_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)",
+                    "content": "Reset\n\nSignature: void Buffer::reset()\nMethod: reset\nReturns: void Buffer\nCalled By:\n    [clearSelection](_Clear Selection_)\n    [closePane](_Close Pane_)\n    [computeLayout](_Compute Layout_)\n    [Feed](_Feed_)\n    [leaveAlternateScreen](_Leave Alternate Screen_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2430,29 +2445,14 @@
                   {
                     "id": "b5f2be52",
                     "title": "Restore Cursor",
-                    "content": "Restore Cursor\n\nSignature: void Buffer::restoreCursor()\nMethod: restoreCursor\nReturns: void Buffer\nCalled By: (none found)",
+                    "content": "Restore Cursor\n\nSignature: void Buffer::restoreCursor()\nMethod: restoreCursor\nReturns: void Buffer\nCalled By:\n    [Feed](_Feed_)\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "eda73069",
                     "title": "Save Cursor",
-                    "content": "Save Cursor\n\nSignature: void Buffer::saveCursor()\nMethod: saveCursor\nReturns: void Buffer\nCalled By: (none found)",
-                    "children": [],
-                    "expanded": false
-                  }
-                ],
-                "expanded": false
-              },
-              {
-                "id": "48dd7ffb",
-                "title": "Helper Methods",
-                "content": "Helper Methods",
-                "children": [
-                  {
-                    "id": "52ca8a2d",
-                    "title": "Clamp Int",
-                    "content": "Clamp Int\n\nSignature: int clampInt(int value, int low, int high)\nMethod: clampInt\nReturns: int\nParameters:\n    value int\n    low   int\n    high  int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [insertBlanks](_Insert Blanks_)\n    [resize](_Resize_)\n    [restoreCursor](_Restore Cursor_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n    [setScrollRegion](_Set Scroll Region_)\n    [shiftLines](_Shift Lines_)\n\n--------------------------------------------------------------------------------\n\nint clampInt(int value, int low, int high)\n{\n    if (high < low) return low;\n    return std::max(low, std::min(high, value));\n}",
+                    "content": "Save Cursor\n\nSignature: void Buffer::saveCursor()\nMethod: saveCursor\nReturns: void Buffer\nCalled By:\n    [Feed](_Feed_)\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2474,14 +2474,14 @@
                   {
                     "id": "bb57dbaa",
                     "title": "Move Navigation",
-                    "content": "Move Navigation\n\nSignature: void Buffer::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void Buffer\nParameters:\n    dx int\n    dy int\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                    "content": "Move Navigation\n\nSignature: void Buffer::moveNavigation(int dx, int dy)\nMethod: moveNavigation\nReturns: void Buffer\nParameters:\n    dx int\n    dy int\nCalled By:\n    [Feed](_Feed_)\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "ab74d47d",
                     "title": "Resize",
-                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [resize](_Resize_)",
+                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [resize](_Resize_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2502,14 +2502,14 @@
                   {
                     "id": "bcd012ac",
                     "title": "Scroll Region Down",
-                    "content": "Scroll Region Down\n\nSignature: void Buffer::scrollRegionDown(int count)\nMethod: scrollRegionDown\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Scroll Region Down\n\nSignature: void Buffer::scrollRegionDown(int count)\nMethod: scrollRegionDown\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "ec65e26e",
                     "title": "Scroll Region Up",
-                    "content": "Scroll Region Up\n\nSignature: void Buffer::scrollRegionUp(int count)\nMethod: scrollRegionUp\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Scroll Region Up\n\nSignature: void Buffer::scrollRegionUp(int count)\nMethod: scrollRegionUp\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2551,14 +2551,14 @@
                   {
                     "id": "84db0b92",
                     "title": "Set Scroll Region",
-                    "content": "Set Scroll Region\n\nSignature: void Buffer::setScrollRegion(int top, int bottom)\nMethod: setScrollRegion\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\nCalled By: (none found)",
+                    "content": "Set Scroll Region\n\nSignature: void Buffer::setScrollRegion(int top, int bottom)\nMethod: setScrollRegion\nReturns: void Buffer\nParameters:\n    top    int\n    bottom int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "c6531171",
                     "title": "Visible Start",
-                    "content": "Visible Start\n\nSignature: int Buffer::visibleStart() const\nMethod: visibleStart\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [handleMouse](_Handle the Mouse_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resize](_Resize_)\n    [scrollBounds](_Scroll Bounds_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)",
+                    "content": "Visible Start\n\nSignature: int Buffer::visibleStart() const\nMethod: visibleStart\nReturns: int Buffer\nQualifiers: const\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawPane](_Draw Pane_)\n    [handleMouse](_Handle the Mouse_)\n    [moveCursor](_Move Cursor_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [resize](_Resize_)\n    [scrollBounds](_Scroll Bounds_)\n    [scrollBy](_Scroll By_)\n    [setCursor](_Set Cursor_)\n    [setNavigation](_Set Navigation_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2573,14 +2573,14 @@
                   {
                     "id": "e52b6c6b",
                     "title": "Back Space",
-                    "content": "Back Space\n\nSignature: void Buffer::backspace()\nMethod: backspace\nReturns: void Buffer\nCalled By: (none found)",
+                    "content": "Back Space\n\nSignature: void Buffer::backspace()\nMethod: backspace\nReturns: void Buffer\nCalled By:\n    [handleGround](_Handle Ground_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "851c760f",
                     "title": "Carriage Return",
-                    "content": "Carriage Return\n\nSignature: void Buffer::carriageReturn()\nMethod: carriageReturn\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "content": "Carriage Return\n\nSignature: void Buffer::carriageReturn()\nMethod: carriageReturn\nReturns: void Buffer\nCalled By:\n    [handleCsi](_Handle Csi_)\n    [handleGround](_Handle Ground_)\n    [putGrapheme](_Put Grapheme_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2594,63 +2594,63 @@
                   {
                     "id": "269e3e5c",
                     "title": "Delete Characters",
-                    "content": "Delete Characters\n\nSignature: void Buffer::deleteCharacters(int count)\nMethod: deleteCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Delete Characters\n\nSignature: void Buffer::deleteCharacters(int count)\nMethod: deleteCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "5dd8079c",
                     "title": "Delete Lines",
-                    "content": "Delete Lines\n\nSignature: void Buffer::deleteLines(int count)\nMethod: deleteLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Delete Lines\n\nSignature: void Buffer::deleteLines(int count)\nMethod: deleteLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "992e069f",
                     "title": "Ensure Line",
-                    "content": "Ensure Line\n\nSignature: void Buffer::ensureLine(int index)\nMethod: ensureLine\nReturns: void Buffer\nParameters:\n    index int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [lineFeed](_Line Feed_)\n    [putGrapheme](_Put Grapheme_)\n    [restoreCursor](_Restore Cursor_)",
+                    "content": "Ensure Line\n\nSignature: void Buffer::ensureLine(int index)\nMethod: ensureLine\nReturns: void Buffer\nParameters:\n    index int\nCalled By:\n    [deleteCharacters](_Delete Characters_)\n    [eraseCharacters](_Erase Characters_)\n    [eraseLine](_Erase Line_)\n    [insertBlanks](_Insert Blanks_)\n    [lineFeed](_Line Feed_)\n    [moveCursor](_Move Cursor_)\n    [putGrapheme](_Put Grapheme_)\n    [restoreCursor](_Restore Cursor_)\n    [setCursor](_Set Cursor_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "f1d8b049",
                     "title": "Erase Characters",
-                    "content": "Erase Characters\n\nSignature: void Buffer::eraseCharacters(int count)\nMethod: eraseCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Erase Characters\n\nSignature: void Buffer::eraseCharacters(int count)\nMethod: eraseCharacters\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "9cd2b4a4",
                     "title": "Erase Line",
-                    "content": "Erase Line\n\nSignature: void Buffer::eraseLine(int mode)\nMethod: eraseLine\nReturns: void Buffer\nParameters:\n    mode int\nCalled By:\n    [eraseDisplay](_Erase Display_)",
+                    "content": "Erase Line\n\nSignature: void Buffer::eraseLine(int mode)\nMethod: eraseLine\nReturns: void Buffer\nParameters:\n    mode int\nCalled By:\n    [eraseDisplay](_Erase Display_)\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "1e42cd4c",
                     "title": "Insert Blanks",
-                    "content": "Insert Blanks\n\nSignature: void Buffer::insertBlanks(int count)\nMethod: insertBlanks\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Insert Blanks\n\nSignature: void Buffer::insertBlanks(int count)\nMethod: insertBlanks\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "3767485f",
                     "title": "Insert Lines",
-                    "content": "Insert Lines\n\nSignature: void Buffer::insertLines(int count)\nMethod: insertLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By: (none found)",
+                    "content": "Insert Lines\n\nSignature: void Buffer::insertLines(int count)\nMethod: insertLines\nReturns: void Buffer\nParameters:\n    count int\nCalled By:\n    [handleCsi](_Handle Csi_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "6fd19f7e",
                     "title": "Line Feed",
-                    "content": "Line Feed\n\nSignature: void Buffer::lineFeed()\nMethod: lineFeed\nReturns: void Buffer\nCalled By:\n    [putGrapheme](_Put Grapheme_)",
+                    "content": "Line Feed\n\nSignature: void Buffer::lineFeed()\nMethod: lineFeed\nReturns: void Buffer\nCalled By:\n    [Feed](_Feed_)\n    [handleGround](_Handle Ground_)\n    [putGrapheme](_Put Grapheme_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "58631d2c",
                     "title": "Put Text",
-                    "content": "Put Text\n\nSignature: void Buffer::putText(const std::string& text)\nMethod: putText\nReturns: void Buffer\nParameters:\n    text const std::string&\nCalled By: (none found)",
+                    "content": "Put Text\n\nSignature: void Buffer::putText(const std::string& text)\nMethod: putText\nReturns: void Buffer\nParameters:\n    text const std::string&\nCalled By:\n    [handleGround](_Handle Ground_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2664,7 +2664,7 @@
                   {
                     "id": "992d16af",
                     "title": "Tab",
-                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)",
+                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [handleGround](_Handle Ground_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2672,6 +2672,633 @@
                 "expanded": false
               }
             ],
+            "expanded": false
+          },
+          {
+            "id": "5801fadc",
+            "title": "buffer.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "5064dae1",
+                "title": "Buffer Class",
+                "content": "Buffer Class ",
+                "children": [
+                  {
+                    "id": "de94eebf",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nstd::pair<int, int> scrollBounds() const;\nvoid shiftLines(int top, int bottom, int count, bool down);\n\nstruct ScreenState\n{\n    std::vector<std::vector<Cell>> lines;\n    int cursor_x = 0;\n    int cursor_y = 0;\n    int saved_x = 0;\n    int saved_y = 0;\n    Style style;\n    Style saved_style;\n    int scroll_offset = 0;\n    int scroll_top = 0;\n    int scroll_bottom = -1;\n    bool scroll_region_set = false;\n    bool wrap_pending = false;\n    Pos navigation;\n};\n\nint columns_ = 80;\nint rows_ = 24;\nint scrollback_limit_ = 20000;\nint saved_x_ = 0;\nint saved_y_ = 0;\nint scroll_offset_ = 0;\nint scroll_top_ = 0;\nint scroll_bottom_ = -1;\nbool scroll_region_set_ = false;\nPos navigation_{0, 23};\nstd::optional<Pos> anchor_;\nstd::optional<Pos> head_;\nstd::optional<ScreenState> saved_screen_;\nstd::vector<std::vector<Cell>> lines_;\nVte* parser_ = nullptr;",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "4b191022",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nBuffer(int columns, int rows, int scrollback);\n~Buffer();\nBuffer(const Buffer&) = delete;\nBuffer& operator=(const Buffer&) = delete;\n\nvoid feed(std::string_view data);\nvoid enterAlternateScreen();\nvoid leaveAlternateScreen();\n\nint columns() const { return columns_; }\nint rows() const { return rows_; }\nconst std::vector<std::vector<Cell>>& lines() const { return lines_; }\nstd::vector<std::vector<Cell>>& lines() { return lines_; }\nPos cursor() const { return {cursor_x_, cursor_y_}; }\nPos navigation() const { return navigation_; }\nstd::optional<Pos> anchor() const { return anchor_; }\nstd::optional<Pos> head() const { return head_; }\nint visibleStart() const;\nint maxScrollOffset() const;\n\nvoid resize(int columns, int rows);\nvoid putText(const std::string& text);\nvoid putGrapheme(const std::string& grapheme);\nvoid ensureLine(int index);\nCell blankCell() const;\nvoid carriageReturn();\nvoid lineFeed();\nvoid backspace();\nvoid tab();\nvoid eraseLine(int mode);\nvoid eraseDisplay(int mode);\nvoid setScrollRegion(int top, int bottom);\nvoid insertLines(int count);\nvoid deleteLines(int count);\nvoid scrollRegionUp(int count);\nvoid scrollRegionDown(int count);\nvoid insertBlanks(int count);\nvoid deleteCharacters(int count);\nvoid eraseCharacters(int count);\nvoid saveCursor();\nvoid restoreCursor();\nvoid reset();\n\nvoid scrollBy(int delta);\nvoid scrollToTop();\nvoid scrollToBottom();\nvoid setNavigation(Pos position);\nvoid moveNavigation(int dx, int dy);\nvoid setAnchor(Pos position);\nvoid setHead(Pos position);\nvoid clearSelection();\nstd::string selectedText() const;\n\nStyle current_style_;\nStyle saved_style_;\nbool wrap_pending_ = false;\nint cursor_x_ = 0;\nint cursor_y_ = 0;",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "8dc122b5",
+                "title": "Structs",
+                "content": "Structs\n\nstruct Pos\n{\n    int x = 0;\n    int y = 0;\n};\n\nstruct TermColor\n{\n    bool set = false;\n    bool rgb = false;\n    int index = 0;\n    int r = 0;\n    int g = 0;\n    int b = 0;\n};\n\nstruct Style\n{\n    TermColor foreground;\n    TermColor background;\n    bool bold = false;\n    bool dim = false;\n    bool italic = false;\n    bool underlined = false;\n    bool reverse = false;\n    bool strikethrough = false;\n};\n\nstruct Cell\n{\n    std::string text;\n    int width = 1;\n    Style style;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "447c47dd",
+                "title": "Vte Class",
+                "content": "Vte Class \n\nclass Vte;",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "36af229b",
+            "title": "pty.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "f8f189c3",
+                "title": "Helper Functions",
+                "content": "Helper Functions",
+                "children": [
+                  {
+                    "id": "41429169",
+                    "title": "Split Command",
+                    "content": "Split Command\n\nSignature: std::vector<std::string> splitCommand(const std::string& command)\nMethod: splitCommand\nReturns: std::vector<std::string>\nParameters:\n    command const std::string&\nCalled By:\n    [spawn](_Spawn Pty_)\n\n--------------------------------------------------------------------------------\n\nstd::vector<std::string> splitCommand(const std::string& command)\n{\n    std::istringstream stream(command);\n    std::vector<std::string> result;\n    std::string part;\n    while (stream >> part) result.push_back(part);\n    return result;\n}",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "d9d718eb",
+                "title": "Alive",
+                "content": "Alive\n\nSignature: bool Pty::alive()\nMethod: alive\nReturns: bool Pty\nCalled By: (none found)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "92ecced4",
+                "title": "Pty Destructor",
+                "content": "Pty Destructor\n\nSignature: Pty::~Pty()\nMethod: ~Pty\nReturns: Pty\nCalled By: (none found)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "1bd82259",
+                "title": "Read Available",
+                "content": "Read Available\n\nSignature: std::string Pty::readAvailable()\nMethod: readAvailable\nReturns: std::string Pty\nCalled By:\n    [readLoop](_Read Loop_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "7f56ba83",
+                "title": "Resize",
+                "content": "Resize\n\nSignature: void Pty::resize(int columns, int rows)\nMethod: resize\nReturns: void Pty\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "1bb33821",
+                "title": "Respond To Queries",
+                "content": "Respond To Queries\n\nSignature: void Pty::respondToQueries(const std::string& data)\nMethod: respondToQueries\nReturns: void Pty\nParameters:\n    data const std::string&\nCalled By:\n    [readAvailable](_Read Available_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "d0763b97",
+                "title": "Spawn Pty",
+                "content": "Spawn Pty\n\nSignature: bool Pty::spawn(const std::string& command, int columns, int rows)\nMethod: spawn\nReturns: bool Pty\nParameters:\n    command const std::string&\n    columns int\n    rows    int\nCalled By:\n    [start](_Start_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "aacc3dbf",
+                "title": "Write",
+                "content": "Write\n\nSignature: void Pty::write(const std::string& data)\nMethod: write\nReturns: void Pty\nParameters:\n    data const std::string&\nCalled By:\n    [enterNormal](_Enter Normal Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [respondToQueries](_Respond To Queries_)\n    [runClipboardCommand](_Run Clipboard Command_)\n    [sendKeys](_Send Keys_)\n    [write](_Write_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "c5160f1d",
+            "title": "pty.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "41e0cbe3",
+                "title": "Pty Class",
+                "content": "Pty Class",
+                "children": [
+                  {
+                    "id": "604f3773",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nvoid respondToQueries(const std::string& data);\n\nint master_ = -1;\npid_t pid_ = -1;\nint columns_ = 80;\nint rows_ = 24;\nstd::atomic<bool> reaped_{false};",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "55858cca",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nPty() = default;\n~Pty();\nPty(const Pty&) = delete;\nPty& operator=(const Pty&) = delete;\n\nbool spawn(const std::string& command, int columns, int rows);\nvoid write(const std::string& data);\nstd::string readAvailable();\nvoid resize(int columns, int rows);\nbool alive();\nbool hasProcess() const { return pid_ > 0; }",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "193e2f24",
+            "title": "vte.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "5ef0e7b6",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "7581bd3e",
+                    "title": "Parameter",
+                    "content": "Parameter\n\nSignature: int parameter(const std::vector<int>& values, std::size_t index, int fallback)\nMethod: parameter\nReturns: int\nParameters:\n    values   const std::vector<int>&\n    index    std::size_t\n    fallback int\nCalled By:\n    [handleCsi](_Handle Csi_)\n    [handleSgr](_Handle Sgr_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "9c642b62",
+                    "title": "Parse Parameters",
+                    "content": "Parse Parameters\n\nSignature: std::vector<int> parseParameters(const std::string& text)\nMethod: parseParameters\nReturns: std::vector<int>\nParameters:\n    text const std::string&\nCalled By:\n    [handleCsi](_Handle Csi_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2107c889",
+                    "title": "Utf 8 Length",
+                    "content": "Utf 8 Length\n\nSignature: int utf8Length(unsigned char first)\nMethod: utf8Length\nReturns: int\nParameters:\n    first unsigned char\nCalled By:\n    [handleGround](_Handle Ground_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "b56f4b35",
+                "title": "Feed",
+                "content": "Feed",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "0873ccae",
+                "title": "Handle Csi",
+                "content": "Handle Csi\n\nSignature: void Vte::handleCsi(unsigned char final)\nMethod: handleCsi\nReturns: void Vte\nParameters:\n    final unsigned char\nCalled By:\n    [Feed](_Feed_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "70d7dc3d",
+                "title": "Handle Ground",
+                "content": "Handle Ground\n\nSignature: void Vte::handleGround(unsigned char byte)\nMethod: handleGround\nReturns: void Vte\nParameters:\n    byte unsigned char\nCalled By:\n    [Feed](_Feed_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "2cd646d8",
+                "title": "Handle Sgr",
+                "content": "Handle Sgr\n\nSignature: void Vte::handleSgr(const std::vector<int>& values)\nMethod: handleSgr\nReturns: void Vte\nParameters:\n    values const std::vector<int>&\nCalled By:\n    [handleCsi](_Handle Csi_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "e76ff058",
+                "title": "Move Cursor",
+                "content": "Move Cursor\n\nSignature: void Vte::moveCursor(int dx, int dy)\nMethod: moveCursor\nReturns: void Vte\nParameters:\n    dx int\n    dy int\nCalled By:\n    [handleCsi](_Handle Csi_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "67ac554b",
+                "title": "Reset Style",
+                "content": "Reset Style\n\nSignature: void Vte::resetStyle()\nMethod: resetStyle\nReturns: void Vte\nCalled By:\n    [handleSgr](_Handle Sgr_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "322ad50b",
+                "title": "Set Cursor",
+                "content": "Set Cursor\n\nSignature: void Vte::setCursor(int x, int y)\nMethod: setCursor\nReturns: void Vte\nParameters:\n    x int\n    y int\nCalled By:\n    [handleCsi](_Handle Csi_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b2d083ef",
+                "title": "Vte Class",
+                "content": "Vte Class\n\nSignature: Vte::Vte(Buffer& buffer) : buffer_(buffer)\nConstructor: Vte\nParameters:\n    buffer Buffer&\nInitializers:\n    buffer_ buffer\nCalled By:\n    [Buffer](_Buffer Constructor_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "3d18cdbb",
+            "title": "vte.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "03afcfeb",
+                "title": "Buffer Class",
+                "content": "Buffer Class\n\nclass Buffer;",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "98f8745a",
+                "title": "Vte Class",
+                "content": "Vte Class",
+                "children": [
+                  {
+                    "id": "f5b39364",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nenum class State\n{\n    Ground,\n    Escape,\n    EscapeIntermediate,\n    Csi,\n    Osc,\n    OscEscape,\n    EscapeString,\n    EscapeStringEscape\n};\n\nBuffer& buffer_;\nState state_ = State::Ground;\nstd::string parameters_;\nstd::string osc_;\nstd::string utf8_pending_;\nint utf8_expected_ = 1;\n\nvoid handleGround(unsigned char byte);\nvoid handleCsi(unsigned char final);\nvoid handleSgr(const std::vector<int>& values);\nvoid moveCursor(int dx, int dy);\nvoid setCursor(int x, int y);\nvoid resetStyle();",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "bbf9582f",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nexplicit Vte(Buffer& buffer);\nvoid feed(std::string_view data);",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "42342274",
+        "title": "ui",
+        "content": "",
+        "children": [
+          {
+            "id": "18f901fe",
+            "title": "renderer.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "1ca660ca",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "0b0c6545",
+                    "title": "Centered Box",
+                    "content": "Centered Box\n\nSignature: Rect centeredBox(int width, int height, int preferredWidth, int preferredHeight)\nMethod: centeredBox\nReturns: Rect\nParameters:\n    width           int\n    height          int\n    preferredWidth  int\n    preferredHeight int\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "44f1c09b",
+                    "title": "Clock Colon Array",
+                    "content": "Clock Colon Array\n\nconst char* const kClockColon[5] = {\"   \", \" # \", \"   \", \" # \", \"   \"};",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "7533e16e",
+                    "title": "Clock Digits Array",
+                    "content": "Clock Digits Array\n\nconst char* const kClockDigits[10][5] =\n{\n    {\"###\", \"# #\", \"# #\", \"# #\", \"###\"},\n    {\"## \", \" # \", \" # \", \" # \", \"###\"},\n    {\"###\", \"  #\", \"###\", \"#  \", \"###\"},\n    {\"###\", \"  #\", \"###\", \"  #\", \"###\"},\n    {\"# #\", \"# #\", \"###\", \"  #\", \"  #\"},\n    {\"###\", \"#  \", \"###\", \"  #\", \"###\"},\n    {\"###\", \"#  \", \"###\", \"# #\", \"###\"},\n    {\"###\", \"  #\", \"  #\", \"  #\", \"  #\"},\n    {\"###\", \"# #\", \"###\", \"# #\", \"###\"},\n    {\"###\", \"# #\", \"###\", \"  #\", \"###\"}\n};",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "440ed3b9",
+                    "title": "Color From",
+                    "content": "Color From\n\nSignature: ftxui::Color colorFrom(const TermColor& color, ftxui::Color fallback)\nMethod: colorFrom\nReturns: ftxui::Color\nParameters:\n    color    const TermColor&\n    fallback ftxui::Color\nCalled By:\n    [drawPane](_Draw Pane_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "81252073",
+                    "title": "Draw Box",
+                    "content": "Draw Box\n\nSignature: void drawBox(Canvas& canvas, Rect box, const Canvas::Stylizer& borderStyle)\nMethod: drawBox\nReturns: void\nParameters:\n    canvas      Canvas&\n    box         Rect\n    borderStyle const Canvas::Stylizer&\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f0c0d129",
+                    "title": "Draw the Clock",
+                    "content": "Draw the Clock\n\nSignature: void drawClockGlyph(Canvas& canvas, int x, int y, const char* const glyph[5], const Canvas::Stylizer& stylizer)\nMethod: drawClockGlyph\nReturns: void\nParameters:\n    canvas   Canvas&\n    x        int\n    y        int\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "4c442b16",
+                    "title": "Fill Rect",
+                    "content": "Fill Rect\n\nSignature: void fillRect(Canvas& canvas, Rect area, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: fillRect\nReturns: void\nParameters:\n    canvas   Canvas&\n    area     Rect\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c6900a0e",
+                    "title": "Parse Color",
+                    "content": "Parse Color\n\nSignature: ftxui::Color parseColor(std::string text, ftxui::Color fallback)\nMethod: parseColor\nReturns: ftxui::Color\nParameters:\n    text     std::string\n    fallback ftxui::Color\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [draw](_Renderer Draw_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "512312a6",
+                    "title": "Write Cell",
+                    "content": "Write Cell\n\nSignature: void writeCell(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeCell\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawBox](_Draw Box_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawClockGlyph](_Draw the Clock_)\n    [fillRect](_Fill Rect_)\n    [writeText](_Write Text_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "538152de",
+                    "title": "Write Text",
+                    "content": "Write Text\n\nSignature: void writeText(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeText\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawResizeIndicator](_Draw Resize Indicator_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "af183363",
+                "title": "Build Layout",
+                "content": "Build Layout\n\nSignature: void Renderer::buildLayout(const NodePtr& node, Rect area)\nMethod: buildLayout\nReturns: void Renderer\nParameters:\n    node const NodePtr&\n    area Rect\nCalled By:\n    [buildLayout](_Build Layout_)\n    [computeLayout](_Compute Layout_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "cd827023",
+                "title": "Compute Layout",
+                "content": "Compute Layout\n\nSignature: void Renderer::computeLayout(int width, int height)\nMethod: computeLayout\nReturns: void Renderer\nParameters:\n    width  int\n    height int\nCalled By:\n    [Ftxui Render](_Ftxui Render_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "66729e2c",
+                "title": "Draw Clock",
+                "content": "Draw Clock\n\nSignature: void Renderer::drawClock(ftxui::Canvas& canvas, ftxui::Color foreground, ftxui::Color background)\nMethod: drawClock\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "d8f1b17d",
+                "title": "Draw Help",
+                "content": "Draw Help\n\nSignature: void Renderer::drawHelp(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawHelp\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "a5dc6613",
+                "title": "Draw Pane",
+                "content": "Draw Pane\n\nSignature: void Renderer::drawPane(ftxui::Canvas& canvas, const PaneRect& entry, ftxui::Color foreground, ftxui::Color background)\nMethod: drawPane\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    entry      const PaneRect&\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "67d7c474",
+                "title": "Draw Rename Overlay",
+                "content": "Draw Rename Overlay\n\nSignature: void Renderer::drawRenameOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawRenameOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "4483f553",
+                "title": "Draw Resize Indicator",
+                "content": "Draw Resize Indicator\n\nSignature: void Renderer::drawResizeIndicator(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawResizeIndicator\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "69ad05e1",
+                "title": "Draw Status",
+                "content": "Draw Status\n\nSignature: void Renderer::drawStatus(ftxui::Canvas& canvas, int width, int y, ftxui::Color foreground, ftxui::Color background)\nMethod: drawStatus\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    y          int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "3fd701a3",
+                "title": "Draw Tabs",
+                "content": "Draw Tabs\n\nSignature: void Renderer::drawTabs(ftxui::Canvas& canvas, int width, int y, ftxui::Color foreground, ftxui::Color background)\nMethod: drawTabs\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    y          int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "3126e573",
+                "title": "Draw Tabs Overlay",
+                "content": "Draw Tabs Overlay\n\nSignature: void Renderer::drawTabsOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawTabsOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "b166ae3e",
+                "title": "Draw Themes Overlay",
+                "content": "Draw Themes Overlay\n\nSignature: void Renderer::drawThemesOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawThemesOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "d763b1de",
+                "title": "Rect For",
+                "content": "Rect For\n\nSignature: std::optional<Rect> Renderer::rectFor(int paneId) const\nMethod: rectFor\nReturns: std::optional<Rect> Renderer\nQualifiers: const\nParameters:\n    paneId int\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [drawClock](_Draw Clock_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "c920780d",
+                "title": "Renderer Constructor",
+                "content": "Renderer Constructor\n\nSignature: Renderer::Renderer(App& app) : app_(app)\nConstructor: Renderer\nParameters:\n    app App&\nInitializers:\n    app_ app\nCalled By: (none found)\n\nRenderer::Renderer(App& app) : app_(app) {}",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "1a119aa2",
+                "title": "Renderer Draw",
+                "content": "Renderer Draw\n\nSignature: void Renderer::draw(ftxui::Canvas& canvas, int width, int height)\nMethod: draw\nReturns: void Renderer\nParameters:\n    canvas ftxui::Canvas&\n    width  int\n    height int\nCalled By:\n    [Ftxui Render](_Ftxui Render_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "fcf32f86",
+                "title": "Terminal Cursor Screen Position",
+                "content": "Terminal Cursor Screen Position\n\nSignature: std::optional<Pos> Renderer::terminalCursorScreenPosition() const\nMethod: terminalCursorScreenPosition\nReturns: std::optional<Pos> Renderer\nQualifiers: const\nCalled By:\n    [Ftxui Render](_Ftxui Render_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "8d5581f9",
+            "title": "renderer.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "c6af893c",
+                "title": "App Class",
+                "content": "App Class\n\nclass App;",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "d3ee53c5",
+                "title": "Pane Rect",
+                "content": "Pane Rect\n\nstruct PaneRect\n{\n    std::shared_ptr<Pane> pane;\n    Rect border;\n    Rect inner;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "18e5d71b",
+                "title": "Rect Struct",
+                "content": "Rect Struct\n\nstruct Rect\n{\n    int x = 0;\n    int y = 0;\n    int width = 0;\n    int height = 0;\n\n    bool contains(int px, int py) const\n    {\n        return px >= x && py >= y && px < x + width && py < y + height;\n    }\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "5baf4ca2",
+                "title": "Renderer Class",
+                "content": "Renderer Class",
+                "children": [
+                  {
+                    "id": "245619b7",
+                    "title": "Private Members",
+                    "content": "Private Members\n\nvoid buildLayout(const NodePtr& node, Rect area);\nvoid drawPane(ftxui::Canvas& canvas, const PaneRect& entry,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabs(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawStatus(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawHelp(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawClock(ftxui::Canvas& canvas,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\n\nApp& app_;\nstd::vector<PaneRect> paneRects_;\nstd::map<int, std::pair<int, int>> last_sizes_;\nstd::optional<Pos> cursor_position_;",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f7e8ad77",
+                    "title": "Public Members",
+                    "content": "Public Members\n\nexplicit Renderer(App& app);\nvoid computeLayout(int width, int height);\nvoid draw(ftxui::Canvas& canvas, int width, int height);\n\nconst std::vector<PaneRect>& paneRects() const { return paneRects_; }\nstd::optional<Rect> rectFor(int paneId) const;\nstd::optional<Pos> terminalCursorScreenPosition() const;",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "b09bfe09",
+        "title": "utils.cpp",
+        "content": "",
+        "children": [
+          {
+            "id": "6517ba28",
+            "title": "Helper Methods",
+            "content": "Helper Methods",
+            "children": [
+              {
+                "id": "09d43acb",
+                "title": "Is Space Bool",
+                "content": "Is Space Bool\n\nbool isSpace(char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "d2f09313",
+            "title": "Base 64 Encode",
+            "content": "Base 64 Encode\n\nSignature: std::string base64Encode(std::string_view data)\nMethod: base64Encode\nReturns: std::string\nParameters:\n    data std::string_view\nCalled By:\n    [emitClipboard](_Emit Clipboard_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "d9f7863a",
+            "title": "Codepoint Width",
+            "content": "Codepoint Width\n\nSignature: int codepointWidth(std::uint32_t codepoint)\nMethod: codepointWidth\nReturns: int\nParameters:\n    codepoint std::uint32_t\nCalled By:\n    [putGrapheme](_Put Grapheme_)\n    [putText](_Put Text_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "7ab3ce58",
+            "title": "Executable Dir",
+            "content": "Executable Dir\n\nSignature: std::string executableDir()\nMethod: executableDir\nReturns: std::string\nCalled By:\n    [defaultPath](_Path to the Default Config_)\n    [Theme Config Path](_Theme Config Path_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "61d742f7",
+            "title": "Expand Home",
+            "content": "Expand Home\n\nSignature: std::string expandHome(std::string path)\nMethod: expandHome\nReturns: std::string\nParameters:\n    path std::string\nCalled By:\n    [applySetting](_Apply Setting_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "0c308634",
+            "title": "Join Tokens",
+            "content": "Join Tokens\n\nSignature: std::string joinTokens(const std::vector<std::string>& tokens, const std::string& separator)\nMethod: joinTokens\nReturns: std::string\nParameters:\n    tokens    const std::vector<std::string>&\n    separator const std::string&\nCalled By:\n    [load](_Load Configuration_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "afda686a",
+            "title": "Lower",
+            "content": "Lower\n\nSignature: std::string lower(std::string value)\nMethod: lower\nReturns: std::string\nParameters:\n    value std::string\nCalled By:\n    [applySetting](_Apply Setting_)\n    [containsInsensitive](_Case Insensitive Contains_)\n    [load](_Load Configuration_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)\n    [saveColorSettings](_Save the Color Settings_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "b1d12cd7",
+            "title": "Tokenize Config Line",
+            "content": "Tokenize Config Line\n\nSignature: std::vector<std::string> tokenizeConfigLine(std::string_view line)\nMethod: tokenizeConfigLine\nReturns: std::vector<std::string>\nParameters:\n    line std::string_view\nCalled By:\n    [load](_Load Configuration_)\n    [saveColorSettings](_Save the Color Settings_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "5df6aee9",
+            "title": "Trim",
+            "content": "Trim\n\nSignature: std::string trim(std::string_view value)\nMethod: trim\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [applySetting](_Apply Setting_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)",
+            "children": [],
+            "expanded": false
+          },
+          {
+            "id": "c70cde88",
+            "title": "Utf 8 Decode",
+            "content": "Utf 8 Decode\n\nSignature: bool utf8Decode(std::string_view data, std::size_t& position, std::uint32_t& codepoint)\nMethod: utf8Decode\nReturns: bool\nParameters:\n    data      std::string_view\n    position  std::size_t&\n    codepoint std::uint32_t&\nCalled By:\n    [handleGround](_Handle Ground_)\n    [putGrapheme](_Put Grapheme_)\n    [putText](_Put Text_)",
+            "children": [],
+            "expanded": false
+          }
+        ],
+        "expanded": false
+      },
+      {
+        "id": "fd543fc1",
+        "title": "utils.hpp",
+        "content": "",
+        "children": [
+          {
+            "id": "3f192103",
+            "title": "Forward Declarations",
+            "content": "Forward Declarations\n\nstd::string trim(std::string_view value);\nstd::string lower(std::string value);\nstd::vector<std::string> tokenizeConfigLine(std::string_view line);\nstd::string joinTokens(const std::vector<std::string>& tokens, const std::string& separator);\nstd::string base64Encode(std::string_view data);\nbool utf8Decode(std::string_view data, std::size_t& position, std::uint32_t& codepoint);\nint codepointWidth(std::uint32_t codepoint);\nstd::string executableDir();\nstd::string expandHome(std::string path);",
+            "children": [],
             "expanded": false
           }
         ],

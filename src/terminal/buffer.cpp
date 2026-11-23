@@ -8,7 +8,7 @@
 
 namespace nexyth
 {
-    /*!
+    /*>
         Helper Methods
     */
     namespace
