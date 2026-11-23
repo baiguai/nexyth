@@ -319,13 +319,6 @@ namespace nexyth
             {
                 ftxui::Screen::Cursor cursor;
                 cursor.shape = ftxui::Screen::Cursor::Hidden;
-
-                if (const auto position = renderer_.terminalCursorScreenPosition())
-                {
-                    cursor.x = position->x;
-                    cursor.y = position->y;
-                    cursor.shape = ftxui::Screen::Cursor::Bar;
-                }
                 active->SetCursor(cursor);
             }
 

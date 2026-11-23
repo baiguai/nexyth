@@ -84,6 +84,8 @@ namespace nexyth
             void buildLayout(const NodePtr& node, Rect area);
             void drawPane(ftxui::Canvas& canvas, const PaneRect& entry,
             ftxui::Color foreground, ftxui::Color background);
+            void drawCursor(ftxui::Canvas& canvas, ftxui::Color foreground,
+            ftxui::Color background);
             void drawTabs(ftxui::Canvas& canvas, int width, int y,
             ftxui::Color foreground, ftxui::Color background);
             void drawStatus(ftxui::Canvas& canvas, int width, int y,

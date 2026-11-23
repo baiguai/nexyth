@@ -1417,7 +1417,7 @@
                   {
                     "id": "ca3ccc8f",
                     "title": "Ftxui Render",
-                    "content": "Ftxui Render\n\nftxui::Element App::OnRender()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n\n        if (const auto position = renderer_.terminalCursorScreenPosition())\n        {\n            cursor.x = position->x;\n            cursor.y = position->y;\n            cursor.shape = ftxui::Screen::Cursor::Bar;\n        }\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
+                    "content": "Ftxui Render\n\nftxui::Element App::OnRender()\n{\n    const auto size = ftxui::Terminal::Size();\n    const int width = std::max(10, size.dimx);\n    const int height = std::max(4, size.dimy);\n    renderer_.computeLayout(width, height);\n\n    if (auto* active = ftxui::ScreenInteractive::Active())\n    {\n        ftxui::Screen::Cursor cursor;\n        cursor.shape = ftxui::Screen::Cursor::Hidden;\n        active->SetCursor(cursor);\n    }\n\n    return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)\n    {\n        renderer_.draw(c, width, height);\n    }) |\n    ftxui::flex;\n}",
                     "children": [],
                     "expanded": false
                   },
@@ -2947,7 +2947,7 @@
                   {
                     "id": "512312a6",
                     "title": "Write Cell",
-                    "content": "Write Cell\n\nSignature: void writeCell(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeCell\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawBox](_Draw Box_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawClockGlyph](_Draw the Clock_)\n    [fillRect](_Fill Rect_)\n    [writeText](_Write Text_)",
+                    "content": "Write Cell\n\nSignature: void writeCell(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeCell\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawBox](_Draw Box_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawClockGlyph](_Draw the Clock_)\n    [fillRect](_Fill Rect_)\n    [renderer.cpp:547](_renderer.cpp_)\n    [writeText](_Write Text_)",
                     "children": [],
                     "expanded": false
                   },
@@ -3062,7 +3062,7 @@
               {
                 "id": "fcf32f86",
                 "title": "Terminal Cursor Screen Position",
-                "content": "Terminal Cursor Screen Position\n\nSignature: std::optional<Pos> Renderer::terminalCursorScreenPosition() const\nMethod: terminalCursorScreenPosition\nReturns: std::optional<Pos> Renderer\nQualifiers: const\nCalled By:\n    [Ftxui Render](_Ftxui Render_)",
+                "content": "Terminal Cursor Screen Position\n\nSignature: std::optional<Pos> Renderer::terminalCursorScreenPosition() const\nMethod: terminalCursorScreenPosition\nReturns: std::optional<Pos> Renderer\nQualifiers: const\nCalled By:\n    [renderer.cpp:533](_renderer.cpp_)",
                 "children": [],
                 "expanded": false
               }
@@ -3103,7 +3103,7 @@
                   {
                     "id": "245619b7",
                     "title": "Private Members",
-                    "content": "Private Members\n\nvoid buildLayout(const NodePtr& node, Rect area);\nvoid drawPane(ftxui::Canvas& canvas, const PaneRect& entry,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabs(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawStatus(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawHelp(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawClock(ftxui::Canvas& canvas,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\n\nApp& app_;\nstd::vector<PaneRect> paneRects_;\nstd::map<int, std::pair<int, int>> last_sizes_;\nstd::optional<Pos> cursor_position_;",
+                    "content": "Private Members\n\nvoid buildLayout(const NodePtr& node, Rect area);\nvoid drawPane(ftxui::Canvas& canvas, const PaneRect& entry,\nftxui::Color foreground, ftxui::Color background);\nvoid drawCursor(ftxui::Canvas& canvas, ftxui::Color foreground,\nftxui::Color background);\nvoid drawTabs(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawStatus(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawHelp(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawClock(ftxui::Canvas& canvas,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\n\nApp& app_;\nstd::vector<PaneRect> paneRects_;\nstd::map<int, std::pair<int, int>> last_sizes_;\nstd::optional<Pos> cursor_position_;",
                     "children": [],
                     "expanded": false
                   },
