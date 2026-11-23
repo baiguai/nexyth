@@ -5,6 +5,10 @@
 set -e  # Exit on any error
 source ./config.sh
 
+if [ "${FTXUI_NO_AUTO_UPGRADE:-0}" != "1" ] && [ -x ./upgrade.sh ]; then
+    ./upgrade.sh || echo "Warning: FTXUI upgrade check failed; building with the current pin."
+fi
+
 # Generate the dev docs
 ./docsgen/gendocs.sh
 

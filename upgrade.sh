@@ -3,28 +3,56 @@
 # upgrade.sh - bump the FTXUI dependency to a newer release.
 #
 #   ./upgrade.sh              upgrade to the latest FTXUI release on GitHub
-#   ./upgrade.sh <tag>        pin a specific tag, e.g. ./upgrade.sh v5.0.0
+#   ./upgrade.sh <tag>        pin a specific tag, e.g. ./upgrade.sh v7.0.3
 #
 # What it does:
 #   - reads the current pin from CMakeLists.txt.in (the template build.sh uses)
 #   - updates it to the chosen/latest tag
+#   - drops the legacy CAN/SUB PATCH_COMMAND when upgrading to FTXUI >= 6,
+#     where that fix is upstream
 #   - clears the cached FetchContent checkouts so the new tag is actually used
-#   - runs a configure pass to fetch the new tag and verify the local patch
-#     (patches/ftxui-c0-delivery.patch) still applies; on failure it rolls
-#     the template back to the previous pin
+#   - runs a configure pass to fetch the new tag; on failure it rolls the
+#     template back to the previous pin
 #
 # FTXUI upgrades can break the app compile if its API changed - configure
-# passing here only means the patch applied; then run ./build.sh.
+# passing here only means the fetch succeeded; then run ./build.sh.
 
 set -euo pipefail
 
 REPO="https://github.com/ArthurSonzogni/FTXUI.git"
 TEMPLATE="CMakeLists.txt.in"
-PATCH="patches/ftxui-c0-delivery.patch"
 
 command -v git >/dev/null 2>&1 || { echo "ERROR: git is required."; exit 1; }
 [ -f "$TEMPLATE" ] || { echo "ERROR: $TEMPLATE not found. Run from the repo root."; exit 1; }
-[ -f "$PATCH" ] || { echo "ERROR: $PATCH not found."; exit 1; }
+
+version_tuple() {
+    echo "${1#[vV]}" | tr '.' ' '
+}
+
+version_ge() {
+    local -a a b
+    read -ra a <<< "$(version_tuple "$1")"
+    read -ra b <<< "$(version_tuple "$2")"
+    local i av bv
+    for i in 0 1 2; do
+        av=${a[$i]:-0}
+        bv=${b[$i]:-0}
+        if (( av > bv )); then return 0; fi
+        if (( av < bv )); then return 1; fi
+    done
+    return 0
+}
+
+clear_cache() {
+    for dep in build/_deps/ftxui-src build/_deps/ftxui-build build/_deps/ftxui-subbuild \
+               build-windows/_deps/ftxui-src build-windows/_deps/ftxui-build \
+               build-windows/_deps/ftxui-subbuild; do
+        if [ -e "$dep" ]; then
+            rm -rf "$dep"
+            echo "Removed cached: $dep"
+        fi
+    done
+}
 
 CURRENT=$(grep -oP '^  GIT_TAG\s+\K\S+' "$TEMPLATE")
 echo "FTXUI currently pinned at: $CURRENT"
@@ -51,21 +79,21 @@ fi
 echo ""
 echo "Upgrading FTXUI: $CURRENT -> $TARGET"
 
+BACKUP=$(mktemp)
+cp "$TEMPLATE" "$BACKUP"
+trap 'rm -f "$BACKUP"' EXIT
+
 sed -i "s|^  GIT_TAG .*|  GIT_TAG $TARGET|" "$TEMPLATE"
 
-# Clear cached FetchContent checkouts so the new tag is fetched on next build
-for dep in build/_deps/ftxui-src build/_deps/ftxui-build \
-           build-windows/_deps/ftxui-src build-windows/_deps/ftxui-build; do
-    if [ -e "$dep" ]; then
-        rm -rf "$dep"
-        echo "Removed cached: $dep"
-    fi
-done
+if version_ge "$TARGET" 6.0.0 && grep -q 'ftxui-c0-delivery.patch' "$TEMPLATE"; then
+    sed -i '/ftxui-c0-delivery\.patch/d' "$TEMPLATE"
+    echo "Removed legacy CAN/SUB patch (fixed upstream in FTXUI 6+)."
+fi
 
-# Regenerate CMakeLists.txt from the template (same as build.sh) and run a
-# configure pass to fetch the new tag and verify the patch still applies.
+clear_cache
+
 echo ""
-echo "Verifying FTXUI $TARGET fetches and the patch applies..."
+echo "Verifying FTXUI $TARGET fetches and applies..."
 source ./config.sh
 cp "$TEMPLATE" CMakeLists.txt
 sed -i "s/<<TARGET_NAME>>/$APP_NAME/g" CMakeLists.txt
@@ -90,19 +118,9 @@ mkdir -p build
 if ! cmake -S . -B build; then
     echo ""
     echo "ERROR: configure failed for FTXUI $TARGET."
-    echo "  The local patch ($PATCH) no longer applies cleanly."
-    echo ""
-    echo "  For FTXUI >= v6.0.0 the CAN/SUB fix is already upstream:"
-    echo "  Parse() returns SPECIAL for every C0 byte (incl. Ctrl+X/Ctrl+Z),"
-    echo "  so the patch is obsolete - remove the 'PATCH_COMMAND ...' line"
-    echo "  from $TEMPLATE and run ./upgrade.sh again."
-    echo ""
-    echo "  For older versions, re-baseline the patch against the new source"
-    echo "  and run ./upgrade.sh again."
-    echo ""
     echo "  Rolling back the pin to $CURRENT..."
-    sed -i "s|^  GIT_TAG .*|  GIT_TAG $CURRENT|" "$TEMPLATE"
-    rm -rf build/_deps/ftxui-src build/_deps/ftxui-build
+    cp "$BACKUP" "$TEMPLATE"
+    clear_cache
     echo "Rolled back. Nothing was changed."
     exit 1
 fi
@@ -110,4 +128,3 @@ fi
 echo ""
 echo "Done: FTXUI pinned to $TARGET ($TEMPLATE)."
 echo "Run ./build.sh to rebuild with the new FTXUI."
-    
