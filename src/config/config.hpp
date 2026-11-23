@@ -43,7 +43,11 @@ namespace nexyth
     //>>
     struct Settings
     {
+#ifdef _WIN32
+        std::string shell = "cmd.exe";
+#else
         std::string shell = "/bin/bash";
+#endif
         int scrollback = 20000;
         bool tabbar = false;
         bool statusline = true;
