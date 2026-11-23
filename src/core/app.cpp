@@ -251,7 +251,7 @@ namespace nexyth
 
         */
         //>>
-        ftxui::Element App::Render()
+        ftxui::Element App::OnRender()
         {
             const auto size = ftxui::Terminal::Size();
             const int width = std::max(10, size.dimx);

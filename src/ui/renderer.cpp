@@ -350,7 +350,7 @@ namespace nexyth
         const ftxui::Color foreground = parseColor(settings.foreground, ftxui::Color::Default);
         const ftxui::Color background = parseColor(settings.background, ftxui::Color::Default);
 
-        const auto plain = [foreground, background](ftxui::Pixel& pixel)
+        const auto plain = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = foreground;
             pixel.background_color = background;
@@ -377,7 +377,7 @@ namespace nexyth
             const bool focused = focusedPane && entry.pane && entry.pane->id() == focusedPane->id();
             const ftxui::Color edge = focused ? focusBorder : border;
 
-            const auto edgeStyle = [edge, background, focused](ftxui::Pixel& pixel)
+            const auto edgeStyle = [edge, background, focused](ftxui::Cell& pixel)
             {
                 pixel.foreground_color = edge;
                 pixel.background_color = background;
@@ -505,7 +505,7 @@ namespace nexyth
                     bg = selectionColor;
                 }
 
-                const auto stylizer = [fg, bg, &cell](ftxui::Pixel& pixel)
+                const auto stylizer = [fg, bg, &cell](ftxui::Cell& pixel)
                 {
                     pixel.foreground_color = fg;
                     pixel.background_color = bg;
@@ -544,7 +544,7 @@ namespace nexyth
             const ftxui::Color fg = selected ? background : foreground;
             const ftxui::Color bg = selected ? foreground : background;
 
-            const auto style = [fg, bg, selected](ftxui::Pixel& pixel)
+            const auto style = [fg, bg, selected](ftxui::Cell& pixel)
             {
                 pixel.foreground_color = fg;
                 pixel.background_color = bg;
@@ -556,7 +556,7 @@ namespace nexyth
             x += static_cast<int>(text.size());
         }
 
-        const auto fillStyle = [background](ftxui::Pixel& pixel)
+        const auto fillStyle = [background](ftxui::Cell& pixel)
         {
             pixel.background_color = background;
             pixel.foreground_color = background;
@@ -581,7 +581,7 @@ namespace nexyth
         const ftxui::Color statusFg = parseColor(settings.status_foreground, foreground);
         const ftxui::Color statusBg = parseColor(settings.status_background, background);
 
-        const auto statusStyle = [statusFg, statusBg](ftxui::Pixel& pixel)
+        const auto statusStyle = [statusFg, statusBg](ftxui::Cell& pixel)
         {
             pixel.foreground_color = statusFg;
             pixel.background_color = statusBg;
@@ -597,7 +597,7 @@ namespace nexyth
         const ftxui::Color modeBg =
         app_.mode() == Mode::Insert ? ftxui::Color::RGB(70, 150, 80) : (app_.mode() == Mode::Visual ? ftxui::Color::RGB(190, 140, 60) : ftxui::Color::RGB(70, 110, 180));
 
-        const auto modeStyle = [modeFg, modeBg](ftxui::Pixel& pixel)
+        const auto modeStyle = [modeFg, modeBg](ftxui::Cell& pixel)
         {
             pixel.foreground_color = modeFg;
             pixel.background_color = modeBg;
@@ -635,13 +635,13 @@ namespace nexyth
         const ftxui::Color boxBg = parseColor("#202020", background);
         const ftxui::Color boxFg = foreground;
 
-        const auto fill = [boxFg, boxBg](ftxui::Pixel& pixel)
+        const auto fill = [boxFg, boxBg](ftxui::Cell& pixel)
         {
             pixel.foreground_color = boxFg;
             pixel.background_color = boxBg;
         };
 
-        const auto heading = [boxBg, boxFg](ftxui::Pixel& pixel)
+        const auto heading = [boxBg, boxFg](ftxui::Cell& pixel)
         {
             pixel.foreground_color = boxBg;
             pixel.background_color = boxFg;
@@ -688,7 +688,7 @@ namespace nexyth
         const auto rect = rectFor(app_.clockPaneId());
         if (!rect || rect->width < 10 || rect->height < 5) return;
 
-        const auto style = [foreground, background](ftxui::Pixel& pixel)
+        const auto style = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = foreground;
             pixel.background_color = background;
@@ -754,7 +754,7 @@ namespace nexyth
     */
     void Renderer::drawTabsOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
     {
-        const auto fill = [foreground, background](ftxui::Pixel& pixel)
+        const auto fill = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = foreground;
             pixel.background_color = background;
@@ -781,13 +781,13 @@ namespace nexyth
     */
     void Renderer::drawThemesOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
     {
-        const auto fill = [foreground, background](ftxui::Pixel& pixel)
+        const auto fill = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = foreground;
             pixel.background_color = background;
         };
 
-        const auto selected = [foreground, background](ftxui::Pixel& pixel)
+        const auto selected = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = background;
             pixel.background_color = foreground;
@@ -819,13 +819,13 @@ namespace nexyth
     */
     void Renderer::drawRenameOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
     {
-        const auto fill = [foreground, background](ftxui::Pixel& pixel)
+        const auto fill = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = foreground;
             pixel.background_color = background;
         };
 
-        const auto heading = [foreground, background](ftxui::Pixel& pixel)
+        const auto heading = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = background;
             pixel.background_color = foreground;
@@ -852,7 +852,7 @@ namespace nexyth
     */
     void Renderer::drawResizeIndicator(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
     {
-        const auto style = [foreground, background](ftxui::Pixel& pixel)
+        const auto style = [foreground, background](ftxui::Cell& pixel)
         {
             pixel.foreground_color = background;
             pixel.background_color = foreground;
