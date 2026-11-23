@@ -43,7 +43,7 @@ namespace nexyth
             App(ftxui::ScreenInteractive* screen, std::string configPath);
             ~App() override;
 
-            ftxui::Element Render() override;
+            ftxui::Element OnRender() override;
             bool OnEvent(ftxui::Event event) override;
 
             Config& config() { return config_; }
