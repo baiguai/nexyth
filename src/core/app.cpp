@@ -268,6 +268,55 @@ namespace nexyth
         }
     //!
 
+    namespace
+    {
+        /*!
+            Cursor Node
+
+            Sets the native terminal cursor during element rendering, after
+            ftxui's DOM Render pass has applied its own (hidden) cursor state.
+            A bar cursor sits at the left edge of the cell, leaving the cell's
+            character visible.
+        */
+        //>>
+        class CursorNode : public ftxui::Node
+        {
+            public:
+                CursorNode(ftxui::Element child, std::optional<Pos> position)
+                    : ftxui::Node({std::move(child)}), position_(position) {}
+
+                void SetBox(ftxui::Box box) override
+                {
+                    ftxui::Node::SetBox(box);
+                    children_[0]->SetBox(box);
+                }
+
+                void Render(ftxui::Screen& screen) override
+                {
+                    ftxui::Node::Render(screen);
+
+                    ftxui::Screen::Cursor cursor;
+                    if (position_)
+                    {
+                        cursor.x = position_->x;
+                        cursor.y = position_->y;
+                        cursor.shape = ftxui::Screen::Cursor::Bar;
+                    }
+                    else
+                    {
+                        cursor.shape = ftxui::Screen::Cursor::Hidden;
+                    }
+                    screen.SetCursor(cursor);
+                }
+
+            private:
+                std::optional<Pos> position_;
+        };
+        //<<
+        //!
+    }
+    //!
+
     /*>
         Ftxui Methods
     */
@@ -315,18 +364,12 @@ namespace nexyth
             const int height = std::max(4, size.dimy);
             renderer_.computeLayout(width, height);
 
-            if (auto* active = ftxui::ScreenInteractive::Active())
-            {
-                ftxui::Screen::Cursor cursor;
-                cursor.shape = ftxui::Screen::Cursor::Hidden;
-                active->SetCursor(cursor);
-            }
-
-            return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)
+            return std::make_shared<CursorNode>(
+            ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)
             {
                 renderer_.draw(c, width, height);
-            }) |
-            ftxui::flex;
+            }) | ftxui::flex,
+            renderer_.terminalCursorScreenPosition());
         }
         //<<
         //!
