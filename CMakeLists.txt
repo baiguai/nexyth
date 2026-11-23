@@ -41,6 +41,7 @@ elseif(APPLE)
 elseif(WIN32)
     # Windows
     target_link_libraries(nexyth PRIVATE user32 kernel32 gdi32)
+    target_compile_definitions(nexyth PRIVATE _WIN32_WINNT=0x0A00 NTDDI_VERSION=0x0A000006 NOMINMAX)
 endif()
 
 # Compiler-specific options

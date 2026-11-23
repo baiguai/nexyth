@@ -10,9 +10,16 @@
 #include <iostream>
 #include <limits>
 
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#else
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#endif
 
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/dom/canvas.hpp"
@@ -100,6 +107,51 @@ namespace nexyth
             }
             //!
 
+#ifdef _WIN32
+            bool writeWindowsClipboard(const std::string& text)
+            {
+                if (text.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) return false;
+                const int required = MultiByteToWideChar(
+                    CP_UTF8, MB_ERR_INVALID_CHARS, text.data(),
+                    static_cast<int>(text.size()), nullptr, 0);
+                if (required <= 0) return false;
+
+                std::vector<wchar_t> wide(static_cast<std::size_t>(required) + 1, L'\0');
+                if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text.data(),
+                                        static_cast<int>(text.size()), wide.data(),
+                                        required) != required)
+                {
+                    return false;
+                }
+
+                const HGLOBAL memory =
+                    GlobalAlloc(GMEM_MOVEABLE, wide.size() * sizeof(wchar_t));
+                if (memory == nullptr) return false;
+                wchar_t* destination = static_cast<wchar_t*>(GlobalLock(memory));
+                if (destination == nullptr)
+                {
+                    GlobalFree(memory);
+                    return false;
+                }
+                std::copy(wide.begin(), wide.end(), destination);
+                GlobalUnlock(memory);
+
+                if (!OpenClipboard(nullptr))
+                {
+                    GlobalFree(memory);
+                    return false;
+                }
+                EmptyClipboard();
+                const HANDLE result = SetClipboardData(CF_UNICODETEXT, memory);
+                CloseClipboard();
+                if (result == nullptr)
+                {
+                    GlobalFree(memory);
+                    return false;
+                }
+                return true;
+            }
+#else
             /*!
                 Run Clipboard Command
 
@@ -178,6 +230,7 @@ namespace nexyth
                 return WIFEXITED(status) && WEXITSTATUS(status) == 0;
             }
             //!
+#endif
 
             /*!
                 Write System Clipboard
@@ -186,6 +239,9 @@ namespace nexyth
             */
             bool writeSystemClipboard(const std::string& text)
             {
+#ifdef _WIN32
+                return writeWindowsClipboard(text);
+#else
                 /*|
                     Commands:
 
@@ -206,6 +262,7 @@ namespace nexyth
                     if (runClipboardCommand(command, text)) return true;
                 }
                 return false;
+#endif
             }
             //!
         }
