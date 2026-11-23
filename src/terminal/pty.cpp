@@ -176,22 +176,29 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   };
   if (!attributesInitialized) return fail();
   if (!UpdateProcThreadAttribute(attributeList, 0,
-                                 PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, &console,
-                                 sizeof(console), nullptr, nullptr)) {
+                                  PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, console,
+                                  sizeof(console), nullptr, nullptr)) {
     return fail();
   }
 
-  std::wstring commandLine = utf8ToWide(command);
-  if (commandLine.empty()) return fail();
+
+  const std::wstring wideCommand = utf8ToWide(command);
+  if (wideCommand.empty()) return fail();
+  std::vector<wchar_t> commandLine(wideCommand.begin(), wideCommand.end());
+  commandLine.push_back(L'\0');
   _putenv_s("TERM", "xterm-256color");
   _putenv_s("NEXYTH", "1");
 
   STARTUPINFOEXW startup{};
   startup.StartupInfo.cb = sizeof(startup);
+  startup.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+  startup.StartupInfo.hStdInput = nullptr;
+  startup.StartupInfo.hStdOutput = nullptr;
+  startup.StartupInfo.hStdError = nullptr;
   startup.lpAttributeList = attributeList;
   PROCESS_INFORMATION process{};
   const BOOL created =
-      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, TRUE,
+      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, FALSE,
                      EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
                      nullptr, nullptr, &startup.StartupInfo, &process);
   if (!created) return fail();
@@ -199,9 +206,10 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   DeleteProcThreadAttributeList(attributeList);
   CloseHandle(inputRead);
   CloseHandle(outputWrite);
+  CloseHandle(process.hThread);
   console_ = console;
   process_ = process.hProcess;
-  thread_ = process.hThread;
+  thread_ = nullptr;
   inputWrite_ = inputWrite;
   outputRead_ = outputRead;
   reaped_ = false;
