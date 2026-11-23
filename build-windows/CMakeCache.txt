@@ -308,6 +308,9 @@ FTXUI_BUILD_DOCS:BOOL=OFF
 //Set to ON to build examples
 FTXUI_BUILD_EXAMPLES:BOOL=OFF
 
+//Build the C++20 modules
+FTXUI_BUILD_MODULES:BOOL=OFF
+
 //Set to ON to build tests
 FTXUI_BUILD_TESTS:BOOL=OFF
 
@@ -319,6 +322,9 @@ FTXUI_CLANG_TIDY:BOOL=OFF
 
 //Enable more compiler warnings and warnings as errors
 FTXUI_DEV_WARNINGS:BOOL=OFF
+
+//Enable ccache support
+FTXUI_ENABLE_CCACHE:BOOL=OFF
 
 //Execute code coverage
 FTXUI_ENABLE_COVERAGE:BOOL=OFF

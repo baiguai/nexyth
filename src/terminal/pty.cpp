@@ -81,8 +81,13 @@ COORD consoleSize(int columns, int rows) {
 }
 #endif
 
-            !_method
+}  // namespace
 
+/*!
+    Pty Destructor
+
+    !_method
+*/
 Pty::~Pty() {
 #ifdef _WIN32
   if (process_ != nullptr) {
@@ -171,22 +176,29 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   };
   if (!attributesInitialized) return fail();
   if (!UpdateProcThreadAttribute(attributeList, 0,
-                                 PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, &console,
-                                 sizeof(console), nullptr, nullptr)) {
+                                  PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, console,
+                                  sizeof(console), nullptr, nullptr)) {
     return fail();
   }
 
-  std::wstring commandLine = utf8ToWide(command);
-  if (commandLine.empty()) return fail();
+
+  const std::wstring wideCommand = utf8ToWide(command);
+  if (wideCommand.empty()) return fail();
+  std::vector<wchar_t> commandLine(wideCommand.begin(), wideCommand.end());
+  commandLine.push_back(L'\0');
   _putenv_s("TERM", "xterm-256color");
   _putenv_s("NEXYTH", "1");
 
   STARTUPINFOEXW startup{};
   startup.StartupInfo.cb = sizeof(startup);
+  startup.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+  startup.StartupInfo.hStdInput = nullptr;
+  startup.StartupInfo.hStdOutput = nullptr;
+  startup.StartupInfo.hStdError = nullptr;
   startup.lpAttributeList = attributeList;
   PROCESS_INFORMATION process{};
   const BOOL created =
-      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, TRUE,
+      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, FALSE,
                      EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
                      nullptr, nullptr, &startup.StartupInfo, &process);
   if (!created) return fail();
@@ -194,9 +206,10 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   DeleteProcThreadAttributeList(attributeList);
   CloseHandle(inputRead);
   CloseHandle(outputWrite);
+  CloseHandle(process.hThread);
   console_ = console;
   process_ = process.hProcess;
-  thread_ = process.hThread;
+  thread_ = nullptr;
   inputWrite_ = inputWrite;
   outputRead_ = outputRead;
   reaped_ = false;
@@ -290,36 +303,9 @@ void Pty::respondToQueries(const std::string& data) {
     if (packet.find("a=q") != std::string::npos) {
       write(std::string("\x1B") + "_Gi=31;OK" + "\x1B" + "\\");
     }
-    //!
-
-    /*!
-        Respond To Queries
-
-        !_method
-    */
-    void Pty::respondToQueries(const std::string& data)
-    {
-        if (master_ < 0 || data.empty()) return;
-
-        const auto respond = [this, &data](const std::string& query,
-        const std::string& response)
-        {
-            if (data.find(query) != std::string::npos) write(response);
-        };
-
-        respond("\x1B[?u", "\x1B[?0u");
-        respond("\x1B[u", "\x1B[?0u");
-        respond("\x1B[0c", "\x1B[?62;1;2;4;6;9;15;22c");
-        respond("\x1B[c", "\x1B[?62;1;2;4;6;9;15;22c");
-        respond("\x1B]11;?\x07", "\x1B]11;rgb:0000/0000/0000\x07");
-        respond(std::string("\x1B") + "]11;?" + "\x1B" + "\\",
-        std::string("\x1B") + "]11;rgb:0000/0000/0000" + "\x1B" + "\\");
-        respond("\x1B[6n", "\x1B[1;1R");
-        respond("\x1B[18t", "\x1B[8;" + std::to_string(rows_) + ";" +
-        std::to_string(columns_) + "t");
-        respond("\x1B[16t", "\x1B[4;" + std::to_string(rows_ * 16) + ";" +
-        std::to_string(columns_ * 8) + "t");
-        respond("\x1B[>q", std::string("\x1B") + "P>q" + "\x1B" + "\\");
+    pos = end + 2;
+  }
+}
 
 void Pty::write(const std::string& data) {
 #ifdef _WIN32
@@ -435,61 +421,4 @@ bool Pty::alive() {
   return true;
 #endif
 }
-
-            if (count == 0) break;
-            if (errno == EINTR) continue;
-            break;
-        }
-        respondToQueries(result);
-        return result;
-    }
-    //!
-
-    /*!
-        Resize
-
-        !_method
-    */
-    void Pty::resize(int columns, int rows)
-    {
-        if (master_ < 0) return;
-
-        columns_ = std::max(1, columns);
-        rows_ = std::max(1, rows);
-        struct winsize size {};
-        size.ws_col = static_cast<unsigned short>(columns_);
-        size.ws_row = static_cast<unsigned short>(rows_);
-        ioctl(master_, TIOCSWINSZ, &size);
-
-        if (pid_ > 0) kill(pid_, SIGWINCH);
-    }
-    //!
-
-    /*!
-        Alive
-
-        !_method
-    */
-    bool Pty::alive()
-    {
-        if (pid_ <= 0 || reaped_) return false;
-
-        int status = 0;
-        const pid_t result = waitpid(pid_, &status, WNOHANG);
-
-        if (result == pid_)
-        {
-            reaped_ = true;
-            return false;
-        }
-
-        if (result < 0 && errno == ECHILD)
-        {
-            reaped_ = true;
-            return false;
-        }
-
-        return true;
-    }
-    //!
-}
+}  // namespace nexyth

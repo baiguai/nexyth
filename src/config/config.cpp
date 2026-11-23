@@ -28,6 +28,20 @@ namespace nexyth {
         //!
 
         /*!
+            Shell For Platform
+        */
+        //>>
+        std::string shellForPlatform(std::string shell)
+        {
+#ifdef _WIN32
+            if (!shell.empty() && shell.front() == '/') return "cmd.exe";
+#endif
+            return shell;
+        }
+        //<<
+        //!
+
+        /*!
             Strip Comment
 
         */
@@ -181,7 +195,7 @@ namespace nexyth {
     {
           const std::string key = lower(trim(name));
           const std::string text = trim(value);
-          if (key == "shell") settings.shell = expandHome(text);
+          if (key == "shell") settings.shell = shellForPlatform(expandHome(text));
           else if (key == "leader") settings.leader = keys::normalizeToken(text);
           else if (key == "tabbar") settings.tabbar = parseBool(text, settings.tabbar);
           else if (key == "statusline" || key == "status-line")
