@@ -30,8 +30,6 @@ namespace nexyth
         bool isSpace(char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }
         //<<
         //!
-    }
-    //!
 
 #ifdef _WIN32
 struct CodepointRange {
@@ -74,8 +72,11 @@ int wideCharWidth(std::uint32_t codepoint) {
              : 1;
 }
 #endif
+    }
+    //!
 
-}  // namespace
+    /*!
+        Trim
 
         !_method
     */
@@ -341,23 +342,7 @@ std::string expandHome(std::string path) {
     if (home != nullptr) {
       return std::string(home) + (path.size() > 1 ? path.substr(1) : "");
     }
-    //!
-
-    /*!
-        Expand Home
-
-        !_method
-    */
-    std::string expandHome(std::string path)
-    {
-        if (path == "~" || (path.size() > 2 && path.substr(0, 2) == "~/"))
-        {
-            if (const char* home = std::getenv("HOME"))
-            {
-                return std::string(home) + (path.size() > 1 ? path.substr(1) : "");
-            }
-        }
-        return path;
-    }
-    //!
+  }
+  return path;
+}
 }

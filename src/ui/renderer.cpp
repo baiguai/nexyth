@@ -400,6 +400,8 @@ namespace nexyth
             }
         }
 
+        drawCursor(canvas, foreground, background);
+
         if (app_.clockActive())
         {
             drawClock(canvas, foreground, background);
@@ -523,6 +525,27 @@ namespace nexyth
         }
     }
     //!
+
+    void Renderer::drawCursor(ftxui::Canvas& canvas, ftxui::Color foreground,
+    ftxui::Color background)
+    {
+        if (app_.mode() != Mode::Insert) return;
+        const auto position = terminalCursorScreenPosition();
+        if (!position) return;
+
+        const auto style = [foreground, background](ftxui::Cell& pixel)
+        {
+            pixel.foreground_color = foreground;
+            pixel.background_color = background;
+            pixel.bold = false;
+            pixel.dim = false;
+            pixel.underlined = false;
+            pixel.strikethrough = false;
+            pixel.inverted = false;
+        };
+
+        writeCell(canvas, position->x, position->y, "│", style);
+    }
 
     /*!
         Draw Tabs
