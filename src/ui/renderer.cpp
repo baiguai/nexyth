@@ -629,7 +629,7 @@ namespace nexyth
         if (app_.resizeMode()) text << "  RESIZE";
         const std::string message = app_.statusMessage();
         if (!message.empty()) text << "  " << message;
-        text << "   <C-b>? help";
+        text << "   ? help";
         writeText(canvas, static_cast<int>(mode.size()), y, text.str(), statusStyle);
     }
     //!
@@ -661,7 +661,7 @@ namespace nexyth
         fillRect(canvas, box, " ", fill);
         drawBox(canvas, box, fill);
 
-        std::string header = " nexyth keys [" + std::string(modeName(app_.mode())) + "]  (? close)";
+        std::string header = " nexyth keys   (Escape close)";
         if (app_.helpFiltering()) header += "  filter: " + app_.helpFilter();
         writeText(canvas, box.x + 1, box.y, header, heading);
 
@@ -675,7 +675,8 @@ namespace nexyth
             for (int column = 0; column < 2; ++column)
             {
                 const std::size_t index =
-                offset + static_cast<std::size_t>(row) * 2 + static_cast<std::size_t>(column);
+                offset + static_cast<std::size_t>(column) * static_cast<std::size_t>(rows)
+                + static_cast<std::size_t>(row);
                 if (index >= bindings.size()) break;
                 const std::string text = bindings[index].first + "  " + bindings[index].second;
                 const int x = box.x + 1 + column * columnWidth;

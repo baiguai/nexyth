@@ -1048,7 +1048,8 @@ namespace nexyth
         */
         void App::closePane()
         {
-            workspace_.closePane();
+            auto pane = workspace_.focusedPane();
+            workspace_.closePane(pane->buffer().columns(), pane->buffer().rows());
             zoom_ = false;
             refresh();
         }
@@ -1613,16 +1614,35 @@ namespace nexyth
         */
         std::vector<std::pair<std::string, std::string>> App::filteredBindings() const
         {
-            const auto bindings = config_.listBindings(mode_);
-
-            if (!help_filtering_ || help_filter_.empty()) return bindings;
+            const Mode modes[] = {Mode::Normal, Mode::Insert, Mode::Visual};
 
             std::vector<std::pair<std::string, std::string>> result;
 
-            for (const auto& binding : bindings)
+            for (Mode mode : modes)
             {
-                if (containsInsensitive(binding.first + " " + binding.second, help_filter_))
+                std::string label = modeName(mode);
+                label += std::string(6 - label.size(), ' ');
+
+                for (auto binding : config_.listBindings(mode))
                 {
+                    const std::string rawKey = binding.first;
+                    if (binding.second == "plex" &&
+                        ((mode == Mode::Normal && rawKey == "<Esc>") ||
+                         (mode == Mode::Insert &&
+                          (rawKey == "<Esc>" || rawKey == "<C-Esc>"))))
+                        binding.first = "<Esc> <Esc>";
+
+                    binding.first = label + "  " + binding.first;
+
+                    if (help_filtering_ && !help_filter_.empty())
+                    {
+                        const std::string rawText = label + " " + rawKey + " " + binding.second;
+                        const std::string shownText = binding.first + " " + binding.second;
+                        if (!containsInsensitive(shownText, help_filter_) &&
+                            !containsInsensitive(rawText, help_filter_))
+                            continue;
+                    }
+
                     result.push_back(binding);
                 }
             }
