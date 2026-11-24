@@ -675,7 +675,8 @@ namespace nexyth
             for (int column = 0; column < 2; ++column)
             {
                 const std::size_t index =
-                offset + static_cast<std::size_t>(row) * 2 + static_cast<std::size_t>(column);
+                offset + static_cast<std::size_t>(column) * static_cast<std::size_t>(rows)
+                + static_cast<std::size_t>(row);
                 if (index >= bindings.size()) break;
                 const std::string text = bindings[index].first + "  " + bindings[index].second;
                 const int x = box.x + 1 + column * columnWidth;
