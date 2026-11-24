@@ -1,5 +1,7 @@
 #include "workspace.hpp"
 
+#include <algorithm>
+
 namespace nexyth
 {
     /*!
@@ -19,10 +21,12 @@ namespace nexyth
         ----
     */
     //>>
-    std::shared_ptr<Pane> Workspace::makePane(int columns, int rows)
+    std::shared_ptr<Pane> Workspace::makePane(int columns, int rows,
+    const std::string& command, const std::string& cwd)
     {
         const int id = next_id_++;
-        auto pane = std::make_shared<Pane>(id, shell_, columns, rows, scrollback_, onData_);
+        const std::string& launch = command.empty() ? shell_ : command;
+        auto pane = std::make_shared<Pane>(id, launch, columns, rows, scrollback_, onData_, cwd);
         pane->start();
         return pane;
     }
@@ -303,7 +307,7 @@ namespace nexyth
 
         !_method
     */
-    void Workspace::closePane()
+    void Workspace::closePane(int columns, int rows)
     {
         Tab& tab = tabs_[active_];
         auto current = findPane(tab.root, tab.focusId);
@@ -316,8 +320,11 @@ namespace nexyth
 
         if (panes.size() == 1)
         {
-            current->pane.reset();
-            tab.focusId = -1;
+            const std::string command = current->pane->command();
+            const std::string cwd = current->pane->cwd();
+            auto fresh = makePane(columns, rows, command, cwd);
+            current->pane = fresh;
+            tab.focusId = fresh->id();
             return;
         }
 
@@ -330,6 +337,133 @@ namespace nexyth
         std::vector<int> remaining;
         collectPanes(tab.root, remaining);
         tab.focusId = remaining.empty() ? -1 : remaining.front();
+    }
+    //!
+
+    /*!
+        Snapshot One Node
+
+        !_method
+    */
+    LayoutNodePtr Workspace::snapshotNode(const NodePtr& node) const
+    {
+        auto result = std::make_shared<LayoutNode>();
+
+        if (!node) return result;
+
+        if (node->type == Node::Type::Leaf)
+        {
+            if (node->pane)
+            {
+                result->pane.command = node->pane->command();
+                result->pane.cwd = node->pane->cwd();
+            }
+            return result;
+        }
+
+        result->type = LayoutNode::Type::Split;
+        result->vertical = node->kind == SplitKind::SideBySide;
+        result->ratio = node->ratio;
+        result->first = snapshotNode(node->first);
+        result->second = snapshotNode(node->second);
+        return result;
+    }
+    //!
+
+    /*!
+        Restore One Node
+
+        !_method
+    */
+    NodePtr Workspace::restoreNode(const LayoutNodePtr& node, int columns, int rows)
+    {
+        if (!node || node->type == LayoutNode::Type::Leaf)
+        {
+            const std::string command = node ? node->pane.command : std::string();
+            const std::string cwd = node ? node->pane.cwd : std::string();
+            return makePaneNode(makePane(columns, rows, command, cwd));
+        }
+
+        const SplitKind kind = node->vertical ? SplitKind::SideBySide : SplitKind::Stacked;
+        return makeSplitNode(restoreNode(node->first, columns, rows),
+        restoreNode(node->second, columns, rows), kind, node->ratio);
+    }
+    //!
+
+    /*!
+        Snapshot the Workspace
+
+        Captures tabs, split geometry, tab names, focused panes and each
+        pane's launch command and best-effort working directory.
+
+        !_method
+    */
+    LayoutSnapshot Workspace::snapshot() const
+    {
+        LayoutSnapshot result;
+        result.activeIndex = active_;
+
+        for (const auto& tab : tabs_)
+        {
+            LayoutTab saved;
+            saved.name = tab.name;
+            saved.root = snapshotNode(tab.root);
+
+            std::vector<int> panes;
+            collectPanes(tab.root, panes);
+
+            const auto found = std::find(panes.begin(), panes.end(), tab.focusId);
+
+            if (found != panes.end())
+            {
+                saved.focusIndex = static_cast<int>(std::distance(panes.begin(), found));
+            }
+
+            result.tabs.push_back(saved);
+        }
+
+        return result;
+    }
+    //!
+
+    /*!
+        Restore a Workspace
+
+        Existing panes are stopped and recreated from the snapshot. Live
+        processes, terminal scrollback and application state are not saved.
+
+        !_method
+    */
+    void Workspace::restore(const LayoutSnapshot& snapshot, int columns, int rows)
+    {
+        if (snapshot.tabs.empty()) return;
+
+        tabs_.clear();
+        active_ = 0;
+        next_id_ = 1;
+
+        for (const auto& saved : snapshot.tabs)
+        {
+            Tab tab;
+            tab.name = saved.name;
+            tab.root = restoreNode(saved.root, columns, rows);
+
+            std::vector<int> panes;
+            collectPanes(tab.root, panes);
+
+            if (panes.empty())
+            {
+                auto pane = makePane(columns, rows);
+                tab.root = makePaneNode(pane);
+                panes.push_back(pane->id());
+            }
+
+            const int index = std::clamp(saved.focusIndex, 0, static_cast<int>(panes.size()) - 1);
+            tab.focusId = panes[static_cast<std::size_t>(index)];
+            tabs_.push_back(std::move(tab));
+        }
+
+        active_ = std::clamp(snapshot.activeIndex, 0, static_cast<int>(tabs_.size()) - 1);
     }
     //!
 }

@@ -27,6 +27,7 @@
 #endif
 
 #include <algorithm>
+#include <cstdio>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -125,7 +126,8 @@ Pty::~Pty() {
 #endif
 }
 
-bool Pty::spawn(const std::string& command, int columns, int rows) {
+bool Pty::spawn(const std::string& command, int columns, int rows,
+                const std::string& cwd) {
 #ifdef _WIN32
   if (console_ != nullptr || process_ != nullptr) return false;
   columns_ = std::max(1, columns);
@@ -184,6 +186,7 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
 
   const std::wstring wideCommand = utf8ToWide(command);
   if (wideCommand.empty()) return fail();
+  const std::wstring wideCwd = cwd.empty() ? std::wstring() : utf8ToWide(cwd);
   std::vector<wchar_t> commandLine(wideCommand.begin(), wideCommand.end());
   commandLine.push_back(L'\0');
   _putenv_s("TERM", "xterm-256color");
@@ -197,10 +200,11 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
   startup.StartupInfo.hStdError = nullptr;
   startup.lpAttributeList = attributeList;
   PROCESS_INFORMATION process{};
-  const BOOL created =
-      CreateProcessW(nullptr, commandLine.data(), nullptr, nullptr, FALSE,
-                     EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
-                     nullptr, nullptr, &startup.StartupInfo, &process);
+  const BOOL created = CreateProcessW(
+      nullptr, commandLine.data(), nullptr, nullptr, FALSE,
+      EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT, nullptr,
+      wideCwd.empty() ? nullptr : wideCwd.c_str(), &startup.StartupInfo,
+      &process);
   if (!created) return fail();
 
   DeleteProcThreadAttributeList(attributeList);
@@ -253,6 +257,11 @@ bool Pty::spawn(const std::string& command, int columns, int rows) {
     if (slave > STDERR_FILENO) close(slave);
     setenv("TERM", "xterm-256color", 1);
     setenv("NEXYTH", "1", 1);
+    if (!cwd.empty())
+    {
+      const int changed = chdir(cwd.c_str());
+      (void)changed;
+    }
     const auto arguments = splitCommand(command);
     std::vector<char*> argv;
     for (const auto& argument : arguments) {
@@ -419,6 +428,38 @@ bool Pty::alive() {
     return false;
   }
   return true;
+#endif
+}
+
+/*!
+    Working Directory
+
+    Best-effort lookup of the child process' current directory. Linux can
+    read it from procfs; other platforms leave it empty and use the app's
+    working directory when the pane is recreated.
+
+    !_method
+*/
+std::string Pty::workingDirectory() const {
+#if defined(__linux__)
+  if (pid_ <= 0) return "";
+
+  char linkPath[64];
+  std::snprintf(linkPath, sizeof(linkPath), "/proc/%d/cwd",
+                static_cast<int>(pid_));
+
+  std::vector<char> buffer(4096);
+  const ssize_t length =
+      readlink(linkPath, buffer.data(), buffer.size() - 1);
+  if (length <= 0 || length >= static_cast<ssize_t>(buffer.size() - 1)) {
+    return "";
+  }
+
+  buffer[static_cast<std::size_t>(length)] = '\0';
+  const std::string result(buffer.data());
+  return result.empty() || result[0] != '/' ? "" : result;
+#else
+  return "";
 #endif
 }
 }  // namespace nexyth

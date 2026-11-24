@@ -28,6 +28,7 @@
 
 #include "../config/keys.hpp"
 #include "../core/action.hpp"
+#include "../layout/layout_store.hpp"
 #include "../layout/node.hpp"
 #include "../utils.hpp"
 
@@ -268,6 +269,55 @@ namespace nexyth
         }
     //!
 
+    namespace
+    {
+        /*!
+            Cursor Node
+
+            Sets the native terminal cursor during element rendering, after
+            ftxui's DOM Render pass has applied its own (hidden) cursor state.
+            A bar cursor sits at the left edge of the cell, leaving the cell's
+            character visible.
+        */
+        //>>
+        class CursorNode : public ftxui::Node
+        {
+            public:
+                CursorNode(ftxui::Element child, std::optional<Pos> position)
+                    : ftxui::Node({std::move(child)}), position_(position) {}
+
+                void SetBox(ftxui::Box box) override
+                {
+                    ftxui::Node::SetBox(box);
+                    children_[0]->SetBox(box);
+                }
+
+                void Render(ftxui::Screen& screen) override
+                {
+                    ftxui::Node::Render(screen);
+
+                    ftxui::Screen::Cursor cursor;
+                    if (position_)
+                    {
+                        cursor.x = position_->x;
+                        cursor.y = position_->y;
+                        cursor.shape = ftxui::Screen::Cursor::Bar;
+                    }
+                    else
+                    {
+                        cursor.shape = ftxui::Screen::Cursor::Hidden;
+                    }
+                    screen.SetCursor(cursor);
+                }
+
+            private:
+                std::optional<Pos> position_;
+        };
+        //<<
+        //!
+    }
+    //!
+
     /*>
         Ftxui Methods
     */
@@ -315,18 +365,12 @@ namespace nexyth
             const int height = std::max(4, size.dimy);
             renderer_.computeLayout(width, height);
 
-            if (auto* active = ftxui::ScreenInteractive::Active())
-            {
-                ftxui::Screen::Cursor cursor;
-                cursor.shape = ftxui::Screen::Cursor::Hidden;
-                active->SetCursor(cursor);
-            }
-
-            return ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)
+            return std::make_shared<CursorNode>(
+            ftxui::canvas(width, height, [this, width, height](ftxui::Canvas& c)
             {
                 renderer_.draw(c, width, height);
-            }) |
-            ftxui::flex;
+            }) | ftxui::flex,
+            renderer_.terminalCursorScreenPosition());
         }
         //<<
         //!
@@ -409,6 +453,70 @@ namespace nexyth
                 if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20)
                 {
                     appendRenameChar(raw[0]);
+                    return true;
+                }
+
+                return true;
+            }
+
+            if (overlay_ == Overlay::LayoutSave)
+            {
+                if (token == "<Esc>")
+                {
+                    layoutSaveCancel();
+                    return true;
+                }
+
+                if (token == "<CR>")
+                {
+                    layoutSaveApply();
+                    return true;
+                }
+
+                if (token == "<BS>" || raw == "\x7F")
+                {
+                    backspaceLayoutChar();
+                    return true;
+                }
+
+                if (raw.size() == 1 && static_cast<unsigned char>(raw[0]) >= 0x20)
+                {
+                    appendLayoutChar(raw[0]);
+                    return true;
+                }
+
+                return true;
+            }
+
+            if (overlay_ == Overlay::Layouts)
+            {
+                if (token == "<Up>" || token == "k")
+                {
+                    layoutListPrevious();
+                    return true;
+                }
+
+                if (token == "<Down>" || token == "j")
+                {
+                    layoutListNext();
+                    return true;
+                }
+
+                if (token == "<CR>" || token == "Enter")
+                {
+                    layoutListApply();
+                    return true;
+                }
+
+                if (token == "D")
+                {
+                    layoutListDelete();
+                    return true;
+                }
+
+                if (token == "<Esc>" || token == "q")
+                {
+                    layoutListCancel();
                     return true;
                 }
 
@@ -940,7 +1048,8 @@ namespace nexyth
         */
         void App::closePane()
         {
-            workspace_.closePane();
+            auto pane = workspace_.focusedPane();
+            workspace_.closePane(pane->buffer().columns(), pane->buffer().rows());
             zoom_ = false;
             refresh();
         }
@@ -1505,16 +1614,35 @@ namespace nexyth
         */
         std::vector<std::pair<std::string, std::string>> App::filteredBindings() const
         {
-            const auto bindings = config_.listBindings(mode_);
-
-            if (!help_filtering_ || help_filter_.empty()) return bindings;
+            const Mode modes[] = {Mode::Normal, Mode::Insert, Mode::Visual};
 
             std::vector<std::pair<std::string, std::string>> result;
 
-            for (const auto& binding : bindings)
+            for (Mode mode : modes)
             {
-                if (containsInsensitive(binding.first + " " + binding.second, help_filter_))
+                std::string label = modeName(mode);
+                label += std::string(6 - label.size(), ' ');
+
+                for (auto binding : config_.listBindings(mode))
                 {
+                    const std::string rawKey = binding.first;
+                    if (binding.second == "plex" &&
+                        ((mode == Mode::Normal && rawKey == "<Esc>") ||
+                         (mode == Mode::Insert &&
+                          (rawKey == "<Esc>" || rawKey == "<C-Esc>"))))
+                        binding.first = "<Esc> <Esc>";
+
+                    binding.first = label + "  " + binding.first;
+
+                    if (help_filtering_ && !help_filter_.empty())
+                    {
+                        const std::string rawText = label + " " + rawKey + " " + binding.second;
+                        const std::string shownText = binding.first + " " + binding.second;
+                        if (!containsInsensitive(shownText, help_filter_) &&
+                            !containsInsensitive(rawText, help_filter_))
+                            continue;
+                    }
+
                     result.push_back(binding);
                 }
             }
@@ -1606,6 +1734,256 @@ namespace nexyth
             {
                 overlay_ = Overlay::None;
                 rename_buffer_.clear();
+                refresh();
+            }
+            //!
+        //!
+
+        /*!
+            Saved Layouts
+        */
+            /*!
+                Show the Save Layout Dialog
+
+                !_method
+            */
+            void App::startLayoutSave()
+            {
+                std::string error;
+                layout_names_ = LayoutStore::list(error);
+
+                overlay_ = Overlay::LayoutSave;
+                layout_buffer_.clear();
+                layout_index_ = 0;
+                clearPending();
+
+                if (!error.empty()) statusMessage("layout list failed: " + error);
+                else refresh();
+            }
+            //!
+
+            /*!
+                Save Layout: Add Character
+
+                !_method
+            */
+            void App::appendLayoutChar(char character)
+            {
+                if (layout_buffer_.size() < 120) layout_buffer_ += character;
+                refresh();
+            }
+            //!
+
+            /*!
+                Save Layout: Remove Character
+
+                !_method
+            */
+            void App::backspaceLayoutChar()
+            {
+                if (!layout_buffer_.empty()) layout_buffer_.pop_back();
+                refresh();
+            }
+            //!
+
+            /*!
+                Apply the Layout Save
+
+                !_method
+            */
+            void App::layoutSaveApply()
+            {
+                const std::string name = trim(layout_buffer_);
+
+                if (name.empty())
+                {
+                    statusMessage("layout name is empty");
+                    return;
+                }
+
+                LayoutSnapshot snapshot = workspace_.snapshot();
+                snapshot.name = name;
+
+                std::string error;
+
+                if (!LayoutStore::save(snapshot, error))
+                {
+                    statusMessage("layout save failed: " + error);
+                    return;
+                }
+
+                overlay_ = Overlay::None;
+                layout_buffer_.clear();
+                statusMessage("layout saved: " + name + " (processes restart on restore)");
+            }
+            //!
+
+            /*!
+                Cancel the Layout Save
+
+                !_method
+            */
+            void App::layoutSaveCancel()
+            {
+                overlay_ = Overlay::None;
+                layout_buffer_.clear();
+                refresh();
+            }
+            //!
+
+            /*!
+                Show or Hide the Layout List
+
+                !_method
+            */
+            void App::toggleLayoutList()
+            {
+                if (overlay_ == Overlay::Layouts)
+                {
+                    layoutListCancel();
+                    return;
+                }
+
+                std::string error;
+                layout_names_ = LayoutStore::list(error);
+
+                if (!error.empty())
+                {
+                    statusMessage("layout list failed: " + error);
+                    return;
+                }
+
+                if (layout_names_.empty())
+                {
+                    statusMessage("no saved layouts");
+                    return;
+                }
+
+                layout_index_ = 0;
+                overlay_ = Overlay::Layouts;
+                clearPending();
+                refresh();
+            }
+            //!
+
+            /*!
+                Layout List: Move Down
+
+                !_method
+            */
+            void App::layoutListNext()
+            {
+                if (layout_names_.empty()) return;
+
+                layout_index_ = (layout_index_ + 1) % layout_names_.size();
+                refresh();
+            }
+            //!
+
+            /*!
+                Layout List: Move Up
+
+                !_method
+            */
+            void App::layoutListPrevious()
+            {
+                if (layout_names_.empty()) return;
+
+                layout_index_ = (layout_index_ + layout_names_.size() - 1) % layout_names_.size();
+                refresh();
+            }
+            //!
+
+            /*!
+                Apply the Selected Layout
+
+                !_method
+            */
+            void App::layoutListApply()
+            {
+                if (layout_index_ >= layout_names_.size())
+                {
+                    layoutListCancel();
+                    return;
+                }
+
+                const std::string name = layout_names_[layout_index_];
+                LayoutSnapshot snapshot;
+                std::string error;
+
+                if (!LayoutStore::load(name, snapshot, error))
+                {
+                    statusMessage("layout load failed: " + error);
+                    layoutListCancel();
+                    return;
+                }
+
+                int columns = 80;
+                int rows = 24;
+
+                if (auto pane = workspace_.focusedPane())
+                {
+                    std::lock_guard<std::mutex> lock(pane->mutex());
+                    columns = std::max(1, pane->buffer().columns());
+                    rows = std::max(1, pane->buffer().rows());
+                }
+
+                workspace_.restore(snapshot, columns, rows);
+                zoom_ = false;
+                clock_active_.store(false, std::memory_order_relaxed);
+                clock_pane_id_ = -1;
+
+                overlay_ = Overlay::None;
+                layout_names_.clear();
+                statusMessage("layout restored: " + name);
+            }
+            //!
+
+            /*!
+                Delete the Selected Layout
+
+                !_method
+            */
+            void App::layoutListDelete()
+            {
+                if (layout_index_ >= layout_names_.size())
+                {
+                    layoutListCancel();
+                    return;
+                }
+
+                const std::string name = layout_names_[layout_index_];
+                std::string error;
+
+                if (!LayoutStore::remove(name, error))
+                {
+                    statusMessage("layout delete failed: " + error);
+                    return;
+                }
+
+                layout_names_ = LayoutStore::list(error);
+
+                if (layout_names_.empty())
+                {
+                    layoutListCancel();
+                    statusMessage("layout deleted: " + name + " (no layouts left)");
+                    return;
+                }
+
+                layout_index_ = std::min(layout_index_, layout_names_.size() - 1);
+                statusMessage("layout deleted: " + name);
+            }
+            //!
+
+            /*!
+                Cancel the Layout List
+
+                !_method
+            */
+            void App::layoutListCancel()
+            {
+                overlay_ = Overlay::None;
+                layout_names_.clear();
                 refresh();
             }
             //!

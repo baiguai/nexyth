@@ -84,8 +84,6 @@ namespace nexyth
             void buildLayout(const NodePtr& node, Rect area);
             void drawPane(ftxui::Canvas& canvas, const PaneRect& entry,
             ftxui::Color foreground, ftxui::Color background);
-            void drawCursor(ftxui::Canvas& canvas, ftxui::Color foreground,
-            ftxui::Color background);
             void drawTabs(ftxui::Canvas& canvas, int width, int y,
             ftxui::Color foreground, ftxui::Color background);
             void drawStatus(ftxui::Canvas& canvas, int width, int y,
@@ -99,6 +97,10 @@ namespace nexyth
             void drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,
             ftxui::Color foreground, ftxui::Color background);
             void drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,
+            ftxui::Color foreground, ftxui::Color background);
+            void drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height,
+            ftxui::Color foreground, ftxui::Color background);
+            void drawLayoutListOverlay(ftxui::Canvas& canvas, int width, int height,
             ftxui::Color foreground, ftxui::Color background);
             void drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,
             ftxui::Color foreground, ftxui::Color background);

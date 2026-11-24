@@ -12,6 +12,7 @@ add_executable(nexyth
     src/config/keys.cpp
     src/core/action.cpp
     src/core/app.cpp
+    src/layout/layout_store.cpp
     src/layout/node.cpp
     src/layout/pane.cpp
     src/layout/workspace.cpp

@@ -26,7 +26,7 @@ namespace nexyth
         Overlay Enum Class
     */
     //>>
-    enum class Overlay { None, Help, Tabs, Themes, Rename };
+    enum class Overlay { None, Help, Tabs, Themes, Rename, LayoutSave, Layouts };
     //<<
     //!
 
@@ -64,6 +64,9 @@ namespace nexyth
             bool resizeMode() const { return resize_mode_; }
             std::size_t themeIndex() const { return theme_index_; }
             std::string renameBuffer() const { return rename_buffer_; }
+            std::string layoutBuffer() const { return layout_buffer_; }
+            const std::vector<std::string>& layoutNames() const { return layout_names_; }
+            std::size_t layoutIndex() const { return layout_index_; }
             std::vector<std::pair<std::string, std::string>> filteredBindings() const;
 
             void refresh();
@@ -90,6 +93,17 @@ namespace nexyth
             void backspaceRenameChar();
             void renameTabApply();
             void renameTabCancel();
+            void startLayoutSave();
+            void appendLayoutChar(char character);
+            void backspaceLayoutChar();
+            void layoutSaveApply();
+            void layoutSaveCancel();
+            void toggleLayoutList();
+            void layoutListNext();
+            void layoutListPrevious();
+            void layoutListApply();
+            void layoutListDelete();
+            void layoutListCancel();
             void helpScroll(int delta);
             void appendHelpFilter(char character);
             void backspaceHelpFilter();
@@ -152,6 +166,9 @@ namespace nexyth
             std::string help_filter_;
             bool help_filtering_ = false;
             std::string rename_buffer_;
+            std::string layout_buffer_;
+            std::vector<std::string> layout_names_;
+            std::size_t layout_index_ = 0;
             std::string clipboard_;
             std::size_t help_offset_ = 0;
             std::size_t theme_index_ = 0;
