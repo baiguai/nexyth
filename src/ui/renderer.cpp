@@ -629,7 +629,7 @@ namespace nexyth
         if (app_.resizeMode()) text << "  RESIZE";
         const std::string message = app_.statusMessage();
         if (!message.empty()) text << "  " << message;
-        text << "   <C-b>? help";
+        text << "   ? help";
         writeText(canvas, static_cast<int>(mode.size()), y, text.str(), statusStyle);
     }
     //!
@@ -661,7 +661,7 @@ namespace nexyth
         fillRect(canvas, box, " ", fill);
         drawBox(canvas, box, fill);
 
-        std::string header = " nexyth keys [" + std::string(modeName(app_.mode())) + "]  (? close)";
+        std::string header = " nexyth keys   (Escape close)";
         if (app_.helpFiltering()) header += "  filter: " + app_.helpFilter();
         writeText(canvas, box.x + 1, box.y, header, heading);
 

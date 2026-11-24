@@ -55,7 +55,7 @@ namespace nexyth
 
             void splitFocused(bool vertical, int columns, int rows);
             void splitWindow(bool vertical, int columns, int rows);
-            void closePane();
+            void closePane(int columns, int rows);
 
             LayoutSnapshot snapshot() const;
             void restore(const LayoutSnapshot& snapshot, int columns, int rows);

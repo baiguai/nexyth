@@ -307,7 +307,7 @@ namespace nexyth
 
         !_method
     */
-    void Workspace::closePane()
+    void Workspace::closePane(int columns, int rows)
     {
         Tab& tab = tabs_[active_];
         auto current = findPane(tab.root, tab.focusId);
@@ -320,8 +320,11 @@ namespace nexyth
 
         if (panes.size() == 1)
         {
-            current->pane.reset();
-            tab.focusId = -1;
+            const std::string command = current->pane->command();
+            const std::string cwd = current->pane->cwd();
+            auto fresh = makePane(columns, rows, command, cwd);
+            current->pane = fresh;
+            tab.focusId = fresh->id();
             return;
         }
 

@@ -1048,7 +1048,8 @@ namespace nexyth
         */
         void App::closePane()
         {
-            workspace_.closePane();
+            auto pane = workspace_.focusedPane();
+            workspace_.closePane(pane->buffer().columns(), pane->buffer().rows());
             zoom_ = false;
             refresh();
         }
@@ -1615,16 +1616,26 @@ namespace nexyth
         {
             const auto bindings = config_.listBindings(mode_);
 
-            if (!help_filtering_ || help_filter_.empty()) return bindings;
-
             std::vector<std::pair<std::string, std::string>> result;
 
-            for (const auto& binding : bindings)
+            for (auto binding : bindings)
             {
-                if (containsInsensitive(binding.first + " " + binding.second, help_filter_))
+                const std::string rawKey = binding.first;
+                if (binding.second == "plex" &&
+                    ((mode_ == Mode::Normal && rawKey == "<Esc>") ||
+                     (mode_ == Mode::Insert && rawKey == "<C-Esc>")))
+                    binding.first = "<Esc> <Esc>";
+
+                if (help_filtering_ && !help_filter_.empty())
                 {
-                    result.push_back(binding);
+                    const std::string rawText = rawKey + " " + binding.second;
+                    const std::string shownText = binding.first + " " + binding.second;
+                    if (!containsInsensitive(shownText, help_filter_) &&
+                        !containsInsensitive(rawText, help_filter_))
+                        continue;
                 }
+
+                result.push_back(binding);
             }
             return result;
         }
