@@ -98,6 +98,10 @@ namespace nexyth
             ftxui::Color foreground, ftxui::Color background);
             void drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,
             ftxui::Color foreground, ftxui::Color background);
+            void drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height,
+            ftxui::Color foreground, ftxui::Color background);
+            void drawLayoutListOverlay(ftxui::Canvas& canvas, int width, int height,
+            ftxui::Color foreground, ftxui::Color background);
             void drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,
             ftxui::Color foreground, ftxui::Color background);
 

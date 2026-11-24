@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "layout.hpp"
 #include "node.hpp"
 
 namespace nexyth
@@ -55,6 +56,9 @@ namespace nexyth
             void splitFocused(bool vertical, int columns, int rows);
             void splitWindow(bool vertical, int columns, int rows);
             void closePane();
+
+            LayoutSnapshot snapshot() const;
+            void restore(const LayoutSnapshot& snapshot, int columns, int rows);
             //<<
         //!
 
@@ -63,7 +67,10 @@ namespace nexyth
         */
         private:
             //>>
-            std::shared_ptr<Pane> makePane(int columns, int rows);
+            std::shared_ptr<Pane> makePane(int columns, int rows,
+            const std::string& command = {}, const std::string& cwd = {});
+            LayoutNodePtr snapshotNode(const NodePtr& node) const;
+            NodePtr restoreNode(const LayoutNodePtr& node, int columns, int rows);
             void normalizeFocus(Tab& tab);
 
             std::string shell_;

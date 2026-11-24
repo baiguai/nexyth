@@ -17,11 +17,13 @@ class Pty {
   Pty(const Pty&) = delete;
   Pty& operator=(const Pty&) = delete;
 
-  bool spawn(const std::string& command, int columns, int rows);
+  bool spawn(const std::string& command, int columns, int rows,
+             const std::string& cwd = "");
   void write(const std::string& data);
   std::string readAvailable();
   void resize(int columns, int rows);
   bool alive();
+  std::string workingDirectory() const;
 #ifdef _WIN32
   bool hasProcess() const { return process_ != nullptr; }
 #else

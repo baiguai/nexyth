@@ -94,6 +94,8 @@ namespace nexyth
         add(*this, "tab-next", [](App& app, const auto&) { app.nextTab(); });
         add(*this, "tab-prev", [](App& app, const auto&) { app.previousTab(); });
         add(*this, "tab-select", [](App& app, const auto& args){ app.selectTab(toInt(args, 0, 1)); });
+        add(*this, "layout-save", [](App& app, const auto&) { app.startLayoutSave(); });
+        add(*this, "layout-list", [](App& app, const auto&) { app.toggleLayoutList(); });
 
         add(*this, "resize-mode", [](App& app, const auto&) { app.toggleResizeMode(); });
         add(*this, "resize-left", [](App& app, const auto& args) { app.resizeFocused(-1, 0, toInt(args, 0, 0)); });
