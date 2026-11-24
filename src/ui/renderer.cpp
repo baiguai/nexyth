@@ -433,6 +433,14 @@ namespace nexyth
         {
             drawRenameOverlay(canvas, width, height, foreground, background);
         }
+        else if (app_.overlay() == Overlay::LayoutSave)
+        {
+            drawLayoutSaveOverlay(canvas, width, height, foreground, background);
+        }
+        else if (app_.overlay() == Overlay::Layouts)
+        {
+            drawLayoutListOverlay(canvas, width, height, foreground, background);
+        }
     }
     //!
 
@@ -842,6 +850,82 @@ namespace nexyth
         const std::string current = " current: " + app_.workspace().tabLabel(app_.workspace().activeIndex());
         writeText(canvas, box.x + 1, box.y + 3, current.substr(0, static_cast<std::size_t>(box.width - 2)), fill);
         writeText(canvas, box.x + 1, box.y + box.height - 2, " type a new name; Backspace edits", fill);
+    }
+    //!
+
+    /*!
+        Draw Layout Save Overlay
+
+        !_method
+    */
+    void Renderer::drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
+    {
+        const auto fill = [foreground, background](ftxui::Cell& pixel)
+        {
+            pixel.foreground_color = foreground;
+            pixel.background_color = background;
+        };
+
+        const auto heading = [foreground, background](ftxui::Cell& pixel)
+        {
+            pixel.foreground_color = background;
+            pixel.background_color = foreground;
+            pixel.bold = true;
+        };
+
+        const Rect box = centeredBox(width, height, 64, 8);
+        fillRect(canvas, box, " ", fill);
+        drawBox(canvas, box, fill);
+        writeText(canvas, box.x + 1, box.y, " nexyth save layout (Enter save, Esc cancel)", heading);
+
+        const std::string value = "> " + app_.layoutBuffer();
+        writeText(canvas, box.x + 1, box.y + 2, value.substr(0, static_cast<std::size_t>(box.width - 2)), fill);
+        writeText(canvas, box.x + 1, box.y + 3, " tabs, panes, sizes, focus and paths are saved", fill);
+        writeText(canvas, box.x + 1, box.y + box.height - 2, " processes and scrollback restart on restore", fill);
+    }
+    //!
+
+    /*!
+        Draw Layout List Overlay
+
+        !_method
+    */
+    void Renderer::drawLayoutListOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
+    {
+        const auto fill = [foreground, background](ftxui::Cell& pixel)
+        {
+            pixel.foreground_color = foreground;
+            pixel.background_color = background;
+        };
+
+        const auto selected = [foreground, background](ftxui::Cell& pixel)
+        {
+            pixel.foreground_color = background;
+            pixel.background_color = foreground;
+            pixel.bold = true;
+        };
+
+        const Rect box = centeredBox(width, height, 60, 16);
+        fillRect(canvas, box, " ", fill);
+        drawBox(canvas, box, fill);
+        writeText(canvas, box.x + 1, box.y, " nexyth layouts (j/k, Enter restore, D delete, Esc cancel)", fill);
+        const Canvas::Stylizer normalStyle = fill;
+        const Canvas::Stylizer selectedStyle = selected;
+
+        const auto& names = app_.layoutNames();
+        const std::size_t index = app_.layoutIndex();
+        const std::size_t start = index > 10 ? index - 10 : 0;
+
+        if (names.empty())
+        {
+            writeText(canvas, box.x + 1, box.y + 2, " no saved layouts", fill);
+        }
+
+        for (std::size_t i = start; i < names.size() && i - start + 2 < static_cast<std::size_t>(box.height); ++i)
+        {
+            const std::string prefix = i == index ? "> " : "  ";
+            writeText(canvas, box.x + 1, box.y + 2 + static_cast<int>(i - start), prefix + names[i], i == index ? selectedStyle : normalStyle);
+        }
     }
     //!
 

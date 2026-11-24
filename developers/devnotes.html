@@ -1017,7 +1017,7 @@
   {
     "id": "dea8cf44",
     "title": "Project Structure",
-    "content": "Project Structure\n\nnexyth/\n|-- app.sh\n|-- build-windows.sh\n|-- build.sh\n|-- cmake/\n|   `-- mingw-x86_64.cmake\n|-- CMakeLists.txt\n|-- CMakeLists.txt.in\n|-- config/\n|   |-- default.conf\n|   |-- default_1.conf\n|   |-- scribboleth.html\n|   `-- themes.conf\n|-- config.sh\n|-- developers/\n|   `-- devnotes.html\n|-- docsgen/\n|   |-- config/\n|   |   `-- main.json\n|   |-- gendocs.sh\n|   |-- harvest.py\n|   |-- help.html\n|   |-- langs/\n|   |   |-- cpp.json\n|   |   `-- python.json\n|   `-- run.sh\n|-- leakcheck.sh\n|-- patches/\n|   `-- ftxui-c0-delivery.patch\n|-- run.sh\n|-- setup.sh\n|-- src/\n|   |-- config/\n|   |   |-- config.cpp\n|   |   |-- config.hpp\n|   |   |-- keys.cpp\n|   |   `-- keys.hpp\n|   |-- core/\n|   |   |-- action.cpp\n|   |   |-- action.hpp\n|   |   |-- app.cpp\n|   |   |-- app.hpp\n|   |   `-- mode.hpp\n|   |-- layout/\n|   |   |-- node.cpp\n|   |   |-- node.hpp\n|   |   |-- pane.cpp\n|   |   |-- pane.hpp\n|   |   |-- workspace.cpp\n|   |   `-- workspace.hpp\n|   |-- main.cpp\n|   |-- terminal/\n|   |   |-- buffer.cpp\n|   |   |-- buffer.hpp\n|   |   |-- pty.cpp\n|   |   |-- pty.hpp\n|   |   |-- vte.cpp\n|   |   `-- vte.hpp\n|   |-- ui/\n|   |   |-- renderer.cpp\n|   |   `-- renderer.hpp\n|   |-- utils.cpp\n|   `-- utils.hpp\n`-- upgrade.sh",
+    "content": "Project Structure\n\nnexyth/\n|-- app.sh\n|-- build-windows.sh\n|-- build.sh\n|-- cmake/\n|   `-- mingw-x86_64.cmake\n|-- CMakeLists.txt\n|-- CMakeLists.txt.in\n|-- config/\n|   |-- default.conf\n|   |-- default_1.conf\n|   |-- scribboleth.html\n|   `-- themes.conf\n|-- config.sh\n|-- developers/\n|   `-- devnotes.html\n|-- docsgen/\n|   |-- config/\n|   |   `-- main.json\n|   |-- gendocs.sh\n|   |-- harvest.py\n|   |-- help.html\n|   |-- langs/\n|   |   |-- cpp.json\n|   |   `-- python.json\n|   `-- run.sh\n|-- leakcheck.sh\n|-- patches/\n|   `-- ftxui-c0-delivery.patch\n|-- run.sh\n|-- setup.sh\n|-- src/\n|   |-- config/\n|   |   |-- config.cpp\n|   |   |-- config.hpp\n|   |   |-- keys.cpp\n|   |   `-- keys.hpp\n|   |-- core/\n|   |   |-- action.cpp\n|   |   |-- action.hpp\n|   |   |-- app.cpp\n|   |   |-- app.hpp\n|   |   `-- mode.hpp\n|   |-- layout/\n|   |   |-- layout.hpp\n|   |   |-- layout_store.cpp\n|   |   |-- layout_store.hpp\n|   |   |-- node.cpp\n|   |   |-- node.hpp\n|   |   |-- pane.cpp\n|   |   |-- pane.hpp\n|   |   |-- workspace.cpp\n|   |   `-- workspace.hpp\n|   |-- main.cpp\n|   |-- terminal/\n|   |   |-- buffer.cpp\n|   |   |-- buffer.hpp\n|   |   |-- pty.cpp\n|   |   |-- pty.hpp\n|   |   |-- vte.cpp\n|   |   `-- vte.hpp\n|   |-- ui/\n|   |   |-- renderer.cpp\n|   |   `-- renderer.hpp\n|   |-- utils.cpp\n|   `-- utils.hpp\n`-- upgrade.sh",
     "children": [],
     "expanded": false
   },
@@ -1117,7 +1117,7 @@
               {
                 "id": "16578984",
                 "title": "Path to the Default Config",
-                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [load](_Load Configuration_)\n    [main](_Main Method_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
+                "content": "Path to the Default Config\n\nThe default path CAN be overridden via an environment variable:\nNEXYTH_CONFIG\n\nSignature: std::string Config::defaultPath()\nMethod: defaultPath\nReturns: std::string Config\nCalled By:\n    [directory](_Layout Store Directory_)\n    [load](_Load Configuration_)\n    [main](_Main Method_)\n\nStandard config path:\n\nconst std::string path = std::string(home) + \"/.config/nexyth/config\";",
                 "children": [],
                 "expanded": false
               },
@@ -1297,7 +1297,7 @@
               {
                 "id": "2189eabf",
                 "title": "The Action Registry",
-                "content": "The Action Registry\n\nActionRegistry::ActionRegistry()\n{\n    add(*this, \"plex\", [](App& app, const auto&) { app.setMode(Mode::Normal); });\n    add(*this, \"normal\", [](App& app, const auto&) { app.enterNormal(); });\n    add(*this, \"normal-home\", [](App& app, const auto&) { app.enterNormal(true, false); });\n    add(*this, \"normal-end\", [](App& app, const auto&) { app.enterNormal(false, true); });\n    add(*this, \"visual\", [](App& app, const auto&) { app.enterVisual(); });\n    add(*this, \"select-start\", [](App& app, const auto&) { app.startSelection(); });\n    add(*this, \"visual-exit\", [](App& app, const auto&) { app.exitVisual(); });\n    add(*this, \"help\", [](App& app, const auto&) { app.toggleHelp(); });\n    add(*this, \"tab-list\", [](App& app, const auto&) { app.toggleTabs(); });\n    add(*this, \"theme-list\", [](App& app, const auto&) { app.toggleThemes(); });\n    add(*this, \"quit\", [](App& app, const auto&) { app.quit(); });\n\n    add(*this, \"focus-left\", [](App& app, const auto&) { app.focusDirection(-1, 0); });\n    add(*this, \"focus-right\", [](App& app, const auto&) { app.focusDirection(1, 0); });\n    add(*this, \"focus-up\", [](App& app, const auto&) { app.focusDirection(0, -1); });\n    add(*this, \"focus-down\", [](App& app, const auto&) { app.focusDirection(0, 1); });\n    add(*this, \"focus-next\", [](App& app, const auto&) { app.focusNext(); });\n    add(*this, \"focus-previous\", [](App& app, const auto&) { app.focusPrevious(); });\n\n    add(*this, \"split-horizontal\", [](App& app, const auto&) { app.splitWindow(false); });\n    add(*this, \"split-vertical\", [](App& app, const auto&) { app.splitWindow(true); });\n    add(*this, \"split-pane-horizontal\", [](App& app, const auto&) { app.splitFocused(false); });\n    add(*this, \"split-pane-vertical\", [](App& app, const auto&) { app.splitFocused(true); });\n    add(*this, \"close-pane\", [](App& app, const auto&) { app.closePane(); });\n\n    add(*this, \"new-tab\", [](App& app, const auto&) { app.newTab(); });\n    add(*this, \"rename-tab\", [](App& app, const auto&) { app.startRenameTab(); });\n    add(*this, \"close-tab\", [](App& app, const auto&) { app.closeTab(); });\n    add(*this, \"tab-next\", [](App& app, const auto&) { app.nextTab(); });\n    add(*this, \"tab-prev\", [](App& app, const auto&) { app.previousTab(); });\n    add(*this, \"tab-select\", [](App& app, const auto& args){ app.selectTab(toInt(args, 0, 1)); });\n\n    add(*this, \"resize-mode\", [](App& app, const auto&) { app.toggleResizeMode(); });\n    add(*this, \"resize-left\", [](App& app, const auto& args) { app.resizeFocused(-1, 0, toInt(args, 0, 0)); });\n    add(*this, \"resize-right\", [](App& app, const auto& args) { app.resizeFocused(1, 0, toInt(args, 0, 0)); });\n    add(*this, \"resize-up\", [](App& app, const auto& args) { app.resizeFocused(0, -1, toInt(args, 0, 0)); });\n    add(*this, \"resize-down\", [](App& app, const auto& args) { app.resizeFocused(0, 1, toInt(args, 0, 0)); });\n    add(*this, \"resize-equal\", [](App& app, const auto&) { app.resizeEqual(); });\n    add(*this, \"zoom-toggle\", [](App& app, const auto&) { app.toggleZoom(); });\n    add(*this, \"clock\", [](App& app, const auto&) { app.toggleClock(); });\n    add(*this, \"clock-toggle\", [](App& app, const auto&) { app.toggleClock(); });\n\n    add(*this, \"scroll-up\", [](App& app, const auto& args) { app.scroll(-toInt(args, 0, 5)); });\n    add(*this, \"scroll-down\", [](App& app, const auto& args) { app.scroll(toInt(args, 0, 5)); });\n    add(*this, \"scroll-top\", [](App& app, const auto&) { app.scrollToEdge(true); });\n    add(*this, \"scroll-bottom\", [](App& app, const auto&) { app.scrollToEdge(false); });\n\n    add(*this, \"move-left\", [](App& app, const auto&) { app.moveNavigation(-1, 0); });\n    add(*this, \"move-right\", [](App& app, const auto&) { app.moveNavigation(1, 0); });\n    add(*this, \"move-up\", [](App& app, const auto&) { app.moveNavigation(0, -1); });\n    add(*this, \"move-down\", [](App& app, const auto&) { app.moveNavigation(0, 1); });\n    add(*this, \"move-word-forward\", [](App& app, const auto&) { app.moveNavigationWord(1); });\n    add(*this, \"move-word-backward\", [](App& app, const auto&) { app.moveNavigationWord(-1); });\n    add(*this, \"move-line-start\", [](App& app, const auto&) { app.moveNavigationEdge(true, true); });\n    add(*this, \"move-line-end\", [](App& app, const auto&) { app.moveNavigationEdge(false, true); });\n    add(*this, \"move-top\", [](App& app, const auto&) { app.moveNavigationEdge(true, false); });\n    add(*this, \"move-bottom\", [](App& app, const auto&) { app.moveNavigationEdge(false, false); });\n    add(*this, \"select-here\", [](App& app, const auto&) { app.selectHere(); });\n    add(*this, \"yank\", [](App& app, const auto&) { app.yank(false); });\n    add(*this, \"yank-line\", [](App& app, const auto&) { app.yank(true); });\n    add(*this, \"paste\", [](App& app, const auto&) { app.paste(); });\n    add(*this, \"send-keys\", [](App& app, const auto& args) { app.sendKeys(join(args)); });\n}",
+                "content": "The Action Registry\n\nActionRegistry::ActionRegistry()\n{\n    add(*this, \"plex\", [](App& app, const auto&) { app.setMode(Mode::Normal); });\n    add(*this, \"normal\", [](App& app, const auto&) { app.enterNormal(); });\n    add(*this, \"normal-home\", [](App& app, const auto&) { app.enterNormal(true, false); });\n    add(*this, \"normal-end\", [](App& app, const auto&) { app.enterNormal(false, true); });\n    add(*this, \"visual\", [](App& app, const auto&) { app.enterVisual(); });\n    add(*this, \"select-start\", [](App& app, const auto&) { app.startSelection(); });\n    add(*this, \"visual-exit\", [](App& app, const auto&) { app.exitVisual(); });\n    add(*this, \"help\", [](App& app, const auto&) { app.toggleHelp(); });\n    add(*this, \"tab-list\", [](App& app, const auto&) { app.toggleTabs(); });\n    add(*this, \"theme-list\", [](App& app, const auto&) { app.toggleThemes(); });\n    add(*this, \"quit\", [](App& app, const auto&) { app.quit(); });\n\n    add(*this, \"focus-left\", [](App& app, const auto&) { app.focusDirection(-1, 0); });\n    add(*this, \"focus-right\", [](App& app, const auto&) { app.focusDirection(1, 0); });\n    add(*this, \"focus-up\", [](App& app, const auto&) { app.focusDirection(0, -1); });\n    add(*this, \"focus-down\", [](App& app, const auto&) { app.focusDirection(0, 1); });\n    add(*this, \"focus-next\", [](App& app, const auto&) { app.focusNext(); });\n    add(*this, \"focus-previous\", [](App& app, const auto&) { app.focusPrevious(); });\n\n    add(*this, \"split-horizontal\", [](App& app, const auto&) { app.splitWindow(false); });\n    add(*this, \"split-vertical\", [](App& app, const auto&) { app.splitWindow(true); });\n    add(*this, \"split-pane-horizontal\", [](App& app, const auto&) { app.splitFocused(false); });\n    add(*this, \"split-pane-vertical\", [](App& app, const auto&) { app.splitFocused(true); });\n    add(*this, \"close-pane\", [](App& app, const auto&) { app.closePane(); });\n\n    add(*this, \"new-tab\", [](App& app, const auto&) { app.newTab(); });\n    add(*this, \"rename-tab\", [](App& app, const auto&) { app.startRenameTab(); });\n    add(*this, \"close-tab\", [](App& app, const auto&) { app.closeTab(); });\n    add(*this, \"tab-next\", [](App& app, const auto&) { app.nextTab(); });\n    add(*this, \"tab-prev\", [](App& app, const auto&) { app.previousTab(); });\n    add(*this, \"tab-select\", [](App& app, const auto& args){ app.selectTab(toInt(args, 0, 1)); });\n    add(*this, \"layout-save\", [](App& app, const auto&) { app.startLayoutSave(); });\n    add(*this, \"layout-list\", [](App& app, const auto&) { app.toggleLayoutList(); });\n\n    add(*this, \"resize-mode\", [](App& app, const auto&) { app.toggleResizeMode(); });\n    add(*this, \"resize-left\", [](App& app, const auto& args) { app.resizeFocused(-1, 0, toInt(args, 0, 0)); });\n    add(*this, \"resize-right\", [](App& app, const auto& args) { app.resizeFocused(1, 0, toInt(args, 0, 0)); });\n    add(*this, \"resize-up\", [](App& app, const auto& args) { app.resizeFocused(0, -1, toInt(args, 0, 0)); });\n    add(*this, \"resize-down\", [](App& app, const auto& args) { app.resizeFocused(0, 1, toInt(args, 0, 0)); });\n    add(*this, \"resize-equal\", [](App& app, const auto&) { app.resizeEqual(); });\n    add(*this, \"zoom-toggle\", [](App& app, const auto&) { app.toggleZoom(); });\n    add(*this, \"clock\", [](App& app, const auto&) { app.toggleClock(); });\n    add(*this, \"clock-toggle\", [](App& app, const auto&) { app.toggleClock(); });\n\n    add(*this, \"scroll-up\", [](App& app, const auto& args) { app.scroll(-toInt(args, 0, 5)); });\n    add(*this, \"scroll-down\", [](App& app, const auto& args) { app.scroll(toInt(args, 0, 5)); });\n    add(*this, \"scroll-top\", [](App& app, const auto&) { app.scrollToEdge(true); });\n    add(*this, \"scroll-bottom\", [](App& app, const auto&) { app.scrollToEdge(false); });\n\n    add(*this, \"move-left\", [](App& app, const auto&) { app.moveNavigation(-1, 0); });\n    add(*this, \"move-right\", [](App& app, const auto&) { app.moveNavigation(1, 0); });\n    add(*this, \"move-up\", [](App& app, const auto&) { app.moveNavigation(0, -1); });\n    add(*this, \"move-down\", [](App& app, const auto&) { app.moveNavigation(0, 1); });\n    add(*this, \"move-word-forward\", [](App& app, const auto&) { app.moveNavigationWord(1); });\n    add(*this, \"move-word-backward\", [](App& app, const auto&) { app.moveNavigationWord(-1); });\n    add(*this, \"move-line-start\", [](App& app, const auto&) { app.moveNavigationEdge(true, true); });\n    add(*this, \"move-line-end\", [](App& app, const auto&) { app.moveNavigationEdge(false, true); });\n    add(*this, \"move-top\", [](App& app, const auto&) { app.moveNavigationEdge(true, false); });\n    add(*this, \"move-bottom\", [](App& app, const auto&) { app.moveNavigationEdge(false, false); });\n    add(*this, \"select-here\", [](App& app, const auto&) { app.selectHere(); });\n    add(*this, \"yank\", [](App& app, const auto&) { app.yank(false); });\n    add(*this, \"yank-line\", [](App& app, const auto&) { app.yank(true); });\n    add(*this, \"paste\", [](App& app, const auto&) { app.paste(); });\n    add(*this, \"send-keys\", [](App& app, const auto& args) { app.sendKeys(join(args)); });\n}",
                 "children": [],
                 "expanded": false
               },
@@ -1396,7 +1396,7 @@
                   {
                     "id": "f36cc180",
                     "title": "Clear Pending",
-                    "content": "Clear Pending\n\nSignature: void App::clearPending()\nMethod: clearPending\nReturns: void App\nCalled By:\n    [closeOverlay](_Close the Overlay_)\n    [handleKey](_Handle the Key Combination_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleThemes](_Toggle the Themes_)",
+                    "content": "Clear Pending\n\nSignature: void App::clearPending()\nMethod: clearPending\nReturns: void App\nCalled By:\n    [closeOverlay](_Close the Overlay_)\n    [handleKey](_Handle the Key Combination_)\n    [setMode](_Set the Mode_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [startLayoutSave](_Show the Save Layout Dialog_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleThemes](_Toggle the Themes_)",
                     "children": [],
                     "expanded": false
                   },
@@ -1410,7 +1410,7 @@
                   {
                     "id": "dd8b228f",
                     "title": "Refresh",
-                    "content": "Refresh\n\nSignature: void App::refresh()\nMethod: refresh\nReturns: void App\nCalled By:\n    [renameTabApply](_Apply the Rename_)\n    [applyTheme](_Apply Theme_)\n    [renameTabCancel](_Cancel Rename_)\n    [themeCancel](_Cancel Theme Dialog_)\n    [closePane](_Close Current Pane_)\n    [closeTab](_Close Current Tab_)\n    [closeClock](_Close the Clock_)\n    [closeOverlay](_Close the Overlay_)\n    [newTab](_Create a New Tab_)\n    [toggleResizeMode](_Deprecated: Toggle Resize Mode_)\n    [focusDirection](_Directional Pane Focus_)\n    [resizeEqual](_Equal Size All Panes_)\n    [exitVisual](_Exit Visual Mode_)\n    [focusNext](_Focus Next Pane_)\n    [focusPrevious](_Focus Previous Pane_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [handleMouse](_Handle the Mouse_)\n    [backspaceHelpFilter](_Help Filter: Remove Character_)\n    [appendHelpFilter](_Help Filter: Type Character_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [appendRenameChar](_Rename: Add Character_)\n    [backspaceRenameChar](_Rename: Remove Character_)\n    [resizeFocused](_Resize Focused Pane_)\n    [helpScroll](_Scroll Help Dialog_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [themeApply](_Select Theme to Apply_)\n    [setMode](_Set the Mode_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [statusMessage](_Status Message_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleClock](_Toggle the Clock_)\n    [toggleThemes](_Toggle the Themes_)\n    [toggleZoom](_Toggle Zoom_)",
+                    "content": "Refresh\n\nSignature: void App::refresh()\nMethod: refresh\nReturns: void App\nCalled By:\n    [renameTabApply](_Apply the Rename_)\n    [applyTheme](_Apply Theme_)\n    [renameTabCancel](_Cancel Rename_)\n    [layoutListCancel](_Cancel the Layout List_)\n    [layoutSaveCancel](_Cancel the Layout Save_)\n    [themeCancel](_Cancel Theme Dialog_)\n    [closePane](_Close Current Pane_)\n    [closeTab](_Close Current Tab_)\n    [closeClock](_Close the Clock_)\n    [closeOverlay](_Close the Overlay_)\n    [newTab](_Create a New Tab_)\n    [toggleResizeMode](_Deprecated: Toggle Resize Mode_)\n    [focusDirection](_Directional Pane Focus_)\n    [resizeEqual](_Equal Size All Panes_)\n    [exitVisual](_Exit Visual Mode_)\n    [focusNext](_Focus Next Pane_)\n    [focusPrevious](_Focus Previous Pane_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [handleMouse](_Handle the Mouse_)\n    [backspaceHelpFilter](_Help Filter: Remove Character_)\n    [appendHelpFilter](_Help Filter: Type Character_)\n    [layoutListNext](_Layout List: Move Down_)\n    [layoutListPrevious](_Layout List: Move Up_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [appendRenameChar](_Rename: Add Character_)\n    [backspaceRenameChar](_Rename: Remove Character_)\n    [resizeFocused](_Resize Focused Pane_)\n    [appendLayoutChar](_Save Layout: Add Character_)\n    [backspaceLayoutChar](_Save Layout: Remove Character_)\n    [helpScroll](_Scroll Help Dialog_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [themeApply](_Select Theme to Apply_)\n    [setMode](_Set the Mode_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [startRenameTab](_Show the Rename Dialog_)\n    [startLayoutSave](_Show the Save Layout Dialog_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [statusMessage](_Status Message_)\n    [toggleHelp](_Toggle Help_)\n    [toggleTabs](_Toggle Tabs_)\n    [toggleClock](_Toggle the Clock_)\n    [toggleThemes](_Toggle the Themes_)\n    [toggleZoom](_Toggle Zoom_)",
                     "children": [],
                     "expanded": false
                   },
@@ -1431,14 +1431,14 @@
                   {
                     "id": "f0f7f185",
                     "title": "Status Message",
-                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "8dfc9bde",
                     "title": "Status Message String",
-                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [yank](_Yank_)",
+                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   }
@@ -1772,14 +1772,14 @@
                 "content": "Tabs Handling",
                 "children": [
                   {
-                    "id": "d98654b8",
+                    "id": "6f4d9093",
                     "title": "Close Current Tab",
                     "content": "Close Current Tab\n\nSignature: void App::closeTab()\nMethod: closeTab\nReturns: void App\nCalled By:\n    [closeTab](_Close Current Tab_)\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "cdb9934c",
+                    "id": "e77973a6",
                     "title": "Create a New Tab",
                     "content": "Create a New Tab\n\nSignature: void App::newTab()\nMethod: newTab\nReturns: void App\nCalled By:\n    [newTab](_Create a New Tab_)\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
@@ -1829,21 +1829,106 @@
                     "expanded": false
                   },
                   {
-                    "id": "e13ef412",
+                    "id": "cdb9934c",
+                    "title": "Saved Layouts",
+                    "content": "Saved Layouts",
+                    "children": [
+                      {
+                        "id": "98ca6ab8",
+                        "title": "Apply the Layout Save",
+                        "content": "Apply the Layout Save\n\nSignature: void App::layoutSaveApply()\nMethod: layoutSaveApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "e7560e80",
+                        "title": "Apply the Selected Layout",
+                        "content": "Apply the Selected Layout\n\nSignature: void App::layoutListApply()\nMethod: layoutListApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "f1124cd6",
+                        "title": "Cancel the Layout List",
+                        "content": "Cancel the Layout List\n\nSignature: void App::layoutListCancel()\nMethod: layoutListCancel\nReturns: void App\nCalled By:\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [handleKey](_Handle the Key Combination_)\n    [toggleLayoutList](_Show or Hide the Layout List_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "16cbfd17",
+                        "title": "Cancel the Layout Save",
+                        "content": "Cancel the Layout Save\n\nSignature: void App::layoutSaveCancel()\nMethod: layoutSaveCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "322a16c7",
+                        "title": "Delete the Selected Layout",
+                        "content": "Delete the Selected Layout\n\nSignature: void App::layoutListDelete()\nMethod: layoutListDelete\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "8b6761e0",
+                        "title": "Layout List: Move Down",
+                        "content": "Layout List: Move Down\n\nSignature: void App::layoutListNext()\nMethod: layoutListNext\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "3f92ea3e",
+                        "title": "Layout List: Move Up",
+                        "content": "Layout List: Move Up\n\nSignature: void App::layoutListPrevious()\nMethod: layoutListPrevious\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "1216cbf2",
+                        "title": "Save Layout: Add Character",
+                        "content": "Save Layout: Add Character\n\nSignature: void App::appendLayoutChar(char character)\nMethod: appendLayoutChar\nReturns: void App\nParameters:\n    character char\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "7cec662f",
+                        "title": "Save Layout: Remove Character",
+                        "content": "Save Layout: Remove Character\n\nSignature: void App::backspaceLayoutChar()\nMethod: backspaceLayoutChar\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "156443d1",
+                        "title": "Show or Hide the Layout List",
+                        "content": "Show or Hide the Layout List\n\nSignature: void App::toggleLayoutList()\nMethod: toggleLayoutList\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                        "children": [],
+                        "expanded": false
+                      },
+                      {
+                        "id": "e095cc19",
+                        "title": "Show the Save Layout Dialog",
+                        "content": "Show the Save Layout Dialog\n\nSignature: void App::startLayoutSave()\nMethod: startLayoutSave\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
+                        "children": [],
+                        "expanded": false
+                      }
+                    ],
+                    "expanded": false
+                  },
+                  {
+                    "id": "a32dd272",
                     "title": "Select Next Tab",
                     "content": "Select Next Tab\n\nSignature: void App::nextTab()\nMethod: nextTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "8436d555",
+                    "id": "cca7c1c1",
                     "title": "Select Previous Tab",
                     "content": "Select Previous Tab\n\nSignature: void App::previousTab()\nMethod: previousTab\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "9cecf50c",
+                    "id": "dea1d29a",
                     "title": "Select Tab By Number",
                     "content": "Select Tab By Number\n\nSignature: void App::selectTab(int oneBased)\nMethod: selectTab\nReturns: void App\nParameters:\n    oneBased int\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [nextTab](_Select Next Tab_)\n    [previousTab](_Select Previous Tab_)\n    [selectTab](_Select Tab By Number_)\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
@@ -1860,47 +1945,47 @@
                 "expanded": false
               },
               {
-                "id": "156443d1",
+                "id": "d02d7886",
                 "title": "Theme Handling",
                 "content": "Theme Handling",
                 "children": [
                   {
-                    "id": "6501cec3",
+                    "id": "0f42a558",
                     "title": "Apply Theme",
                     "content": "Apply Theme\n\nSignature: void App::applyTheme(const Theme& theme)\nMethod: applyTheme\nReturns: void App\nParameters:\n    theme const Theme&\nCalled By:\n    [themeNext](_Select Next Theme_)\n    [themePrevious](_Select Previous Theme_)\n    [themeApply](_Select Theme to Apply_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "96d3e98e",
+                    "id": "657648c8",
                     "title": "Cancel Theme Dialog",
                     "content": "Cancel Theme Dialog\n\nSignature: void App::themeCancel()\nMethod: themeCancel\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)\n    [toggleThemes](_Toggle the Themes_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "ce4dbe73",
+                    "id": "d72de8a7",
                     "title": "Select Next Theme",
                     "content": "Select Next Theme\n\nSignature: void App::themeNext()\nMethod: themeNext\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "b46d5bf3",
+                    "id": "6b1fda74",
                     "title": "Select Previous Theme",
                     "content": "Select Previous Theme\n\nSignature: void App::themePrevious()\nMethod: themePrevious\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "e1114171",
+                    "id": "14636069",
                     "title": "Select Theme to Apply",
                     "content": "Select Theme to Apply\n\nSignature: void App::themeApply()\nMethod: themeApply\nReturns: void App\nCalled By:\n    [handleKey](_Handle the Key Combination_)",
                     "children": [],
                     "expanded": false
                   },
                   {
-                    "id": "ab3de0a3",
+                    "id": "3f73f373",
                     "title": "Toggle the Themes",
                     "content": "Toggle the Themes\n\nSignature: void App::toggleThemes()\nMethod: toggleThemes\nReturns: void App\nCalled By:\n    [The Action Registry](_The Action Registry_)",
                     "children": [],
@@ -1925,14 +2010,14 @@
                   {
                     "id": "81d2d004",
                     "title": "Private Members",
-                    "content": "Private Members\n\nvoid refreshLoop();\nbool handleKey(const ftxui::Event& event);\nbool handleMouse(ftxui::Event event);\nvoid clearPending();\nvoid emitClipboard(const std::string& text);\nvoid applyTheme(const Theme& theme);\n\nftxui::ScreenInteractive* screen_ = nullptr;\nConfig config_;\nWorkspace workspace_;\nRenderer renderer_;\nMode mode_ = Mode::Normal;\nOverlay overlay_ = Overlay::None;\nbool zoom_ = false;\nbool resize_mode_ = false;\nbool selecting_ = false;\nstd::atomic<bool> clock_active_{false};\nint clock_pane_id_ = -1;\nstd::string pending_;\nstd::string message_;\nstd::string help_filter_;\nbool help_filtering_ = false;\nstd::string rename_buffer_;\nstd::string clipboard_;\nstd::size_t help_offset_ = 0;\nstd::size_t theme_index_ = 0;\nstd::chrono::steady_clock::time_point pending_time_;\nstd::chrono::steady_clock::time_point message_time_;\nstd::chrono::steady_clock::time_point last_escape_time_;\nstd::atomic<bool> refresh_pending_{false};\nstd::atomic<bool> refresh_running_{true};\nstd::thread refresh_thread_;\nmutable std::mutex message_mutex_;",
+                    "content": "Private Members\n\nvoid refreshLoop();\nbool handleKey(const ftxui::Event& event);\nbool handleMouse(ftxui::Event event);\nvoid clearPending();\nvoid emitClipboard(const std::string& text);\nvoid applyTheme(const Theme& theme);\n\nftxui::ScreenInteractive* screen_ = nullptr;\nConfig config_;\nWorkspace workspace_;\nRenderer renderer_;\nMode mode_ = Mode::Normal;\nOverlay overlay_ = Overlay::None;\nbool zoom_ = false;\nbool resize_mode_ = false;\nbool selecting_ = false;\nstd::atomic<bool> clock_active_{false};\nint clock_pane_id_ = -1;\nstd::string pending_;\nstd::string message_;\nstd::string help_filter_;\nbool help_filtering_ = false;\nstd::string rename_buffer_;\nstd::string layout_buffer_;\nstd::vector<std::string> layout_names_;\nstd::size_t layout_index_ = 0;\nstd::string clipboard_;\nstd::size_t help_offset_ = 0;\nstd::size_t theme_index_ = 0;\nstd::chrono::steady_clock::time_point pending_time_;\nstd::chrono::steady_clock::time_point message_time_;\nstd::chrono::steady_clock::time_point last_escape_time_;\nstd::atomic<bool> refresh_pending_{false};\nstd::atomic<bool> refresh_running_{true};\nstd::thread refresh_thread_;\nmutable std::mutex message_mutex_;",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "937a7fc9",
                     "title": "Public Members",
-                    "content": "Public Members\n\nApp(ftxui::ScreenInteractive* screen, std::string configPath);\n~App() override;\n\nftxui::Element OnRender() override;\nbool OnEvent(ftxui::Event event) override;\n\nConfig& config() { return config_; }\nWorkspace& workspace() { return workspace_; }\nRenderer& renderer() { return renderer_; }\nMode mode() const { return mode_; }\nOverlay overlay() const { return overlay_; }\nbool zoom() const { return zoom_; }\nbool clockActive() const { return clock_active_; }\nint clockPaneId() const { return clock_pane_id_; }\nbool helpVisible() const { return overlay_ == Overlay::Help; }\nstd::string pendingKeys() const { return pending_; }\nstd::string statusMessage() const;\nstd::string helpFilter() const { return help_filter_; }\nbool helpFiltering() const { return help_filtering_; }\nstd::size_t helpOffset() const { return help_offset_; }\nbool selecting() const { return selecting_; }\nbool resizeMode() const { return resize_mode_; }\nstd::size_t themeIndex() const { return theme_index_; }\nstd::string renameBuffer() const { return rename_buffer_; }\nstd::vector<std::pair<std::string, std::string>> filteredBindings() const;\n\nvoid refresh();\nvoid statusMessage(std::string message);\nvoid quit();\nvoid runCommand(const std::string& name,\nconst std::vector<std::string>& args);\n\nvoid setMode(Mode mode);\nvoid enterNormal(bool home = false, bool end = false);\nvoid enterVisual();\nvoid startSelection();\nvoid exitVisual();\nvoid toggleHelp();\nvoid closeOverlay();\nvoid toggleTabs();\nvoid toggleThemes();\nvoid themeNext();\nvoid themePrevious();\nvoid themeApply();\nvoid themeCancel();\nvoid startRenameTab();\nvoid appendRenameChar(char character);\nvoid backspaceRenameChar();\nvoid renameTabApply();\nvoid renameTabCancel();\nvoid helpScroll(int delta);\nvoid appendHelpFilter(char character);\nvoid backspaceHelpFilter();\nvoid toggleZoom();\nvoid toggleResizeMode();\nvoid toggleClock();\nvoid closeClock();\n\nvoid focusDirection(int dx, int dy);\nvoid focusNext();\nvoid focusPrevious();\nvoid splitFocused(bool vertical);\nvoid splitWindow(bool vertical);\nvoid closePane();\nvoid newTab();\nvoid closeTab();\nvoid selectTab(int oneBased);\nvoid nextTab();\nvoid previousTab();\n\nvoid resizeFocused(int dx, int dy, int amount = 0);\nvoid resizeEqual();\nvoid scroll(int delta);\nvoid scrollToEdge(bool top);\nvoid moveNavigation(int dx, int dy);\nvoid moveNavigationWord(int direction);\nvoid moveNavigationEdge(bool top, bool line);\nvoid selectHere();\nvoid yank(bool wholeLine);\nvoid paste();\nvoid sendKeys(const std::string& data);",
+                    "content": "Public Members\n\nApp(ftxui::ScreenInteractive* screen, std::string configPath);\n~App() override;\n\nftxui::Element OnRender() override;\nbool OnEvent(ftxui::Event event) override;\n\nConfig& config() { return config_; }\nWorkspace& workspace() { return workspace_; }\nRenderer& renderer() { return renderer_; }\nMode mode() const { return mode_; }\nOverlay overlay() const { return overlay_; }\nbool zoom() const { return zoom_; }\nbool clockActive() const { return clock_active_; }\nint clockPaneId() const { return clock_pane_id_; }\nbool helpVisible() const { return overlay_ == Overlay::Help; }\nstd::string pendingKeys() const { return pending_; }\nstd::string statusMessage() const;\nstd::string helpFilter() const { return help_filter_; }\nbool helpFiltering() const { return help_filtering_; }\nstd::size_t helpOffset() const { return help_offset_; }\nbool selecting() const { return selecting_; }\nbool resizeMode() const { return resize_mode_; }\nstd::size_t themeIndex() const { return theme_index_; }\nstd::string renameBuffer() const { return rename_buffer_; }\nstd::string layoutBuffer() const { return layout_buffer_; }\nconst std::vector<std::string>& layoutNames() const { return layout_names_; }\nstd::size_t layoutIndex() const { return layout_index_; }\nstd::vector<std::pair<std::string, std::string>> filteredBindings() const;\n\nvoid refresh();\nvoid statusMessage(std::string message);\nvoid quit();\nvoid runCommand(const std::string& name,\nconst std::vector<std::string>& args);\n\nvoid setMode(Mode mode);\nvoid enterNormal(bool home = false, bool end = false);\nvoid enterVisual();\nvoid startSelection();\nvoid exitVisual();\nvoid toggleHelp();\nvoid closeOverlay();\nvoid toggleTabs();\nvoid toggleThemes();\nvoid themeNext();\nvoid themePrevious();\nvoid themeApply();\nvoid themeCancel();\nvoid startRenameTab();\nvoid appendRenameChar(char character);\nvoid backspaceRenameChar();\nvoid renameTabApply();\nvoid renameTabCancel();\nvoid startLayoutSave();\nvoid appendLayoutChar(char character);\nvoid backspaceLayoutChar();\nvoid layoutSaveApply();\nvoid layoutSaveCancel();\nvoid toggleLayoutList();\nvoid layoutListNext();\nvoid layoutListPrevious();\nvoid layoutListApply();\nvoid layoutListDelete();\nvoid layoutListCancel();\nvoid helpScroll(int delta);\nvoid appendHelpFilter(char character);\nvoid backspaceHelpFilter();\nvoid toggleZoom();\nvoid toggleResizeMode();\nvoid toggleClock();\nvoid closeClock();\n\nvoid focusDirection(int dx, int dy);\nvoid focusNext();\nvoid focusPrevious();\nvoid splitFocused(bool vertical);\nvoid splitWindow(bool vertical);\nvoid closePane();\nvoid newTab();\nvoid closeTab();\nvoid selectTab(int oneBased);\nvoid nextTab();\nvoid previousTab();\n\nvoid resizeFocused(int dx, int dy, int amount = 0);\nvoid resizeEqual();\nvoid scroll(int delta);\nvoid scrollToEdge(bool top);\nvoid moveNavigation(int dx, int dy);\nvoid moveNavigationWord(int direction);\nvoid moveNavigationEdge(bool top, bool line);\nvoid selectHere();\nvoid yank(bool wholeLine);\nvoid paste();\nvoid sendKeys(const std::string& data);",
                     "children": [],
                     "expanded": false
                   }
@@ -1942,7 +2027,7 @@
               {
                 "id": "07f907e5",
                 "title": "Overlay Enum Class",
-                "content": "Overlay Enum Class\n\nenum class Overlay { None, Help, Tabs, Themes, Rename };",
+                "content": "Overlay Enum Class\n\nenum class Overlay { None, Help, Tabs, Themes, Rename, LayoutSave, Layouts };",
                 "children": [],
                 "expanded": false
               }
@@ -1987,6 +2072,171 @@
         "content": "",
         "children": [
           {
+            "id": "b64f9419",
+            "title": "layout.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "07fefe47",
+                "title": "Layout Node Struct",
+                "content": "Layout Node Struct\n\nSerializable form of a node in a tab's split tree.\n\nstruct LayoutNode\n{\n    enum class Type { Leaf, Split };\n\n    Type type = Type::Leaf;\n    bool vertical = true;\n    double ratio = 0.5;\n    std::shared_ptr<LayoutNode> first;\n    std::shared_ptr<LayoutNode> second;\n    LayoutPane pane;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f7685365",
+                "title": "Layout Pane Struct",
+                "content": "Layout Pane Struct\n\nDescribes how to recreate one pane. Live processes and terminal\nscrollback cannot be serialized, so restore starts a fresh process.\n\nstruct LayoutPane\n{\n    std::string command;\n    std::string cwd;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "01f0aabd",
+                "title": "Layout Snapshot Struct",
+                "content": "Layout Snapshot Struct\n\nComplete saved layout: every tab, its split tree and the active tab.\n\nstruct LayoutSnapshot\n{\n    std::string name;\n    std::vector<LayoutTab> tabs;\n    int activeIndex = 0;\n};",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "91ca3b31",
+                "title": "Layout Tab Struct",
+                "content": "Layout Tab Struct\n\nFocus is stored as an index into the tab's panes (depth-first) so it\nstays valid when panes are recreated with new runtime ids.\n\nstruct LayoutTab\n{\n    std::string name;\n    int focusIndex = 0;\n    LayoutNodePtr root;\n};",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "bbfbcc67",
+            "title": "layout_store.cpp",
+            "content": "",
+            "children": [
+              {
+                "id": "072bab79",
+                "title": "Helper Methods",
+                "content": "Helper Methods",
+                "children": [
+                  {
+                    "id": "2ebca25b",
+                    "title": "Decode a Text Field",
+                    "content": "Decode a Text Field\n\nSignature: std::string decodeField(std::string_view value)\nMethod: decodeField\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [readAll](_Read All Saved Layouts_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "d456b415",
+                    "title": "Encode a Text Field",
+                    "content": "Encode a Text Field\n\nPercent-encodes everything except a small set of readable\ncharacters so names, commands and paths cannot break the format.\n\nSignature: std::string encodeField(std::string_view value)\nMethod: encodeField\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [optionalField](_Encode an Optional Text Field_)\n    [writeAll](_Write All Saved Layouts_)\n    [writeNode](_Write One Node_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "f233e7ac",
+                    "title": "Encode an Optional Text Field",
+                    "content": "Encode an Optional Text Field\n\nSignature: std::string optionalField(std::string_view value)\nMethod: optionalField\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [writeAll](_Write All Saved Layouts_)\n    [writeNode](_Write One Node_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "c1265e1a",
+                    "title": "Layout File Path",
+                    "content": "Layout File Path\n\nSignature: std::string filePath()\nMethod: filePath\nReturns: std::string\nCalled By:\n    [readAll](_Read All Saved Layouts_)\n    [writeAll](_Write All Saved Layouts_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "2340e0ea",
+                    "title": "Parse a Ratio Field",
+                    "content": "Parse a Ratio Field\n\nSignature: double toRatio(const std::string& text)\nMethod: toRatio\nReturns: double\nParameters:\n    text const std::string&\nCalled By:\n    [readAll](_Read All Saved Layouts_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "8e9c86f7",
+                    "title": "Parse an Integer Field",
+                    "content": "Parse an Integer Field\n\nSignature: int toInt(const std::string& text, int fallback = 0)\nMethod: toInt\nReturns: int\nParameters:\n    text     const std::string&\n    fallback int\nCalled By:\n    [readAll](_Read All Saved Layouts_)",
+                    "children": [],
+                    "expanded": false
+                  },
+                  {
+                    "id": "405251eb",
+                    "title": "Write One Node",
+                    "content": "Write One Node\n\nSignature: void writeNode(std::ostream& stream, const LayoutNodePtr& node, int depth)\nMethod: writeNode\nReturns: void\nParameters:\n    stream std::ostream&\n    node   const LayoutNodePtr&\n    depth  int\nCalled By:\n    [writeAll](_Write All Saved Layouts_)\n    [writeNode](_Write One Node_)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
+                "expanded": false
+              },
+              {
+                "id": "65effcdb",
+                "title": "Delete a Named Layout",
+                "content": "Delete a Named Layout\n\nSignature: bool LayoutStore::remove(const std::string& name, std::string& error)\nMethod: remove\nReturns: bool LayoutStore\nParameters:\n    name  const std::string&\n    error std::string&\nCalled By:\n    [layoutListDelete](_Delete the Selected Layout_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "384a1518",
+                "title": "Layout Store Directory",
+                "content": "Layout Store Directory\n\nUses the same data directories as default.conf and themes.conf.\n\nSignature: std::string LayoutStore::directory()\nMethod: directory\nReturns: std::string LayoutStore\nCalled By:\n    [filePath](_Layout File Path_)\n    [writeAll](_Write All Saved Layouts_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "699daeb3",
+                "title": "List Saved Layout Names",
+                "content": "List Saved Layout Names\n\nSignature: std::vector<std::string> LayoutStore::list(std::string& error)\nMethod: list\nReturns: std::vector<std::string> LayoutStore\nParameters:\n    error std::string&\nCalled By:\n    [layoutListDelete](_Delete the Selected Layout_)\n    [toggleLayoutList](_Show or Hide the Layout List_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "7eefb11f",
+                "title": "Load a Named Layout",
+                "content": "Load a Named Layout\n\nSignature: bool LayoutStore::load(const std::string& name, LayoutSnapshot& snapshot, std::string& error)\nMethod: load\nReturns: bool LayoutStore\nParameters:\n    name     const std::string&\n    snapshot LayoutSnapshot&\n    error    std::string&\nCalled By:\n    [layoutListApply](_Apply the Selected Layout_)\n    [refreshLoop](_Refresh Loop_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "292ccb7a",
+                "title": "Read All Saved Layouts",
+                "content": "Read All Saved Layouts\n\nSignature: std::vector<LayoutSnapshot> LayoutStore::readAll(std::string& error)\nMethod: readAll\nReturns: std::vector<LayoutSnapshot> LayoutStore\nParameters:\n    error std::string&\nCalled By:\n    [remove](_Delete a Named Layout_)\n    [list](_List Saved Layout Names_)\n    [load](_Load a Named Layout_)\n    [save](_Save a Named Layout_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "fd8447d9",
+                "title": "Save a Named Layout",
+                "content": "Save a Named Layout\n\nSignature: bool LayoutStore::save(const LayoutSnapshot& snapshot, std::string& error)\nMethod: save\nReturns: bool LayoutStore\nParameters:\n    snapshot const LayoutSnapshot&\n    error    std::string&\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "f1e421ef",
+                "title": "Write All Saved Layouts",
+                "content": "Write All Saved Layouts\n\nSignature: bool LayoutStore::writeAll(const std::vector<LayoutSnapshot>& layouts, std::string& error)\nMethod: writeAll\nReturns: bool LayoutStore\nParameters:\n    layouts const std::vector<LayoutSnapshot>&\n    error   std::string&\nCalled By:\n    [remove](_Delete a Named Layout_)\n    [save](_Save a Named Layout_)",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
+            "id": "017daf42",
+            "title": "layout_store.hpp",
+            "content": "",
+            "children": [
+              {
+                "id": "9cefb9b7",
+                "title": "Layout Store Class",
+                "content": "Layout Store Class\n\nPersists named layout snapshots in a simple text file alongside the\ndefault/themes config data. Layouts are independent of config bindings.\n\nclass LayoutStore\n{\n    public:\n        static std::string directory();\n        static std::vector<std::string> list(std::string& error);\n        static bool save(const LayoutSnapshot& snapshot, std::string& error);\n        static bool load(const std::string& name, LayoutSnapshot& snapshot, std::string& error);\n        static bool remove(const std::string& name, std::string& error);\n\n    private:\n        static std::vector<LayoutSnapshot> readAll(std::string& error);\n        static bool writeAll(const std::vector<LayoutSnapshot>& layouts, std::string& error);\n};",
+                "children": [],
+                "expanded": false
+              }
+            ],
+            "expanded": false
+          },
+          {
             "id": "45a49c1e",
             "title": "node.cpp",
             "content": "",
@@ -2015,14 +2265,14 @@
               {
                 "id": "54b6b787",
                 "title": "Make Pane Node",
-                "content": "Make Pane Node\n\nSignature: NodePtr makePaneNode(std::shared_ptr<Pane> pane)\nMethod: makePaneNode\nReturns: NodePtr\nParameters:\n    pane std::shared_ptr<Pane>\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Leaf;\n    node->pane = std::move(pane);\n\n    return node;\n}",
+                "content": "Make Pane Node\n\nSignature: NodePtr makePaneNode(std::shared_ptr<Pane> pane)\nMethod: makePaneNode\nReturns: NodePtr\nParameters:\n    pane std::shared_ptr<Pane>\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [restore](_Restore a Workspace_)\n    [restoreNode](_Restore One Node_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makePaneNode(std::shared_ptr<Pane> pane)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Leaf;\n    node->pane = std::move(pane);\n\n    return node;\n}",
                 "children": [],
                 "expanded": false
               },
               {
                 "id": "8338a200",
                 "title": "Make Split Node",
-                "content": "Make Split Node\n\nSignature: NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\nMethod: makeSplitNode\nReturns: NodePtr\nParameters:\n    first  NodePtr\n    second NodePtr\n    kind   SplitKind\n    ratio  double\nCalled By:\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Split;\n    node->kind = kind;\n    node->ratio = ratio;\n    node->first = std::move(first);\n    node->second = std::move(second);\n\n    return node;\n}",
+                "content": "Make Split Node\n\nSignature: NodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\nMethod: makeSplitNode\nReturns: NodePtr\nParameters:\n    first  NodePtr\n    second NodePtr\n    kind   SplitKind\n    ratio  double\nCalled By:\n    [restoreNode](_Restore One Node_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nNodePtr makeSplitNode(NodePtr first, NodePtr second, SplitKind kind, double ratio)\n{\n    auto node = std::make_shared<Node>();\n    node->type = Node::Type::Split;\n    node->kind = kind;\n    node->ratio = ratio;\n    node->first = std::move(first);\n    node->second = std::move(second);\n\n    return node;\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2080,7 +2330,7 @@
               {
                 "id": "093a1fec",
                 "title": "Pane Constructor",
-                "content": "Pane Constructor\n\nSignature: Pane::Pane(int id, std::string command, int columns, int rows, int scrollback, std::function<void(int)> onData) : id_(id), command_(std::move(command)), buffer_(columns, rows, scrollback), onData_(std::move(onData))\nConstructor: Pane\nParameters:\n    id         int\n    command    std::string\n    columns    int\n    rows       int\n    scrollback int\n    onData     std::function<void(int)>\nInitializers:\n    id_      id\n    command_ std::move(command)\n    buffer_  columns, rows, scrollback\n    onData_  std::move(onData)\nCalled By:\n    [makePane](_Make Pane_)\n    [~Pane](_Pane Destructor_)",
+                "content": "Pane Constructor\n\nSignature: Pane::Pane(int id, std::string command, int columns, int rows, int scrollback, std::function<void(int)> onData, std::string cwd) : id_(id), command_(std::move(command)), cwd_(std::move(cwd)), buffer_(columns, rows, scrollback), onData_(std::move(onData))\nConstructor: Pane\nParameters:\n    id         int\n    command    std::string\n    columns    int\n    rows       int\n    scrollback int\n    onData     std::function<void(int)>\n    cwd        std::string\nInitializers:\n    id_      id\n    command_ std::move(command)\n    cwd_     std::move(cwd)\n    buffer_  columns, rows, scrollback\n    onData_  std::move(onData)\nCalled By:\n    [makePane](_Make Pane_)\n    [~Pane](_Pane Destructor_)",
                 "children": [],
                 "expanded": false
               },
@@ -2108,7 +2358,7 @@
               {
                 "id": "84ee3826",
                 "title": "Resize",
-                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [resize](_Resize_)",
+                "content": "Resize\n\nSignature: void Pane::resize(int columns, int rows)\nMethod: resize\nReturns: void Pane\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [readAll](_Read All Saved Layouts_)\n    [resize](_Resize_)",
                 "children": [],
                 "expanded": false
               },
@@ -2122,7 +2372,7 @@
               {
                 "id": "6c05ed6a",
                 "title": "Start",
-                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [parseParameters](_Parse Parameters_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
+                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [parseParameters](_Parse Parameters_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows(), cwd_))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2149,14 +2399,14 @@
                   {
                     "id": "3f50e55a",
                     "title": "Private Members",
-                    "content": "Private Members\n\nvoid readLoop();\n\nint id_ = 0;\nstd::string command_;\nBuffer buffer_;\nstd::function<void(int)> onData_;\nPty pty_;\nstd::thread reader_;\nstd::mutex mutex_;\nmutable std::mutex title_mutex_;\nstd::string title_;\nstd::atomic<bool> running_{true};\nstd::atomic<bool> alive_{true};",
+                    "content": "Private Members\n\nvoid readLoop();\n\nint id_ = 0;\nstd::string command_;\nstd::string cwd_;\nBuffer buffer_;\nstd::function<void(int)> onData_;\nPty pty_;\nstd::thread reader_;\nstd::mutex mutex_;\nmutable std::mutex title_mutex_;\nstd::string title_;\nstd::atomic<bool> running_{true};\nstd::atomic<bool> alive_{true};",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "45443f55",
                     "title": "Public Members",
-                    "content": "Public Members\n\nPane(int id, std::string command, int columns, int rows, int scrollback,\nstd::function<void(int)> onData);\n~Pane();\nPane(const Pane&) = delete;\nPane& operator=(const Pane&) = delete;\n\nvoid start();\nvoid write(const std::string& data);\nvoid resize(int columns, int rows);\nint id() const { return id_; }\nstd::string title() const;\nvoid setTitle(std::string title);\nbool alive() const;\nBuffer& buffer() { return buffer_; }\nstd::mutex& mutex() { return mutex_; }",
+                    "content": "Public Members\n\nPane(int id, std::string command, int columns, int rows, int scrollback,\nstd::function<void(int)> onData, std::string cwd = \"\");\n~Pane();\nPane(const Pane&) = delete;\nPane& operator=(const Pane&) = delete;\n\nvoid start();\nvoid write(const std::string& data);\nvoid resize(int columns, int rows);\nint id() const { return id_; }\nstd::string command() const { return command_; }\nstd::string cwd() const { return pty_.workingDirectory(); }\nstd::string title() const;\nvoid setTitle(std::string title);\nbool alive() const;\nBuffer& buffer() { return buffer_; }\nstd::mutex& mutex() { return mutex_; }",
                     "children": [],
                     "expanded": false
                   }
@@ -2188,7 +2438,7 @@
               {
                 "id": "218a595d",
                 "title": "Collect Panes",
-                "content": "Collect Panes\n\nSignature: void Workspace::collectPanes(const NodePtr& node, std::vector<int>& out) const\nMethod: collectPanes\nReturns: void Workspace\nQualifiers: const\nParameters:\n    node const NodePtr&\n    out  std::vector<int>&\nCalled By:\n    [closePane](_Close Pane_)\n    [collectPanes](_Collect Panes_)\n    [focusNextPane](_Focus Next Pane_)\n    [focusPreviousPane](_Focus Previous Pane_)\n    [normalizeFocus](_Normalize Focus_)",
+                "content": "Collect Panes\n\nSignature: void Workspace::collectPanes(const NodePtr& node, std::vector<int>& out) const\nMethod: collectPanes\nReturns: void Workspace\nQualifiers: const\nParameters:\n    node const NodePtr&\n    out  std::vector<int>&\nCalled By:\n    [closePane](_Close Pane_)\n    [collectPanes](_Collect Panes_)\n    [focusNextPane](_Focus Next Pane_)\n    [focusPreviousPane](_Focus Previous Pane_)\n    [normalizeFocus](_Normalize Focus_)\n    [restore](_Restore a Workspace_)\n    [snapshot](_Snapshot the Workspace_)",
                 "children": [],
                 "expanded": false
               },
@@ -2209,7 +2459,7 @@
               {
                 "id": "580dec50",
                 "title": "Focus Pane",
-                "content": "Focus Pane\n\nSignature: std::shared_ptr<Pane> Workspace::focusedPane() const\nMethod: focusedPane\nReturns: std::shared_ptr<Pane> Workspace\nQualifiers: const\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [focusDirection](_Directional Pane Focus_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [draw](_Renderer Draw_)\n    [resizeFocused](_Resize Focused Pane_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [sendKeys](_Send Keys_)\n    [setMode](_Set the Mode_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [tabLabel](_Tab Label_)\n    [toggleClock](_Toggle the Clock_)\n    [yank](_Yank_)",
+                "content": "Focus Pane\n\nSignature: std::shared_ptr<Pane> Workspace::focusedPane() const\nMethod: focusedPane\nReturns: std::shared_ptr<Pane> Workspace\nQualifiers: const\nCalled By:\n    [layoutListApply](_Apply the Selected Layout_)\n    [computeLayout](_Compute Layout_)\n    [focusDirection](_Directional Pane Focus_)\n    [drawPane](_Draw Pane_)\n    [drawStatus](_Draw Status_)\n    [enterNormal](_Enter Normal Mode_)\n    [enterVisual](_Enter Visual Mode_)\n    [exitVisual](_Exit Visual Mode_)\n    [handleKey](_Handle the Key Combination_)\n    [moveNavigation](_Move Navigation_)\n    [moveNavigationEdge](_Move Navigation Edge_)\n    [Pane Handling](_Pane Handling_)\n    [draw](_Renderer Draw_)\n    [resizeFocused](_Resize Focused Pane_)\n    [scroll](_Scroll Pane_)\n    [scrollToEdge](_Scroll To Edge_)\n    [selectHere](_Select Here_)\n    [sendKeys](_Send Keys_)\n    [setMode](_Set the Mode_)\n    [splitFocused](_Split Current Pane_)\n    [splitWindow](_Split Window_)\n    [startSelection](_Start Selection_)\n    [tabLabel](_Tab Label_)\n    [toggleClock](_Toggle the Clock_)\n    [yank](_Yank_)",
                 "children": [],
                 "expanded": false
               },
@@ -2223,7 +2473,7 @@
               {
                 "id": "87751cc3",
                 "title": "Make Pane",
-                "content": "Make Pane\n\nSignature: std::shared_ptr<Pane> Workspace::makePane(int columns, int rows)\nMethod: makePane\nReturns: std::shared_ptr<Pane> Workspace\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nstd::shared_ptr<Pane> Workspace::makePane(int columns, int rows)\n{\n    const int id = next_id_++;\n    auto pane = std::make_shared<Pane>(id, shell_, columns, rows, scrollback_, onData_);\n    pane->start();\n    return pane;\n}",
+                "content": "Make Pane\n\nSignature: std::shared_ptr<Pane> Workspace::makePane(int columns, int rows, const std::string& command, const std::string& cwd)\nMethod: makePane\nReturns: std::shared_ptr<Pane> Workspace\nParameters:\n    columns int\n    rows    int\n    command const std::string&\n    cwd     const std::string&\nCalled By:\n    [createInitial](_Create Initial_)\n    [newTab](_New Tab_)\n    [restore](_Restore a Workspace_)\n    [restoreNode](_Restore One Node_)\n    [splitFocused](_Split Focused_)\n    [splitWindow](_Split Window_)\n\n--------------------------------------------------------------------------------\n\nstd::shared_ptr<Pane> Workspace::makePane(int columns, int rows,\nconst std::string& command, const std::string& cwd)\n{\n    const int id = next_id_++;\n    const std::string& launch = command.empty() ? shell_ : command;\n    auto pane = std::make_shared<Pane>(id, launch, columns, rows, scrollback_, onData_, cwd);\n    pane->start();\n    return pane;\n}",
                 "children": [],
                 "expanded": false
               },
@@ -2238,6 +2488,20 @@
                 "id": "fa014a97",
                 "title": "Normalize Focus",
                 "content": "Normalize Focus\n\nSignature: void Workspace::normalizeFocus(Tab& tab)\nMethod: normalizeFocus\nReturns: void Workspace\nParameters:\n    tab Tab&\nCalled By:\n    [closeTab](_Close Tab_)\n    [selectTab](_Select Tab_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "6e5f56a6",
+                "title": "Restore a Workspace",
+                "content": "Restore a Workspace\n\nExisting panes are stopped and recreated from the snapshot. Live\nprocesses, terminal scrollback and application state are not saved.\n\nSignature: void Workspace::restore(const LayoutSnapshot& snapshot, int columns, int rows)\nMethod: restore\nReturns: void Workspace\nParameters:\n    snapshot const LayoutSnapshot&\n    columns  int\n    rows     int\nCalled By:\n    [layoutListApply](_Apply the Selected Layout_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "618c14ea",
+                "title": "Restore One Node",
+                "content": "Restore One Node\n\nSignature: NodePtr Workspace::restoreNode(const LayoutNodePtr& node, int columns, int rows)\nMethod: restoreNode\nReturns: NodePtr Workspace\nParameters:\n    node    const LayoutNodePtr&\n    columns int\n    rows    int\nCalled By:\n    [restore](_Restore a Workspace_)\n    [restoreNode](_Restore One Node_)",
                 "children": [],
                 "expanded": false
               },
@@ -2259,6 +2523,20 @@
                 "id": "35823180",
                 "title": "Set Tab Name",
                 "content": "Set Tab Name\n\nSignature: void Workspace::setTabName(std::string name)\nMethod: setTabName\nReturns: void Workspace\nParameters:\n    name std::string\nCalled By:\n    [renameTabApply](_Apply the Rename_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "73ac119e",
+                "title": "Snapshot One Node",
+                "content": "Snapshot One Node\n\nSignature: LayoutNodePtr Workspace::snapshotNode(const NodePtr& node) const\nMethod: snapshotNode\nReturns: LayoutNodePtr Workspace\nQualifiers: const\nParameters:\n    node const NodePtr&\nCalled By:\n    [snapshotNode](_Snapshot One Node_)\n    [snapshot](_Snapshot the Workspace_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "622cb09f",
+                "title": "Snapshot the Workspace",
+                "content": "Snapshot the Workspace\n\nCaptures tabs, split geometry, tab names, focused panes and each\npane's launch command and best-effort working directory.\n\nSignature: LayoutSnapshot Workspace::snapshot() const\nMethod: snapshot\nReturns: LayoutSnapshot Workspace\nQualifiers: const\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [load](_Load a Named Layout_)\n    [restore](_Restore a Workspace_)\n    [save](_Save a Named Layout_)",
                 "children": [],
                 "expanded": false
               },
@@ -2313,14 +2591,14 @@
                   {
                     "id": "5b582b06",
                     "title": "Private Members",
-                    "content": "Private Members\n\nstd::shared_ptr<Pane> makePane(int columns, int rows);\nvoid normalizeFocus(Tab& tab);\n\nstd::string shell_;\nint scrollback_ = 20000;\nstd::function<void(int)> onData_;\nstd::vector<Tab> tabs_;\nint active_ = 0;\nint next_id_ = 1;",
+                    "content": "Private Members\n\nstd::shared_ptr<Pane> makePane(int columns, int rows,\nconst std::string& command = {}, const std::string& cwd = {});\nLayoutNodePtr snapshotNode(const NodePtr& node) const;\nNodePtr restoreNode(const LayoutNodePtr& node, int columns, int rows);\nvoid normalizeFocus(Tab& tab);\n\nstd::string shell_;\nint scrollback_ = 20000;\nstd::function<void(int)> onData_;\nstd::vector<Tab> tabs_;\nint active_ = 0;\nint next_id_ = 1;",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "da39970f",
                     "title": "Public Members",
-                    "content": "Public Members\n\nWorkspace(std::string shell, int scrollback, std::function<void(int)> onData);\n\nvoid createInitial(int columns, int rows);\nstd::vector<Tab>& tabs() { return tabs_; }\nconst std::vector<Tab>& tabs() const { return tabs_; }\nTab& active() { return tabs_[active_]; }\nint activeIndex() const { return active_; }\nint tabCount() const { return static_cast<int>(tabs_.size()); }\nstd::string tabLabel(int index) const;\nvoid setTabName(std::string name);\n\nstd::shared_ptr<Pane> focusedPane() const;\nvoid setFocus(int paneId);\nvoid focusNextPane();\nvoid focusPreviousPane();\nvoid collectPanes(const NodePtr& node, std::vector<int>& out) const;\n\nvoid selectTab(int oneBased);\nvoid newTab(int columns, int rows);\nvoid closeTab();\n\nvoid splitFocused(bool vertical, int columns, int rows);\nvoid splitWindow(bool vertical, int columns, int rows);\nvoid closePane();",
+                    "content": "Public Members\n\nWorkspace(std::string shell, int scrollback, std::function<void(int)> onData);\n\nvoid createInitial(int columns, int rows);\nstd::vector<Tab>& tabs() { return tabs_; }\nconst std::vector<Tab>& tabs() const { return tabs_; }\nTab& active() { return tabs_[active_]; }\nint activeIndex() const { return active_; }\nint tabCount() const { return static_cast<int>(tabs_.size()); }\nstd::string tabLabel(int index) const;\nvoid setTabName(std::string name);\n\nstd::shared_ptr<Pane> focusedPane() const;\nvoid setFocus(int paneId);\nvoid focusNextPane();\nvoid focusPreviousPane();\nvoid collectPanes(const NodePtr& node, std::vector<int>& out) const;\n\nvoid selectTab(int oneBased);\nvoid newTab(int columns, int rows);\nvoid closeTab();\n\nvoid splitFocused(bool vertical, int columns, int rows);\nvoid splitWindow(bool vertical, int columns, int rows);\nvoid closePane();\n\nLayoutSnapshot snapshot() const;\nvoid restore(const LayoutSnapshot& snapshot, int columns, int rows);",
                     "children": [],
                     "expanded": false
                   }
@@ -2495,7 +2773,7 @@
                   {
                     "id": "ab74d47d",
                     "title": "Resize",
-                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [resize](_Resize_)",
+                    "content": "Resize\n\nSignature: void Buffer::resize(int columns, int rows)\nMethod: resize\nReturns: void Buffer\nParameters:\n    columns int\n    rows    int\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [readAll](_Read All Saved Layouts_)\n    [resize](_Resize_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2678,7 +2956,7 @@
                   {
                     "id": "992d16af",
                     "title": "Tab",
-                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [handleGround](_Handle Ground_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)",
+                    "content": "Tab\n\nSignature: void Buffer::tab()\nMethod: tab\nReturns: void Buffer\nCalled By:\n    [createInitial](_Create Initial_)\n    [handleGround](_Handle Ground_)\n    [newTab](_New Tab_)\n    [normalizeFocus](_Normalize Focus_)\n    [readAll](_Read All Saved Layouts_)\n    [restore](_Restore a Workspace_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2741,7 +3019,15 @@
                 "id": "f8f189c3",
                 "title": "Pty Destructor",
                 "content": "Pty Destructor\n\nSignature: Pty::~Pty()\nMethod: ~Pty\nReturns: Pty\nCalled By: (none found)",
-                "children": [],
+                "children": [
+                  {
+                    "id": "41429169",
+                    "title": "Working Directory",
+                    "content": "Working Directory\n\nBest-effort lookup of the child process' current directory. Linux can\nread it from procfs; other platforms leave it empty and use the app's\nworking directory when the pane is recreated.\n\nSignature: std::string Pty::workingDirectory() const\nMethod: workingDirectory\nReturns: std::string Pty\nQualifiers: const\nCalled By: (none found)",
+                    "children": [],
+                    "expanded": false
+                  }
+                ],
                 "expanded": false
               }
             ],
@@ -2898,7 +3184,7 @@
                   {
                     "id": "0b0c6545",
                     "title": "Centered Box",
-                    "content": "Centered Box\n\nSignature: Rect centeredBox(int width, int height, int preferredWidth, int preferredHeight)\nMethod: centeredBox\nReturns: Rect\nParameters:\n    width           int\n    height          int\n    preferredWidth  int\n    preferredHeight int\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)",
+                    "content": "Centered Box\n\nSignature: Rect centeredBox(int width, int height, int preferredWidth, int preferredHeight)\nMethod: centeredBox\nReturns: Rect\nParameters:\n    width           int\n    height          int\n    preferredWidth  int\n    preferredHeight int\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2926,7 +3212,7 @@
                   {
                     "id": "81252073",
                     "title": "Draw Box",
-                    "content": "Draw Box\n\nSignature: void drawBox(Canvas& canvas, Rect box, const Canvas::Stylizer& borderStyle)\nMethod: drawBox\nReturns: void\nParameters:\n    canvas      Canvas&\n    box         Rect\n    borderStyle const Canvas::Stylizer&\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "content": "Draw Box\n\nSignature: void drawBox(Canvas& canvas, Rect box, const Canvas::Stylizer& borderStyle)\nMethod: drawBox\nReturns: void\nParameters:\n    canvas      Canvas&\n    box         Rect\n    borderStyle const Canvas::Stylizer&\nCalled By:\n    [drawHelp](_Draw Help_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2940,7 +3226,7 @@
                   {
                     "id": "4c442b16",
                     "title": "Fill Rect",
-                    "content": "Fill Rect\n\nSignature: void fillRect(Canvas& canvas, Rect area, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: fillRect\nReturns: void\nParameters:\n    canvas   Canvas&\n    area     Rect\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "content": "Fill Rect\n\nSignature: void fillRect(Canvas& canvas, Rect area, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: fillRect\nReturns: void\nParameters:\n    canvas   Canvas&\n    area     Rect\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
                     "children": [],
                     "expanded": false
                   },
@@ -2961,7 +3247,7 @@
                   {
                     "id": "538152de",
                     "title": "Write Text",
-                    "content": "Write Text\n\nSignature: void writeText(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeText\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawResizeIndicator](_Draw Resize Indicator_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
+                    "content": "Write Text\n\nSignature: void writeText(ftxui::Canvas& canvas, int x, int y, const std::string& text, const Canvas::Stylizer& stylizer)\nMethod: writeText\nReturns: void\nParameters:\n    canvas   ftxui::Canvas&\n    x        int\n    y        int\n    text     const std::string&\n    stylizer const Canvas::Stylizer&\nCalled By:\n    [drawClock](_Draw Clock_)\n    [drawHelp](_Draw Help_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [drawRenameOverlay](_Draw Rename Overlay_)\n    [drawResizeIndicator](_Draw Resize Indicator_)\n    [drawStatus](_Draw Status_)\n    [drawTabs](_Draw Tabs_)\n    [drawTabsOverlay](_Draw Tabs Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [draw](_Renderer Draw_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2997,6 +3283,20 @@
                 "expanded": false
               },
               {
+                "id": "d763b1de",
+                "title": "Draw Layout List Overlay",
+                "content": "Draw Layout List Overlay\n\nSignature: void Renderer::drawLayoutListOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawLayoutListOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
+                "id": "4483f553",
+                "title": "Draw Layout Save Overlay",
+                "content": "Draw Layout Save Overlay\n\nSignature: void Renderer::drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawLayoutSaveOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "children": [],
+                "expanded": false
+              },
+              {
                 "id": "a5dc6613",
                 "title": "Draw Pane",
                 "content": "Draw Pane\n\nSignature: void Renderer::drawPane(ftxui::Canvas& canvas, const PaneRect& entry, ftxui::Color foreground, ftxui::Color background)\nMethod: drawPane\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    entry      const PaneRect&\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
@@ -3011,7 +3311,7 @@
                 "expanded": false
               },
               {
-                "id": "4483f553",
+                "id": "fcf32f86",
                 "title": "Draw Resize Indicator",
                 "content": "Draw Resize Indicator\n\nSignature: void Renderer::drawResizeIndicator(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawResizeIndicator\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
                 "children": [],
@@ -3046,7 +3346,7 @@
                 "expanded": false
               },
               {
-                "id": "d763b1de",
+                "id": "28d3f1b9",
                 "title": "Rect For",
                 "content": "Rect For\n\nSignature: std::optional<Rect> Renderer::rectFor(int paneId) const\nMethod: rectFor\nReturns: std::optional<Rect> Renderer\nQualifiers: const\nParameters:\n    paneId int\nCalled By:\n    [focusDirection](_Directional Pane Focus_)\n    [drawClock](_Draw Clock_)",
                 "children": [],
@@ -3067,7 +3367,7 @@
                 "expanded": false
               },
               {
-                "id": "fcf32f86",
+                "id": "903fe745",
                 "title": "Terminal Cursor Screen Position",
                 "content": "Terminal Cursor Screen Position\n\nSignature: std::optional<Pos> Renderer::terminalCursorScreenPosition() const\nMethod: terminalCursorScreenPosition\nReturns: std::optional<Pos> Renderer\nQualifiers: const\nCalled By:\n    [Ftxui Render](_Ftxui Render_)",
                 "children": [],
@@ -3110,7 +3410,7 @@
                   {
                     "id": "245619b7",
                     "title": "Private Members",
-                    "content": "Private Members\n\nvoid buildLayout(const NodePtr& node, Rect area);\nvoid drawPane(ftxui::Canvas& canvas, const PaneRect& entry,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabs(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawStatus(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawHelp(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawClock(ftxui::Canvas& canvas,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\n\nApp& app_;\nstd::vector<PaneRect> paneRects_;\nstd::map<int, std::pair<int, int>> last_sizes_;\nstd::optional<Pos> cursor_position_;",
+                    "content": "Private Members\n\nvoid buildLayout(const NodePtr& node, Rect area);\nvoid drawPane(ftxui::Canvas& canvas, const PaneRect& entry,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabs(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawStatus(ftxui::Canvas& canvas, int width, int y,\nftxui::Color foreground, ftxui::Color background);\nvoid drawHelp(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawClock(ftxui::Canvas& canvas,\nftxui::Color foreground, ftxui::Color background);\nvoid drawTabsOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawThemesOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawRenameOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawLayoutListOverlay(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\nvoid drawResizeIndicator(ftxui::Canvas& canvas, int width, int height,\nftxui::Color foreground, ftxui::Color background);\n\nApp& app_;\nstd::vector<PaneRect> paneRects_;\nstd::map<int, std::pair<int, int>> last_sizes_;\nstd::optional<Pos> cursor_position_;",
                     "children": [],
                     "expanded": false
                   },
@@ -3181,7 +3481,7 @@
           {
             "id": "5df6aee9",
             "title": "Trim",
-            "content": "Trim\n\nSignature: std::string trim(std::string_view value)\nMethod: trim\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [applySetting](_Apply Setting_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)",
+            "content": "Trim\n\nSignature: std::string trim(std::string_view value)\nMethod: trim\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [applySetting](_Apply Setting_)\n    [layoutSaveApply](_Apply the Layout Save_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)",
             "children": [],
             "expanded": false
           },

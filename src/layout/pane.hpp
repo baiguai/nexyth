@@ -22,7 +22,7 @@ namespace nexyth
         public:
             //>>
             Pane(int id, std::string command, int columns, int rows, int scrollback,
-            std::function<void(int)> onData);
+            std::function<void(int)> onData, std::string cwd = "");
             ~Pane();
             Pane(const Pane&) = delete;
             Pane& operator=(const Pane&) = delete;
@@ -31,6 +31,8 @@ namespace nexyth
             void write(const std::string& data);
             void resize(int columns, int rows);
             int id() const { return id_; }
+            std::string command() const { return command_; }
+            std::string cwd() const { return pty_.workingDirectory(); }
             std::string title() const;
             void setTitle(std::string title);
             bool alive() const;
@@ -48,6 +50,7 @@ namespace nexyth
 
             int id_ = 0;
             std::string command_;
+            std::string cwd_;
             Buffer buffer_;
             std::function<void(int)> onData_;
             Pty pty_;

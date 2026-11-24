@@ -9,8 +9,8 @@ namespace nexyth
 
         !_ctor
     */
-    Pane::Pane(int id, std::string command, int columns, int rows, int scrollback, std::function<void(int)> onData)
-        : id_(id), command_(std::move(command)), buffer_(columns, rows, scrollback), onData_(std::move(onData)) {}
+    Pane::Pane(int id, std::string command, int columns, int rows, int scrollback, std::function<void(int)> onData, std::string cwd)
+        : id_(id), command_(std::move(command)), cwd_(std::move(cwd)), buffer_(columns, rows, scrollback), onData_(std::move(onData)) {}
     //!
 
     /*!
@@ -41,7 +41,7 @@ namespace nexyth
     {
         if (reader_.joinable()) return;
 
-        if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows()))
+        if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows(), cwd_))
         {
             alive_ = false;
             setTitle("[failed]");
