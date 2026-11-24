@@ -4,6 +4,7 @@
 #include <cctype>
 #include <ctime>
 #include <iomanip>
+#include <iterator>
 #include <sstream>
 #include <utility>
 
@@ -856,6 +857,9 @@ namespace nexyth
     /*!
         Draw Layout Save Overlay
 
+        Shows existing layout names and warns when the typed name would
+        overwrite one.
+
         !_method
     */
     void Renderer::drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)
@@ -873,15 +877,51 @@ namespace nexyth
             pixel.bold = true;
         };
 
-        const Rect box = centeredBox(width, height, 64, 8);
+        const Rect box = centeredBox(width, height, 64, 18);
         fillRect(canvas, box, " ", fill);
         drawBox(canvas, box, fill);
         writeText(canvas, box.x + 1, box.y, " nexyth save layout (Enter save, Esc cancel)", heading);
 
+        const auto& names = app_.layoutNames();
+        const std::string typed = trim(app_.layoutBuffer());
+        const auto match = std::find(names.begin(), names.end(), typed);
+        const bool overwrite = !typed.empty() && match != names.end();
+        const std::size_t matchIndex = overwrite ? static_cast<std::size_t>(std::distance(names.begin(), match)) : names.size();
+
         const std::string value = "> " + app_.layoutBuffer();
         writeText(canvas, box.x + 1, box.y + 2, value.substr(0, static_cast<std::size_t>(box.width - 2)), fill);
-        writeText(canvas, box.x + 1, box.y + 3, " tabs, panes, sizes, focus and paths are saved", fill);
-        writeText(canvas, box.x + 1, box.y + box.height - 2, " processes and scrollback restart on restore", fill);
+
+        const std::string status = overwrite ? "! overwrites existing layout: " + typed
+        : names.empty() ? "  no saved layouts yet" : "  new layout";
+        const Canvas::Stylizer normalStyle = fill;
+        const Canvas::Stylizer warnStyle = heading;
+        writeText(canvas, box.x + 1, box.y + 3, status.substr(0, static_cast<std::size_t>(box.width - 2)), overwrite ? warnStyle : normalStyle);
+        writeText(canvas, box.x + 1, box.y + 4, " saved layouts:", fill);
+
+        const int visible = std::max(0, box.height - 7);
+        std::size_t start = 0;
+
+        if (overwrite && matchIndex >= static_cast<std::size_t>(visible))
+        {
+            start = matchIndex - static_cast<std::size_t>(visible) + 1;
+        }
+
+        if (names.size() > static_cast<std::size_t>(visible) &&
+            start + static_cast<std::size_t>(visible) > names.size())
+        {
+            start = names.size() - static_cast<std::size_t>(visible);
+        }
+
+        for (std::size_t i = start; i < names.size() && i - start < static_cast<std::size_t>(visible); ++i)
+        {
+            const std::string prefix = i == matchIndex ? "> " : "  ";
+            const std::string line = prefix + names[i];
+            writeText(canvas, box.x + 1, box.y + 5 + static_cast<int>(i - start),
+            line.substr(0, static_cast<std::size_t>(box.width - 2)),
+            i == matchIndex ? warnStyle : normalStyle);
+        }
+
+        writeText(canvas, box.x + 1, box.y + box.height - 2, " type a name; Backspace edits; processes restart on restore", fill);
     }
     //!
 

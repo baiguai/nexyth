@@ -1431,14 +1431,14 @@
                   {
                     "id": "f0f7f185",
                     "title": "Status Message",
-                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [yank](_Yank_)",
+                    "content": "Status Message\n\nSignature: void App::statusMessage(std::string message)\nMethod: statusMessage\nReturns: void App\nParameters:\n    message std::string\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [startLayoutSave](_Show the Save Layout Dialog_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   },
                   {
                     "id": "8dfc9bde",
                     "title": "Status Message String",
-                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [yank](_Yank_)",
+                    "content": "Status Message String\n\nSignature: std::string App::statusMessage() const\nMethod: statusMessage\nReturns: std::string App\nQualifiers: const\nCalled By:\n    [layoutSaveApply](_Apply the Layout Save_)\n    [layoutListApply](_Apply the Selected Layout_)\n    [layoutListDelete](_Delete the Selected Layout_)\n    [drawStatus](_Draw Status_)\n    [execute](_Execute_)\n    [Ftxui App](_Ftxui App_)\n    [handleKey](_Handle the Key Combination_)\n    [paste](_Paste_)\n    [themeApply](_Select Theme to Apply_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [startLayoutSave](_Show the Save Layout Dialog_)\n    [yank](_Yank_)",
                     "children": [],
                     "expanded": false
                   }
@@ -2186,7 +2186,7 @@
               {
                 "id": "699daeb3",
                 "title": "List Saved Layout Names",
-                "content": "List Saved Layout Names\n\nSignature: std::vector<std::string> LayoutStore::list(std::string& error)\nMethod: list\nReturns: std::vector<std::string> LayoutStore\nParameters:\n    error std::string&\nCalled By:\n    [layoutListDelete](_Delete the Selected Layout_)\n    [toggleLayoutList](_Show or Hide the Layout List_)",
+                "content": "List Saved Layout Names\n\nSignature: std::vector<std::string> LayoutStore::list(std::string& error)\nMethod: list\nReturns: std::vector<std::string> LayoutStore\nParameters:\n    error std::string&\nCalled By:\n    [layoutListDelete](_Delete the Selected Layout_)\n    [toggleLayoutList](_Show or Hide the Layout List_)\n    [startLayoutSave](_Show the Save Layout Dialog_)",
                 "children": [],
                 "expanded": false
               },
@@ -2372,7 +2372,7 @@
               {
                 "id": "6c05ed6a",
                 "title": "Start",
-                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [parseParameters](_Parse Parameters_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows(), cwd_))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
+                "content": "Start\n\nSignature: void Pane::start()\nMethod: start\nReturns: void Pane\nCalled By:\n    [computeLayout](_Compute Layout_)\n    [drawLayoutListOverlay](_Draw Layout List Overlay_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [drawThemesOverlay](_Draw Themes Overlay_)\n    [makePane](_Make Pane_)\n    [Pane Handling](_Pane Handling_)\n    [parseParameters](_Parse Parameters_)\n    [putText](_Put Text_)\n    [resize](_Resize_)\n    [scrollBy](_Scroll By_)\n    [setNavigation](_Set Navigation_)\n\n--------------------------------------------------------------------------------\n\nvoid Pane::start()\n{\n    if (reader_.joinable()) return;\n\n    if (!pty_.spawn(command_, buffer_.columns(), buffer_.rows(), cwd_))\n    {\n        alive_ = false;\n        setTitle(\"[failed]\");\n        return;\n    }\n\n    reader_ = std::thread([this] { readLoop(); });\n}",
                 "children": [],
                 "expanded": false
               },
@@ -3292,7 +3292,7 @@
               {
                 "id": "4483f553",
                 "title": "Draw Layout Save Overlay",
-                "content": "Draw Layout Save Overlay\n\nSignature: void Renderer::drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawLayoutSaveOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
+                "content": "Draw Layout Save Overlay\n\nShows existing layout names and warns when the typed name would\noverwrite one.\n\nSignature: void Renderer::drawLayoutSaveOverlay(ftxui::Canvas& canvas, int width, int height, ftxui::Color foreground, ftxui::Color background)\nMethod: drawLayoutSaveOverlay\nReturns: void Renderer\nParameters:\n    canvas     ftxui::Canvas&\n    width      int\n    height     int\n    foreground ftxui::Color\n    background ftxui::Color\nCalled By:\n    [draw](_Renderer Draw_)",
                 "children": [],
                 "expanded": false
               },
@@ -3481,7 +3481,7 @@
           {
             "id": "5df6aee9",
             "title": "Trim",
-            "content": "Trim\n\nSignature: std::string trim(std::string_view value)\nMethod: trim\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [applySetting](_Apply Setting_)\n    [layoutSaveApply](_Apply the Layout Save_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)",
+            "content": "Trim\n\nSignature: std::string trim(std::string_view value)\nMethod: trim\nReturns: std::string\nParameters:\n    value std::string_view\nCalled By:\n    [applySetting](_Apply Setting_)\n    [layoutSaveApply](_Apply the Layout Save_)\n    [drawLayoutSaveOverlay](_Draw Layout Save Overlay_)\n    [Parse Bool](_Parse Bool_)\n    [parseColor](_Parse Color_)",
             "children": [],
             "expanded": false
           },

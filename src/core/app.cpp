@@ -1729,10 +1729,16 @@ namespace nexyth
             */
             void App::startLayoutSave()
             {
+                std::string error;
+                layout_names_ = LayoutStore::list(error);
+
                 overlay_ = Overlay::LayoutSave;
                 layout_buffer_.clear();
+                layout_index_ = 0;
                 clearPending();
-                refresh();
+
+                if (!error.empty()) statusMessage("layout list failed: " + error);
+                else refresh();
             }
             //!
 
