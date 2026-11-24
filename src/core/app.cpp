@@ -413,6 +413,7 @@ namespace nexyth
                 else
                 {
                     last_escape_time_ = now;
+                    return true;
                 }
             }
 
@@ -1628,8 +1629,7 @@ namespace nexyth
                     const std::string rawKey = binding.first;
                     if (binding.second == "plex" &&
                         ((mode == Mode::Normal && rawKey == "<Esc>") ||
-                         (mode == Mode::Insert &&
-                          (rawKey == "<Esc>" || rawKey == "<C-Esc>"))))
+                         (mode == Mode::Insert && rawKey == "<C-Esc>")))
                         binding.first = "<Esc> <Esc>";
 
                     binding.first = label + "  " + binding.first;
