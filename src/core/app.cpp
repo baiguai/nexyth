@@ -1614,28 +1614,37 @@ namespace nexyth
         */
         std::vector<std::pair<std::string, std::string>> App::filteredBindings() const
         {
-            const auto bindings = config_.listBindings(mode_);
+            const Mode modes[] = {Mode::Normal, Mode::Insert, Mode::Visual};
 
             std::vector<std::pair<std::string, std::string>> result;
 
-            for (auto binding : bindings)
+            for (Mode mode : modes)
             {
-                const std::string rawKey = binding.first;
-                if (binding.second == "plex" &&
-                    ((mode_ == Mode::Normal && rawKey == "<Esc>") ||
-                     (mode_ == Mode::Insert && rawKey == "<C-Esc>")))
-                    binding.first = "<Esc> <Esc>";
+                std::string label = modeName(mode);
+                label += std::string(6 - label.size(), ' ');
 
-                if (help_filtering_ && !help_filter_.empty())
+                for (auto binding : config_.listBindings(mode))
                 {
-                    const std::string rawText = rawKey + " " + binding.second;
-                    const std::string shownText = binding.first + " " + binding.second;
-                    if (!containsInsensitive(shownText, help_filter_) &&
-                        !containsInsensitive(rawText, help_filter_))
-                        continue;
-                }
+                    const std::string rawKey = binding.first;
+                    if (binding.second == "plex" &&
+                        ((mode == Mode::Normal && rawKey == "<Esc>") ||
+                         (mode == Mode::Insert &&
+                          (rawKey == "<Esc>" || rawKey == "<C-Esc>"))))
+                        binding.first = "<Esc> <Esc>";
 
-                result.push_back(binding);
+                    binding.first = label + "  " + binding.first;
+
+                    if (help_filtering_ && !help_filter_.empty())
+                    {
+                        const std::string rawText = label + " " + rawKey + " " + binding.second;
+                        const std::string shownText = binding.first + " " + binding.second;
+                        if (!containsInsensitive(shownText, help_filter_) &&
+                            !containsInsensitive(rawText, help_filter_))
+                            continue;
+                    }
+
+                    result.push_back(binding);
+                }
             }
             return result;
         }

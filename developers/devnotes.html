@@ -2049,7 +2049,7 @@
               {
                 "id": "fa75dda9",
                 "title": "Mode Name",
-                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By:\n    [drawStatus](_Draw Status_)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
+                "content": "Mode Name\n\nSignature: inline const char* modeName(Mode mode)\nMethod: modeName\nReturns: inline const char*\nParameters:\n    mode Mode\nCalled By:\n    [drawStatus](_Draw Status_)\n    [filteredBindings](_Filtered Bindings_)\n\n--------------------------------------------------------------------------------\n\ninline const char* modeName(Mode mode)\n{\n    switch (mode)\n    {\n        case Mode::Normal: return \"PLEX\";\n        case Mode::Insert: return \"NORMAL\";\n        case Mode::Visual: return \"VISUAL\";\n    }\n    return \"PLEX\";\n}",
                 "children": [],
                 "expanded": false
               },
