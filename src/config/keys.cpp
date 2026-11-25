@@ -21,7 +21,7 @@ namespace nexyth
             }
             if (raw == "\x1B\x1B" || raw == "\x1B[27;5;27;27~") return "<C-Esc>";
             if (raw == "\t") return "<Tab>";
-            if (raw == "\r") return "<CR>";
+            if (raw == "\n" || raw == "\r") return "<CR>";
             if (raw == "\x7F") return "<BS>";
             if (raw == " ") return "<Space>";
             if (raw == "\0" || raw == std::string(1, '\0')) return "<C-Space>";
