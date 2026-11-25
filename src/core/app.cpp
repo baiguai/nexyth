@@ -392,6 +392,13 @@ namespace nexyth
         /*!
             Handle the Key Combination
 
+            In NORMAL mode, a single Escape is forwarded to the focused pane.
+            A second Escape within 350 ms, or fused <Esc><Esc> input, is treated
+            as <C-Esc> so the configured plex binding can leave NORMAL mode.
+            Because forwarding is immediate, a slower double Escape can also be
+            seen by the child before PLEX is entered. Overlays, resize mode, and
+            the clock still consume Escape before the forwarding path.
+
             !_method
         */
         bool App::handleKey(const ftxui::Event& event)
@@ -937,6 +944,7 @@ namespace nexyth
 
             mode_ = mode;
             clearPending();
+            last_escape_time_ = {};
 
             if (mode == Mode::Insert)
             {
@@ -1628,8 +1636,7 @@ namespace nexyth
                     const std::string rawKey = binding.first;
                     if (binding.second == "plex" &&
                         ((mode == Mode::Normal && rawKey == "<Esc>") ||
-                         (mode == Mode::Insert &&
-                          (rawKey == "<Esc>" || rawKey == "<C-Esc>"))))
+                         (mode == Mode::Insert && rawKey == "<C-Esc>")))
                         binding.first = "<Esc> <Esc>";
 
                     binding.first = label + "  " + binding.first;
