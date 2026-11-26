@@ -967,6 +967,13 @@
         "expanded": false
       },
       {
+        "id": "fc37c8c5",
+        "title": "//!_coderoot",
+        "content": "Code root node\n\n    //!_coderoot=/Source Code\n\nCreates the folder that all harvested file and doc-block nodes hang from. The last path segment is the node title (Source Code); when the marker is omitted the root is /src.\nThe marker is a line comment and can appear anywhere in the source; the last marker for the key wins. Files keep their source-relative path under the root (e.g. output/message.h), and the `int main` anchor controls where the coderoot section appears among custom nodes.",
+        "children": [],
+        "expanded": false
+      },
+      {
         "id": "1f4a2c79",
         "title": "//!_structure",
         "content": "Structure topic node\n\n    //!_structure=/Project Structure\n    //!_structure=/Project Structure=../\n\nCreates one top-level note named after the last path segment (Project Structure). Its content is a text tree of the directories it walks:\n\n    src/\n    |-- config/\n    |   `-- config.cpp\n    `-- main.cpp\n\nBy default it walks the source root (src/). Append =dir to walk another directory; relative dir paths resolve against docsgen/, so ../ is the project root. Hidden directories, __pycache__, and the entries in IGNORE_PATHS at the top of harvest.py are skipped - build and build-windows by default, so =../ leaves build output out. A bare name in IGNORE_PATHS matches at any depth; an entry with a slash matches a path relative to the walked root, and a leading slash matches an absolute path. Symlinked directories are not descended into. The node is placed among the custom nodes according to the marker's source line.",
@@ -2030,7 +2037,7 @@
             function openMissingLinksDialog() {
                 if (readOnly) return;
                 showingLinks = true;
-                const nodeLinkRegex = /(?:^|\s)_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
+                const nodeLinkRegex = /(?:^|\s|\])_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
 
                 // Gather all node titles (case-insensitive)
                 const allTitles = new Set();
@@ -4290,7 +4297,7 @@
                     }
                 }
 
-                const noteRegex = /(?:^|\s|\()_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
+                const noteRegex = /(?:^|\s|\(|\])_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
                 while ((match = noteRegex.exec(content)) !== null) {
                     const full = match[0];
                     const start = match.index;
@@ -4318,7 +4325,7 @@
 
                 // Generic standalone links
                 const urlRegex = /\b(?:https?|file):\/\/[^\s]+/gi;
-                const nodeLinkRegex = /(?:^|\s|\()_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
+                const nodeLinkRegex = /(?:^|\s|\(|\])_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
 
                 const foundLinks = [];
                 let match;
@@ -6378,7 +6385,7 @@
                 let content = editorArea.value;
 
                 // Regex that preserves whitespace and line breaks around inter-note links
-                const nodeLinkRegex = /(^|\s)_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
+                const nodeLinkRegex = /(^|\s|\])_([^_]|[^_].*?[^_])_(?=\s|[.,!?;:)]|$)/g;
                 content = content.replace(nodeLinkRegex, (match, leading, inner) => {
                     return (leading || "") + inner; // keep whitespace/line breaks, drop underscores
                 });
